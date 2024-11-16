@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "userId": 1,
+    "documentId": 1,
+    "type": "văn bản đến",
+    "changes": "Tệp đính kèm thay đổi",
+    "timestamp": "2024-11-15T14:39:57.581Z"
+  },
+  {
+    "id": 2,
+    "userId": 1,
+    "documentId": 1,
+    "type": "văn bản đến",
+    "changes": "Người phụ trách thay đổi từ '1' thành '2'; Tệp đính kèm thay đổi",
+    "timestamp": "2024-11-15T14:40:14.771Z"
+  },
+  {
+    "id": 3,
+    "userId": 1,
+    "documentId": 2,
+    "type": "văn bản đến",
+    "changes": "Tệp đính kèm thay đổi",
+    "timestamp": "2024-11-16T16:41:14.426Z"
+  }
+]

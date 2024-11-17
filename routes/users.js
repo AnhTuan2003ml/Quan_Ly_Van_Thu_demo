@@ -5,7 +5,7 @@ import {
     getBasicUsers,
     updateUsers,
     addUsers,
-    deleteUsers
+    deleteUsers,
 } from '../controllers/users.js'
 
 const user = express.Router()
@@ -15,5 +15,6 @@ user.get('/basic', getBasicUsers)
 user.post('/', addUsers)
 user.put('/:id', updateUsers)
 user.delete('/:id', deleteUsers)
+
 
 export default user

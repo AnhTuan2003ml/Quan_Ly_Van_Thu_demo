@@ -17,16 +17,18 @@ function writeUsers(data) {
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2))
 }
 
-export const getEmails = (idEmail) => {
+// Hàm tĩnh để lấy email theo id
+export const getEmailById = (idEmail) => {
+    console.log(idEmail);
     const users = readUsers();
-    const user = users.find(user => user.id === idEmail);
-
+    const user = users.find(user => user.id === parseInt(idEmail));
+    console.log(user.email);
     if (user) {
-        return res.json({ email: user.email });
+        return user.email;
     } else {
-        return res.status(404).json({ error: 'User not found' });
+        throw new Error('User not found');
     }
-}
+};
 
 export const getBasicUsers = (req, res) => {
     const users = readUsers();

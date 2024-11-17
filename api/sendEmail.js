@@ -62,28 +62,23 @@ const sendEmailNotification = async (to, subject, text, html) => {
     }
 };
 
-// // Hàm kiểm tra gửi email
-// const testSendEmail = async () => {
-// <<<<<<< HEAD
-//     const to = ['tuankkffdnc@gmail.com','xb91200'];           // Thay thế bằng email người nhận
-//     const subject = 'Thông báo kiểm tra';       // Tiêu đề email
-//     const text = 'Đây là nội dung văn bản';     // Nội dung văn bản thuần
-//     const html = '<h1>Đây là nội dung HTML</h1>'; // Nội dung HTML
-// =======
-//     const to = ['tuankkffdnc@gmail.com', 'xb91200@gmail.com'];
-//     const subject = 'Thông báo kiểm tra';
-//     const text = ['Hủy', 'Thêm']; // Text content for each email
-//     const html = '<h1>Đây là nội dung HTML</h1>';
-// >>>>>>> 48cc33e312af189aa0ee362d4996ff119735b7ac
+export default sendEmailNotification;
+
+// const testSendEmail_put = async () => {
+//     const to = ["tuankkffdnc@gmail.com", "21011117@st.phenikaa-uni.edu.vn"];  // Các địa chỉ email người nhận
+//     const subject = 'Thông báo';  // Tiêu đề email
+//     const text = ['Hủy', 'Thêm'];  // Nội dung văn bản thuần cho mỗi email
+//     const html = ['<h1>Hủy</h1>', '<h1>Thêm</h1>'];  // Nội dung HTML cho mỗi email
 
 //     try {
-//         if (to.length !== text.length) {
-//             throw new Error('Số lượng email và số lượng nội dung không khớp!');
+//         // Kiểm tra số lượng email và số lượng nội dung có khớp không
+//         if (to.length !== text.length || to.length !== html.length) {
+//             throw new Error('Số lượng email, nội dung văn bản và HTML không khớp!');
 //         }
 
-//         // Send each email with the corresponding text
+//         // Gửi từng email với nội dung tương ứng
 //         for (let i = 0; i < to.length; i++) {
-//             await sendEmailNotification(to[i], subject, text[i], html);  // Use text[i]
+//             await sendEmailNotification(to[i], subject, text[i], html[i]);  // Gửi email
 //             console.log(`Email kiểm tra đã được gửi thành công đến ${to[i]}!`);
 //         }
 
@@ -92,6 +87,4 @@ const sendEmailNotification = async (to, subject, text, html) => {
 //     }
 // };
 
-
-// // Gọi hàm kiểm tra
-// testSendEmail();
+// testSendEmail_put()

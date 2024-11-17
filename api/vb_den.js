@@ -3,8 +3,8 @@ import multer, { diskStorage } from 'multer';
 import { existsSync, unlinkSync, writeFileSync, readFileSync } from 'fs';
 import path, { join } from 'path';
 import { addLogData } from './log.js'; // Import đúng file log.js trong cùng thư mục
-import sendEmailNotification from './sendEmail.js'
-import { getEmails } from '../controllers/users.js';
+import { getEmailById } from '../controllers/users.js';
+import sendEmailNotification  from './sendEmail.js';
 
 export default () => {
     const router = Router();
@@ -48,8 +48,24 @@ export default () => {
         next();
     }
 
+    const testSendEmail = async (newEmail) => {
+        console.log(newEmail);
+        try {
+            const to = newEmail;
+            const subject = 'Thông báo';
+            const text = 'Thêm'; // Nội dung văn bản
+            const html = '<h1>Thêm</h1>'; // Nội dung HTML cho email
 
+            // Gửi email
+            sendEmailNotification(to, subject, text, html);
 
+            // In thông báo thành công
+            console.log(`Email kiểm tra đã được gửi thành công đến ${to}!`);
+        } catch (error) {
+            // Xử lý lỗi nếu có
+            console.error(`Lỗi khi gửi email đến ${newEmail}:`, error);
+        }
+    };
     // , ensureAuthenticated
 
 
@@ -99,23 +115,23 @@ export default () => {
                 }
                 if (oldDocument.nguoiphutrach !== parseInt(nguoiphutrach)) {
                     changes.push(`Người phụ trách thay đổi từ '${oldDocument.nguoiphutrach}' thành '${nguoiphutrach}'`);
-                    const oldEmail = getEmails(oldDocument.nguoiphutrach)
-                    const newEmail = getEmails(nguoiphutrach)
-
-                    const testSendEmail = async () => {
-                        const to = [oldEmail, newEmail];
-                        const subject = 'Thông báo';
-                        const text = ['Hủy', 'Thêm']; // Text content for each email
-                        const html = ['<h1>Hủy</h1>', '<h1>Thêm</h1>'];
+                    const oldEmail = getEmailById(oldDocument.nguoiphutrach)
+                    const newEmail = getEmailById(nguoiphutrach)
+                    const testSendEmail_put = async () => {
+                        const to = [oldEmail, newEmail];  // Các địa chỉ email người nhận
+                        const subject = 'Thông báo';  // Tiêu đề email
+                        const text = ['Hủy', 'Thêm'];  // Nội dung văn bản thuần cho mỗi email
+                        const html = ['<h1>Hủy</h1>', '<h1>Thêm</h1>'];  // Nội dung HTML cho mỗi email
 
                         try {
-                            if (to.length !== text.length) {
-                                throw new Error('Số lượng email và số lượng nội dung không khớp!');
+                            // Kiểm tra số lượng email và số lượng nội dung có khớp không
+                            if (to.length !== text.length || to.length !== html.length) {
+                                throw new Error('Số lượng email, nội dung văn bản và HTML không khớp!');
                             }
 
-                            // Send each email with the corresponding text
+                            // Gửi từng email với nội dung tương ứng
                             for (let i = 0; i < to.length; i++) {
-                                await sendEmailNotification(to[i], subject, text[i], html);  // Use text[i]
+                                await sendEmailNotification(to[i], subject, text[i], html[i]);  // Gửi email
                                 console.log(`Email kiểm tra đã được gửi thành công đến ${to[i]}!`);
                             }
 
@@ -123,7 +139,7 @@ export default () => {
                             console.error('Lỗi khi gửi email kiểm tra:', error);
                         }
                     };
-                    testSendEmail();
+                    testSendEmail_put();
                 }
                 if (oldDocument.filePath !== filePath_doc) {
                     changes.push(`Tệp đính kèm thay đổi`);
@@ -163,55 +179,41 @@ export default () => {
 
         // Kiểm tra nếu không có tệp mới, sử dụng tệp cũ
         const filePath_doc = documentFile ? `../../doc/${path.basename(documentFile.filename)}` : null;
-        const newEmail = getEmails(nguoiphutrach)
-        const testSendEmail = async () => {
-            const to = newEmail;
-            const subject = 'Thông báo';
-            const text = 'Thêm'; // Text content for each email
-            const html = '<h1>Thêm</h1>';
-
-            try {
-                if (to.length !== text.length) {
-                    throw new Error('Số lượng email và số lượng nội dung không khớp!');
-                }
-                await sendEmailNotification(to, subject, text, html);  // Use text[i]
-                console.log(`Email kiểm tra đã được gửi thành công đến ${to}!`);
-
-
-            } catch (error) {
-                console.error('Lỗi khi gửi email kiểm tra:', error);
-            }
-        };
-        // Tạo văn bản mới
-        const newDocument = {
-            tenvb,
-            noidung,
-            ngayden,
-            so: parseInt(so),
-            han,
-            nguoiphutrach: parseInt(nguoiphutrach),
-            filePath: filePath_doc
-        };
-        console.log(newDocument);
+        const newEmail = getEmailById(nguoiphutrach);
+        const timestamp = new Date().toISOString(); // Thời gian thay đổi
+        let id_doc =0;
+        // console.log(newDocument);
+        testSendEmail(newEmail);
 
         // Thêm văn bản mới vào cơ sở dữ liệu (hoặc file)
-        addDocument(newDocument)  // Giả sử bạn có hàm `addDocument` để lưu văn bản mới
+        addDocument(tenvb, noidung, ngayden, parseInt(so), han, parseInt(nguoiphutrach), filePath_doc)
             .then((documentId) => {
+                const id_doc = documentId;
                 const timestamp = new Date().toISOString(); // Thời gian thay đổi
-                console.log(userId, documentId, 'văn bản đến', 'Thêm văn bản đến', timestamp);
+
+                // Trả về phản hồi thành công trước khi gọi addLogData()
+                res.json({ success: true, message: 'Văn bản đến đã được thêm thành công.', documentId: id_doc });
+
+                // Ghi log vào cơ sở dữ liệu (hoặc file) sau khi phản hồi đã được gửi
+                // Lưu ý là không gọi res.json() nữa sau khi đã gửi phản hồi
                 addLogData({
                     userId: userId,
-                    documentId: documentId,
+                    documentId: id_doc,
                     type: 'văn bản đến',
                     changes: 'Thêm văn bản đến',
                     timestamp: timestamp
+                }).catch(err => {
+                    console.error('Có lỗi xảy ra khi thêm log:', err);
+                    // Không gọi res.json() lại nữa vì phản hồi đã được gửi
                 });
-                res.json({ success: true, message: 'Văn bản đến đã được thêm thành công.' });
-                testSendEmail();
             })
             .catch(err => {
-                res.status(500).json({ success: false, message: 'Có lỗi xảy ra khi thêm văn bản đến.' });
+                // Lỗi khi thêm văn bản, trả về phản hồi ngay
+                if (!res.headersSent) {
+                    res.status(500).json({ success: false, message: 'Có lỗi xảy ra khi thêm văn bản đến', error: err.message });
+                }
             });
+
     });
 
 
@@ -254,6 +256,11 @@ export default () => {
 
         // Xóa văn bản khỏi mảng
         data.splice(documentIndex, 1);
+        // Đặt lại ID cho các văn bản còn lại để chúng có ID liên tục
+        data.forEach((doc, index) => {
+            doc.id = index + 1; // Đặt lại ID để đảm bảo thứ tự liên tục từ 1
+        });
+
 
         // Ghi lại dữ liệu vào file JSON
         writeJSONFile(filePath, data);
@@ -285,18 +292,21 @@ export default () => {
     function addDocument(tenvb, noidung, ngayden, so, han, nguoiphutrach, link) {
         return new Promise((resolve, reject) => {
             try {
-                const data = readJSONFile(filePath);
+                const data = readJSONFile(filePath);  // Đọc dữ liệu hiện tại từ file JSON
 
-                // Tạo đối tượng mới với các giá trị đã kiểm tra rỗng
+                // Tạo ID mới cho văn bản (ID là số thứ tự tăng dần)
+                const newId = data.length > 0 ? data[data.length - 1].id + 1 : 1;  // Tính ID mới dựa trên ID cuối cùng
+
+                // Tạo đối tượng văn bản mới
                 const newDocument = {
-                    id: Date.now(), // Tạo ID mới (sử dụng timestamp làm ID)
+                    id: newId,  // ID mới
                     tenvb: checkEmpty(tenvb),
                     noidung: checkEmpty(noidung),
                     ngayden: checkEmpty(ngayden),
                     so: checkEmpty(so),
                     han: checkEmpty(han),
                     nguoiphutrach: checkEmpty(nguoiphutrach),
-                    link: checkEmpty(link),
+                    link: checkEmpty(link)
                 };
 
                 // Thêm văn bản mới vào mảng dữ liệu
@@ -312,7 +322,6 @@ export default () => {
             }
         });
     }
-
     // Hàm đọc dữ liệu từ tệp JSON
     function readJSONFile(filePath) {
         if (existsSync(filePath)) {

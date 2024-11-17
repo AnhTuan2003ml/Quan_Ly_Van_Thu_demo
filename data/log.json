@@ -22,5 +22,42 @@
     "type": "văn bản đến",
     "changes": "Tệp đính kèm thay đổi",
     "timestamp": "2024-11-16T16:41:14.426Z"
+  },
+  {
+    "id": 4,
+    "documentId": 2,
+    "type": "văn bản đến",
+    "changes": "Người phụ trách thay đổi từ '5' thành '2'; Tệp đính kèm thay đổi",
+    "timestamp": "2024-11-16T21:12:23.732Z"
+  },
+  {
+    "id": 5,
+    "documentId": 3,
+    "type": "văn bản đến",
+    "changes": "Người phụ trách thay đổi từ '6' thành '2'; Tệp đính kèm thay đổi",
+    "timestamp": "2024-11-16T21:22:00.511Z"
+  },
+  {
+    "id": 6,
+    "userId": 1,
+    "documentId": 4,
+    "type": "văn bản đến",
+    "changes": "Người phụ trách thay đổi từ '7' thành '2'; Tệp đính kèm thay đổi",
+    "timestamp": "2024-11-17T13:24:05.866Z"
+  },
+  {
+    "id": 7,
+    "documentId": 6,
+    "type": "văn bản đến",
+    "changes": "Người phụ trách thay đổi từ '9' thành '2'; Tệp đính kèm thay đổi",
+    "timestamp": "2024-11-17T13:30:59.647Z"
+  },
+  {
+    "id": 8,
+    "userId": 1,
+    "documentId": 5,
+    "type": "văn bản đến",
+    "changes": "Người phụ trách thay đổi từ '8' thành '2'; Tệp đính kèm thay đổi",
+    "timestamp": "2024-11-17T13:34:24.634Z"
   }
 ]

@@ -62,29 +62,47 @@ const sendEmailNotification = async (to, subject, text, html) => {
     }
 };
 
-export default sendEmailNotification;
 
-// const testSendEmail_put = async () => {
-//     const to = ["tuankkffdnc@gmail.com", "21011117@st.phenikaa-uni.edu.vn"];  // Các địa chỉ email người nhận
-//     const subject = 'Thông báo';  // Tiêu đề email
-//     const text = ['Hủy', 'Thêm'];  // Nội dung văn bản thuần cho mỗi email
-//     const html = ['<h1>Hủy</h1>', '<h1>Thêm</h1>'];  // Nội dung HTML cho mỗi email
+export const testSendEmail_single = async (newEmail) => {
+    console.log(newEmail);
+    try {
+        const to = newEmail;
+        const subject = 'Thông báo';
+        const text = 'Thêm'; // Nội dung văn bản
+        const html = '<h1>Thêm</h1>'; // Nội dung HTML cho email
 
-//     try {
-//         // Kiểm tra số lượng email và số lượng nội dung có khớp không
-//         if (to.length !== text.length || to.length !== html.length) {
-//             throw new Error('Số lượng email, nội dung văn bản và HTML không khớp!');
-//         }
+        // Gửi email
+        sendEmailNotification(to, subject, text, html);
 
-//         // Gửi từng email với nội dung tương ứng
-//         for (let i = 0; i < to.length; i++) {
-//             await sendEmailNotification(to[i], subject, text[i], html[i]);  // Gửi email
-//             console.log(`Email kiểm tra đã được gửi thành công đến ${to[i]}!`);
-//         }
+        // In thông báo thành công
+        console.log(`Email kiểm tra đã được gửi thành công đến ${to}!`);
+    } catch (error) {
+        // Xử lý lỗi nếu có
+        console.error(`Lỗi khi gửi email đến ${newEmail}:`, error);
+    }
+};
 
-//     } catch (error) {
-//         console.error('Lỗi khi gửi email kiểm tra:', error);
-//     }
-// };
+export const testSendEmail_multi = async (oldEmail, newEmail) => {
+    const to = [oldEmail, newEmail];  // Các địa chỉ email người nhận
+    const subject = 'Thông báo';  // Tiêu đề email
+    const text = ['Hủy', 'Thêm'];  // Nội dung văn bản thuần cho mỗi email
+    const html = ['<h1>Hủy</h1>', '<h1>Thêm</h1>'];  // Nội dung HTML cho mỗi email
 
-// testSendEmail_put()
+    try {
+        // Kiểm tra số lượng email và số lượng nội dung có khớp không
+        if (to.length !== text.length || to.length !== html.length) {
+            throw new Error('Số lượng email, nội dung văn bản và HTML không khớp!');
+        }
+
+        // Gửi từng email với nội dung tương ứng
+        for (let i = 0; i < to.length; i++) {
+            await sendEmailNotification(to[i], subject, text[i], html[i]);  // Gửi email
+            console.log(`Email kiểm tra đã được gửi thành công đến ${to[i]}!`);
+        }
+
+    } catch (error) {
+        console.error('Lỗi khi gửi email kiểm tra:', error);
+    }
+};
+
+ 

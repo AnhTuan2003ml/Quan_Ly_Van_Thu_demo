@@ -2,12 +2,14 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import path from 'path';
 import session from 'express-session';
-import apiVbDen from './api/vb_den.js';
-import apiAuth from './api/auth.js';
+
+import apiVbDen from './routes/vb_den.js';
+import apiAuth from './routes/auth.js';
+import users from './routes/users.js';
 
 import { fileURLToPath } from 'url';
 
-import users from './routes/users.js'
+
 
 const app = express();
 
@@ -37,8 +39,8 @@ app.get('/', (req, res) => {
 // Sử dụng các API
 //app.use('/api/users', apiUsers());    // API cho người dùng
 app.use('/api/users', users)
-app.use('/api/vb_den', apiVbDen());   // API cho văn bản đến
-app.use('/api/auth', apiAuth());
+app.use('/api/vb_den', apiVbDen);   // API cho văn bản đến
+app.use('/api/auth', apiAuth);
 
 // app.use('/api/log', apiLog()); 
 

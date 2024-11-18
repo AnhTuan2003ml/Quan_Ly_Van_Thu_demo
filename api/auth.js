@@ -35,9 +35,7 @@ export default () => {
             if (user && password === user.password) {
                 req.session.userId = user.id;
                 req.session.userRole = user.status === 1 ? 'admin' :
-                    user.status === 2 ? 'vanthu' :
-                        user.status === 3 ? 'user' : 'guest'; // Default to 'guest' if status is not 1, 2, or 3
- 
+                    user.status === 2 ? 'vanthu' : 'user' ; 
                 return res.json({ success: true, role: req.session.userRole });
             } else {
                 return res.status(401).json({ success: false, message: 'Sai tên đăng nhập hoặc mật khẩu!' });

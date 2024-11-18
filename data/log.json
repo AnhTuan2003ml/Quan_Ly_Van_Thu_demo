@@ -59,5 +59,12 @@
     "type": "văn bản đến",
     "changes": "Người phụ trách thay đổi từ '8' thành '2'; Tệp đính kèm thay đổi",
     "timestamp": "2024-11-17T13:34:24.634Z"
+  },
+  {
+    "id": 9,
+    "documentId": 1,
+    "type": "văn bản đến",
+    "changes": "Người phụ trách thay đổi từ '2' thành '1'; Tệp đính kèm thay đổi",
+    "timestamp": "2024-11-18T18:05:40.839Z"
   }
 ]

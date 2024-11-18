@@ -1,6 +1,6 @@
-import multer, { diskStorage } from 'multer';
+
 import { existsSync, unlinkSync} from 'fs';
-import path, { join } from 'path';
+import path from 'path';
 import { addLogData } from './log.js'; // Import đúng file log.js trong cùng thư mục
 import { getEmailById } from './users.js';
 import { testSendEmail_multi, testSendEmail_single } from "./sendEmail.js";
@@ -8,7 +8,7 @@ import { readJSONFile, readJSONFileID, writeJSONFile, updateDocument_den,addDocu
 
 
 // Lấy đường dẫn thư mục hiện tại, sửa lại để không có dấu '\' ở đầu
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
+export const __dirname = path.dirname(new URL(import.meta.url).pathname);
 // Xử lý đường dẫn sao cho hợp lệ trên hệ thống Windows
 let filePath = path.join(__dirname, '../data/vb_den.json');
 // Đảm bảo đường dẫn không có dấu '/' thừa ở đầu
@@ -16,27 +16,6 @@ if (filePath.startsWith('\\')) {
     filePath = filePath.substring(1);
 }
 
-
-// Định nghĩa thư mục để lưu file tải lên
-let uploadDir = join(__dirname, '../doc');
-if (uploadDir.startsWith('\\')) {
-    uploadDir = uploadDir.substring(1);
-}
-
-const storage = diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, uploadDir);
-    },
-    filename: (req, file, cb) => {
-        const filePath = join(uploadDir, file.originalname);
-        if (existsSync(filePath)) {
-            unlinkSync(filePath); // Xóa tệp cũ nếu tồn tại
-        }
-        cb(null, file.originalname);
-    }
-});
-
-const upload = multer({ storage: storage });
 
 export const Get_vb_den = (req, res) => {
     const userId = req.session.userId;
@@ -53,14 +32,14 @@ export const Get_vb_den = (req, res) => {
 export const Put_vb_den = (req, res) => {
     const documentId = parseInt(req.params.id);
     const { tenvb, noidung, ngayden, so, han, nguoiphutrach } = req.body;
+    const userId = req.session.userId;
     const documentFile = req.file; // Tệp mới nếu có
     // Kiểm tra nếu không có tệp mới, sử dụng tệp cũ
     const filePath_doc = documentFile ? `../../doc/${path.basename(documentFile.filename)}` : req.body.oldFilePath || null;
-    // console.log(filePath_doc);
+    console.log(documentId,tenvb, noidung, ngayden, so, han, nguoiphutrach);
     // Tìm thông tin văn bản cũ (có thể lấy từ cơ sở dữ liệu hoặc từ file JSON)
     readJSONFileID(filePath, documentId) // Giả sử bạn có hàm này để lấy thông tin văn bản cũ
         .then(oldDocument => {
-            const userId = req.session.userId;
             // So sánh và tạo danh sách các thuộc tính thay đổi
             const changes = [];
             // console.log(oldDocument);
@@ -87,7 +66,6 @@ export const Put_vb_den = (req, res) => {
             }
             if (oldDocument.filePath !== filePath_doc) {
                 changes.push(`Tệp đính kèm thay đổi`);
-                upload.single('documentFile');
             }
 
             // Nếu có thay đổi, ghi log
@@ -117,16 +95,15 @@ export const Put_vb_den = (req, res) => {
         });
 }
 
-export const Post_vb_den = (res,req) => {
+export const Post_vb_den = (req,res) => {
     const { tenvb, noidung, ngayden, so, han, nguoiphutrach } = req.body;
     const documentFile = req.file; // Tệp mới nếu có
-
+    const userId = req.session.userId;
     // Kiểm tra nếu không có tệp mới, sử dụng tệp cũ
     const filePath_doc = documentFile ? `../../doc/${path.basename(documentFile.filename)}` : null;
     const newEmail = getEmailById(nguoiphutrach);
     // console.log(newDocument);
-    upload.single('documentFile');
-    testSendEmail(newEmail);
+    testSendEmail_single(newEmail);
 
     // Thêm văn bản mới vào cơ sở dữ liệu (hoặc file)
     addDocument_den(tenvb, noidung, ngayden, parseInt(so), han, parseInt(nguoiphutrach), filePath_doc)
@@ -158,7 +135,7 @@ export const Post_vb_den = (res,req) => {
         });
 }
 
-export const Delete = (res,req) =>{
+export const Delete = (req,res) =>{
     const documentId = parseInt(req.params.id); // Chuyển ID từ chuỗi sang số
     console.log("Văn bản cần xóa:", documentId);
 

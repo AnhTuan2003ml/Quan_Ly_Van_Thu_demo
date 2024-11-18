@@ -157,8 +157,7 @@ export default () => {
         // Kiểm tra nếu không có tệp mới, sử dụng tệp cũ
         const filePath_doc = documentFile ? `../../doc/${path.basename(documentFile.filename)}` : null;
         const newEmail = getEmailById(nguoiphutrach);
-        const timestamp = new Date().toISOString(); // Thời gian thay đổi
-        let id_doc =0;
+      
         // console.log(newDocument);
         testSendEmail(newEmail);
 

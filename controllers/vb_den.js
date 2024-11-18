@@ -10,7 +10,7 @@ import { readJSONFile, readJSONFileID, writeJSONFile, updateDocument_den,addDocu
 // Lấy đường dẫn thư mục hiện tại, sửa lại để không có dấu '\' ở đầu
 export const __dirname = path.dirname(new URL(import.meta.url).pathname);
 // Xử lý đường dẫn sao cho hợp lệ trên hệ thống Windows
-let filePath = path.join(__dirname, '../data/vb_den.json');
+export let filePath = path.join(__dirname, '../data/vb_den.json');
 // Đảm bảo đường dẫn không có dấu '/' thừa ở đầu
 if (filePath.startsWith('\\')) {
     filePath = filePath.substring(1);
@@ -82,7 +82,7 @@ export const Put_vb_den = (req, res) => {
             }
             console.log(documentId, tenvb, noidung, ngayden, parseInt(so), han, parseInt(nguoiphutrach), filePath_doc);
             // Cập nhật thông tin văn bản
-            updateDocument_den(documentId, tenvb, noidung, ngayden, parseInt(so), han, parseInt(nguoiphutrach), filePath_doc)
+            updateDocument_den(documentId, tenvb, noidung, ngayden, parseInt(so), han, parseInt(nguoiphutrach), filePath_doc,filePath)
                 .then(() => {
                     res.json({ success: true, message: 'Văn bản đã được cập nhật thành công.' });
                 })
@@ -106,7 +106,7 @@ export const Post_vb_den = (req,res) => {
     testSendEmail_single(newEmail);
 
     // Thêm văn bản mới vào cơ sở dữ liệu (hoặc file)
-    addDocument_den(tenvb, noidung, ngayden, parseInt(so), han, parseInt(nguoiphutrach), filePath_doc)
+    addDocument_den(tenvb, noidung, ngayden, parseInt(so), han, parseInt(nguoiphutrach), filePath_doc,filePath)
         .then((documentId) => {
             const id_doc = documentId;
             const timestamp = new Date().toISOString(); // Thời gian thay đổi

@@ -1,4 +1,6 @@
 import { existsSync, writeFileSync, readFileSync } from 'fs';
+
+
 // Hàm đọc dữ liệu từ tệp JSON
 export function readJSONFile(filePath) {
     if (existsSync(filePath)) {
@@ -34,7 +36,7 @@ export function readJSONFileID(filePath, id) {
 }
 
 // Cập nhật thông tin văn bản vào JSON
-export function updateDocument_den(id, tenvb, noidung, ngayden, so, han, nguoiphutrach, link) {
+export function updateDocument_den(id, tenvb, noidung, ngayden, so, han, nguoiphutrach, link,filePath) {
     console.log(id, tenvb, noidung, ngayden, so, han, nguoiphutrach, link);
     return new Promise((resolve, reject) => {
         const data = readJSONFile(filePath);
@@ -53,7 +55,7 @@ function checkEmpty(value) {
 }
 
 // Thêm thông tin văn bản vào JSON
-export function addDocument_den(tenvb, noidung, ngayden, so, han, nguoiphutrach, link) {
+export function addDocument_den(tenvb, noidung, ngayden, so, han, nguoiphutrach, link,filePath) {
     return new Promise((resolve, reject) => {
         try {
             const data = readJSONFile(filePath);  // Đọc dữ liệu hiện tại từ file JSON

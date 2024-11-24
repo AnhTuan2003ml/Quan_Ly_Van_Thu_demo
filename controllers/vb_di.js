@@ -23,30 +23,31 @@ export const Get_vb_di = async (req, res) => {
 
     const data = readJSONFile(filePath);
 
-    // Sử dụng async/await để xử lý bất đồng bộ
+    // Sử dụng async/await để xử lý bất đồng bộ khi gọi Get_link_vb_den
     const updatedData = await Promise.all(data.map(async (doc) => {
         if (doc.lienket !== null) {
             try {
-                // Gọi Get_link_vb_den với ID của lienket
+                // Gọi Get_link_vb_den để lấy link từ lienket
                 const linkData = await Get_link_vb_den(doc.lienket);
 
-                // Nếu có lỗi, giữ lienket là null, nếu không thay thế lienket bằng link
-                if (linkData.error) {
-                    console.error(`Error fetching link for document with ID: ${doc.lienket}`, linkData.error);
-                    return { ...doc, lienket: null };  // Hoặc giá trị mặc định khác
-                }
-
-                return { ...doc, lienket: linkData.link };
+                // Thêm thuộc tính vb_lk mà không thay đổi lienket
+                return {
+                    ...doc,
+                    vb_lk: linkData.link,  // Thêm link vào vb_lk
+                };
             } catch (error) {
-                // Xử lý lỗi nếu gặp sự cố
+                // Nếu có lỗi, có thể trả về lienket ban đầu và vb_lk là null
                 console.error(`Error fetching link for document with ID: ${doc.lienket}`, error);
-                return { ...doc, lienket: null }; // Hoặc giá trị mặc định khác
+                return {
+                    ...doc,
+                    vb_lk: null,  // Nếu không có link, gán vb_lk là null
+                };
             }
         }
-        return doc;
+        return doc;  // Nếu không có lienket, giữ nguyên tài liệu
     }));
 
-    // Nếu người dùng là 'user', chỉ trả về các tài liệu được giao cho họ
+    // Nếu người dùng có role là 'user', chỉ trả về các tài liệu mà người đó phụ trách
     if (userRole === 'user') {
         const userDocuments = updatedData.filter(doc => doc.nguoiphutrach === userId);
         return res.json(userDocuments);

@@ -7,7 +7,7 @@
     "so": 5,
     "han": "2024-11-18",
     "nguoiphutrach": 1,
-    "link": "link_to_document_2"
+    "link": null
   },
   {
     "id": 2,
@@ -27,7 +27,7 @@
     "so": 6,
     "han": "2024-11-21",
     "nguoiphutrach": 2,
-    "link": "link_to_document_6"
+    "link":null
   },
   {
     "id": 4,
@@ -37,7 +37,7 @@
     "so": 7,
     "han": "2024-11-30",
     "nguoiphutrach": 2,
-    "link": "link_to_document_7"
+    "link": null
   },
   {
     "id": 5,
@@ -47,7 +47,7 @@
     "so": 8,
     "han": "2024-11-27",
     "nguoiphutrach": 2,
-    "link": "link_to_document_8"
+    "link": null
   },
   {
     "id": 6,
@@ -57,7 +57,7 @@
     "so": 9,
     "han": "2024-11-23",
     "nguoiphutrach": 2,
-    "link": "link_to_document_9"
+    "link": null
   },
   {
     "id": 7,
@@ -67,7 +67,7 @@
     "so": 10,
     "han": "2024-11-28",
     "nguoiphutrach": 10,
-    "link": "link_to_document_10"
+    "link": null
   },
   {
     "id": 8,

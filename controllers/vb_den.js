@@ -16,6 +16,7 @@ if (filePath.startsWith('\\')) {
     filePath = filePath.substring(1);
 }
 
+
 export const Get_link_vb_den = async (id) => {
     const data = readJSONFile(filePath);
 
@@ -30,6 +31,23 @@ export const Get_link_vb_den = async (id) => {
         return { link: null, error: 'Document not found' };
     }
 };
+export const GetDocumentInfo = (req, res) => {
+    const data = readJSONFile(filePath);
+    // Lấy thông tin các văn bản và tạo một mảng mới chứa các đối tượng id và info
+    const documentInfo = data.map(doc => {
+        // Tạo chuỗi thông tin bao gồm tenvb, ngayden, so
+        const info = `${doc.tenvb} - Ngày đến: ${doc.ngayden} - Số: ${doc.so}`;
+        // Trả về đối tượng chứa id và chuỗi thông tin
+        return {
+            id: doc.id,
+            info: info
+        };
+    });
+    console.log(documentInfo);
+    // Trả về mảng documentInfo dưới dạng JSON
+    res.json(documentInfo);
+};
+
 
 
 

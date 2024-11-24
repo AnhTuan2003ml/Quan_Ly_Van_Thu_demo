@@ -182,8 +182,10 @@
                                     <input type="date" class="form-control" id="han">
                                 </div>
                                 <div class="form-group">
-                                    <label for="ngayden">Văn bản liên kết:</label>
-                                    <input type="date" class="form-control" id="lienket" required>
+                                    <label for="nguoiphutrach">Văn bản đến liên kết:</label>
+                                    <select class="form-control" id="vblk" required>
+                                        <!-- Các option sẽ được điền tự động ở đây -->
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="nguoiphutrach">Người Phụ Trách:</label>
@@ -291,19 +293,21 @@
 
 
 
-        function editDocument(id, ten, noidung, ngayden, so, han, nguoiphutrach, link, nguoiphutrach_id,lienket,ngaydi) {
+        function editDocument(id, ten, noidung, ngayden, so, han, nguoiphutrach, link, nguoiphutrach_id, lienket, ngaydi) {
             document.getElementById('documentId').value = id;
             document.getElementById('tenvb').value = ten;
             document.getElementById('noidung').value = noidung;
             document.getElementById('ngayden').value = ngayden;
+            document.getElementById('ngaydi').value = ngaydi;
             document.getElementById('so').value = so;
             document.getElementById('han').value = han;
             document.getElementById('nguoiphutrach').value = nguoiphutrach;
-            document.getElementById('lienket').value = lienket;
+            document.getElementById('vblk').value = lienket;
             document.getElementById('ngaydi').value = ngaydi;
             document.getElementById('oldFilePath').value = link;
             // Fetch users and set the selected user
             fetchUsers(nguoiphutrach_id);
+            fillSelectListFromAPI(lienket);
 
             // Set the filename if a file is associated with the document
             const fileNameDisplay = document.getElementById('fileNameDisplay');
@@ -347,6 +351,41 @@
                 .catch(error => console.error('Error fetching users:', error));
         }
 
+        // Hàm để lấy dữ liệu từ API và điền vào danh sách chọn
+        function fillSelectListFromAPI(selectId) {
+            // Gửi yêu cầu GET tới API để lấy dữ liệu văn bản
+            fetch('api/vb_den/basic')
+                .then(response => response.json()) // Chuyển đổi phản hồi thành JSON
+                .then(data => {
+                    const selectElement = document.getElementById('vblk'); 
+                    console.log(data);
+                    // Xóa tất cả các option hiện tại trong select (để không bị trùng lặp)
+                    selectElement.innerHTML = '';
+
+                    // Nếu dữ liệu không có mục nào, thêm option mặc định
+                    if (!Array.isArray(data) || data.length === 0) {
+                        const defaultOption = document.createElement('option');
+                        defaultOption.value = 0; // Giá trị mặc định
+                        defaultOption.textContent = 'Không có dữ liệu'; // Nội dung hiển thị
+                        selectElement.appendChild(defaultOption);
+                        return; // Kết thúc hàm nếu không có dữ liệu
+                    }
+
+                    // Duyệt qua từng tài liệu trong data và tạo các <option>
+                    data.forEach(doc => {
+                        const option = document.createElement('option');
+                        option.value = doc.id; // Giá trị của option là id của tài liệu
+                        option.textContent = doc.info; // Hiển thị thông tin của tài liệu
+                        selectElement.appendChild(option); // Thêm option vào <select>
+                    });
+                })
+                .catch(error => {
+                    console.error('Có lỗi khi lấy dữ liệu từ API: ', error);
+                });
+        }
+
+
+
         function fetchDocuments() {
             fetch('/api/vb_di')
                 .then(response => response.json())
@@ -376,10 +415,14 @@
                             <td>${doc.so}</td>
                             <td>${doc.han}</td>
                             <td>${nguoiphutrachName}</td> <!-- Display user name -->
-                            <td><a href="${doc.lienket}" target="_blank">Link</a></td>
-                            <td><a href="${doc.link}" target="_blank">Link</a></td>
                             <td>
-                                <button class="btn btn-info btn-sm" onclick="editDocument(${doc.id}, '${doc.tenvb}', '${doc.noidung}', '${doc.ngayden}', '${doc.so}', '${doc.han}', '${doc.nguoiphutrach}', '${doc.link}','${doc.nguoiphutrach}')">Edit</button>
+                                ${doc.lienket ? `<a href="${doc.lienket}" target="_blank">Xem liên kết</a>` : 'Không có liên kết'}
+                            </td>
+                            <td>
+                                ${doc.link ? `<a href="${doc.link}" target="_blank">Xem chi tiết</a>` : 'Không có liên kết'}
+                            </td>
+                            <td>
+                                <button class="btn btn-info btn-sm" onclick="editDocument(${doc.id}, '${doc.tenvb}', '${doc.noidung}', '${doc.ngayden}', '${doc.so}', '${doc.han}', '${doc.nguoiphutrach}', '${doc.link}','${doc.nguoiphutrach}','${doc.lienket}','${doc.ngaydi}')">Edit</button>
                                 <button class="btn btn-danger btn-sm" onclick="deleteDocument(${doc.id})">Delete</button>
                             </td>
                         `;

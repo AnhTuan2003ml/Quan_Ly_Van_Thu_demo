@@ -47,6 +47,6 @@ app.use('/api/vb_di',apiVbDi);
 
 // Cài đặt cổng mà server sẽ lắng nghe
 const port = process.env.PORT || 3000;
-app.listen(port, () => {
+app.listen(port, () => {a
     console.log(`Server đang chạy trên cổng ${port}`);
 });

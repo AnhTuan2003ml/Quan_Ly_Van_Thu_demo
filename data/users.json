@@ -1,11 +1,11 @@
 [
   {
     "id": 1,
-    "name": "Nguyen Van A",
+    "name": "Nguyen Van X",
     "phone": "0123456789",
     "address": "Hà Nội",
     "email": "nguyenvana@example.com",
-    "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+    "password": "90d63fcfa028843f9e278bbf634371cb51c7490a5a8ba329c397f9035a93b3a6",
     "role": "Giám đốc",
     "status": 1
   },
@@ -15,16 +15,16 @@
     "phone": "0123456789",
     "address": "Hà Nội",
     "email": "tuankkffdnc@gmail.com",
-    "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+    "password": "90d63fcfa028843f9e278bbf634371cb51c7490a5a8ba329c397f9035a93b3a6",
     "role": "Giám đốc",
-    "status": 2
+    "status": 3
   },
   {
     "id": 3,
     "name": "Tran Thi C",
     "phone": "0912345678",
     "address": "Đà Nẵng",
-    "email": "tranthic@example.com",
+    "email": "tuankkffdnc@gmail.com",
     "password": "password789",
     "role": "Quản lý",
     "status": 2

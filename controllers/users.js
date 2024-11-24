@@ -144,3 +144,4 @@ export const deleteUsers = (req, res) => {
     writeUsers(users);
     res.json(deletedUser);
 }
+

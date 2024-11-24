@@ -210,15 +210,7 @@
                 </div>
             </div>
 
-            <footer class="footer">
-                <div class="container-fluid">
-                    <p class="copyright text-center">
-                        ©
-                        <script>document.write(new Date().getFullYear())</script> Creative Tim, made with love for a
-                        better web
-                    </p>
-                </div>
-            </footer>
+           
         </div>
     </div>
 
@@ -232,6 +224,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             fetchDocuments(); // Fetch documents when the page loads
             fetchUsers(-1);
+            fetchVBDen(-1);
 
             // Event listener for form submission
             document.getElementById('documentForm').onsubmit = function (event) {
@@ -250,7 +243,7 @@
             formData.append('so', document.getElementById('so').value);
             formData.append('han', document.getElementById('han').value);
             formData.append('nguoiphutrach', document.getElementById('nguoiphutrach').value);
-            formData.append('lienket', document.getElementById('lienket').value);
+            formData.append('lienket', document.getElementById('vblk').value);
             formData.append('ngaydi', document.getElementById('ngaydi').value);
 
             const fileInput = document.getElementById('documentFile');
@@ -307,7 +300,7 @@
             document.getElementById('oldFilePath').value = link;
             // Fetch users and set the selected user
             fetchUsers(nguoiphutrach_id);
-            fillSelectListFromAPI(lienket);
+            fetchVBDen(lienket);
 
             // Set the filename if a file is associated with the document
             const fileNameDisplay = document.getElementById('fileNameDisplay');
@@ -352,9 +345,9 @@
         }
 
         // Hàm để lấy dữ liệu từ API và điền vào danh sách chọn
-        function fillSelectListFromAPI(selectId) {
+        function fetchVBDen(selectId) {
             // Gửi yêu cầu GET tới API để lấy dữ liệu văn bản
-            fetch('api/vb_den/basic')
+            fetch('/api/vb_den/info')
                 .then(response => response.json()) // Chuyển đổi phản hồi thành JSON
                 .then(data => {
                     const selectElement = document.getElementById('vblk'); 

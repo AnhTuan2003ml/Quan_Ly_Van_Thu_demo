@@ -2,6 +2,8 @@ import { Router } from 'express';
 import { Get_vb_di, Post_vb_di, Put_vb_di, Delete, __dirname} from '../controllers/vb_di.js';
 import multer, { diskStorage } from 'multer';
 import { join } from 'path';
+import { existsSync, unlinkSync } from 'fs';
+
 
 // Định nghĩa thư mục để lưu file tải lên
 let uploadDir = join(__dirname, '../doc');

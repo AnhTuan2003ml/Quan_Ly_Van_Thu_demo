@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {Get_vb_den,Post_vb_den,Put_vb_den,Delete,__dirname,GetDocumentInfo} from '../controllers/vb_den.js';
 import multer, { diskStorage } from 'multer';
 import { join } from 'path';
+import { existsSync, unlinkSync } from 'fs';
 
 // Định nghĩa thư mục để lưu file tải lên
 let uploadDir = join(__dirname, '../doc');
@@ -26,9 +27,9 @@ const upload = multer({ storage: storage });
 
 const router = Router();
 router.get('/',Get_vb_den);
+router.get('/info', GetDocumentInfo);
 router.put('/:id', upload.single('documentFile'),Put_vb_den);
 router.post('/', upload.single('documentFile'),Post_vb_den);
 router.delete('/:id',Delete);
-router.get('/basic',GetDocumentInfo);
 
 export default router;

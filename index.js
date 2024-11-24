@@ -14,11 +14,13 @@ import { fileURLToPath } from 'url';
 
 const app = express();
 
+
 // Lấy đường dẫn thư mục hiện tại
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // Cấu hình middleware để phục vụ các file tĩnh
 app.use(express.static(path.join(__dirname, 'public'))); // Phục vụ các file tĩnh từ thư mục 'public'
 app.use('/doc', express.static(path.join(__dirname, 'doc'))); // Phục vụ các tài liệu từ thư mục 'doc'
+
 
 // Cấu hình middleware để xử lý body dữ liệu và session
 app.use(bodyParser.urlencoded({ extended: true })); // Xử lý dữ liệu URL-encoded (dành cho form)
@@ -47,6 +49,6 @@ app.use('/api/vb_di',apiVbDi);
 
 // Cài đặt cổng mà server sẽ lắng nghe
 const port = process.env.PORT || 3000;
-app.listen(port, () => {a
+app.listen(port, () => {
     console.log(`Server đang chạy trên cổng ${port}`);
 });

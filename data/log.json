@@ -80,5 +80,84 @@
     "type": "văn bản đến",
     "changes": "Thêm văn bản đến",
     "timestamp": "2024-11-18T18:23:20.822Z"
+  },
+  {
+    "id": 12,
+    "documentId": 1,
+    "type": "văn bản đi",
+    "changes": "Tệp đính kèm thay đổi; Liên kết file văn bản đến thay đổi",
+    "timestamp": "2024-11-24T15:22:30.672Z"
+  },
+  {
+    "id": 13,
+    "documentId": 1,
+    "type": "văn bản đi",
+    "changes": "Người phụ trách thay đổi từ '1' thành '2'; Tệp đính kèm thay đổi; Liên kết file văn bản đến thay đổi",
+    "timestamp": "2024-11-24T15:24:46.029Z"
+  },
+  {
+    "id": 14,
+    "documentId": 1,
+    "type": "văn bản đi",
+    "changes": "Người phụ trách thay đổi từ '2' thành '1'; Tệp đính kèm thay đổi; Liên kết file văn bản đến thay đổi",
+    "timestamp": "2024-11-24T15:27:56.475Z"
+  },
+  {
+    "id": 15,
+    "userId": 1,
+    "documentId": 1,
+    "type": "văn bản đi",
+    "changes": "Người phụ trách thay đổi từ '1' thành '2'; Tệp đính kèm thay đổi; Liên kết file văn bản đến thay đổi",
+    "timestamp": "2024-11-24T15:36:28.786Z"
+  },
+  {
+    "id": 16,
+    "documentId": 1,
+    "type": "văn bản đi",
+    "changes": "Người phụ trách thay đổi từ '2' thành '3'; Tệp đính kèm thay đổi; Liên kết file văn bản đến thay đổi",
+    "timestamp": "2024-11-24T15:38:35.553Z"
+  },
+  {
+    "id": 17,
+    "documentId": 1,
+    "type": "văn bản đi",
+    "changes": "Người phụ trách thay đổi từ '3' thành '2'; Tệp đính kèm thay đổi; Liên kết file văn bản đến thay đổi",
+    "timestamp": "2024-11-24T15:39:05.204Z"
+  },
+  {
+    "id": 18,
+    "documentId": 1,
+    "type": "văn bản đi",
+    "changes": "Người phụ trách thay đổi từ '2' thành '3'; Tệp đính kèm thay đổi; Liên kết file văn bản đến thay đổi",
+    "timestamp": "2024-11-24T16:21:33.193Z"
+  },
+  {
+    "id": 19,
+    "documentId": 11,
+    "type": "văn bản đi",
+    "changes": "Thêm văn bản đi",
+    "timestamp": "2024-11-24T16:31:48.128Z"
+  },
+  {
+    "id": 20,
+    "documentId": 11,
+    "type": "văn bản đi",
+    "changes": "Số văn bản thay đổi từ 'null' thành ''; Tệp đính kèm thay đổi; Liên kết file văn bản đến thay đổi",
+    "timestamp": "2024-11-24T16:33:03.949Z"
+  },
+  {
+    "id": 21,
+    "documentId": 11,
+    "type": "văn bản đi",
+    "changes": "Số văn bản thay đổi từ 'null' thành '1'; Tệp đính kèm thay đổi; Liên kết file văn bản đến thay đổi",
+    "timestamp": "2024-11-24T16:38:04.222Z"
+  },
+  {
+    "id": 22,
+    "userId": 1,
+    "documentId": 1,
+    "type": "văn bản đi",
+    "changes": "Người phụ trách thay đổi từ '3' thành '2'; Tệp đính kèm thay đổi; Liên kết file văn bản đến thay đổi",
+    "timestamp": "2024-11-24T19:24:08.227Z"
   }
 ]

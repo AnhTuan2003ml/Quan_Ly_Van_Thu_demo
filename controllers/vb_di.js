@@ -115,9 +115,9 @@ export const Put_vb_di = (req, res) => {
                     timestamp: timestamp
                 });
             }
-            console.log(documentId, tenvb, noidung, ngayden, parseInt(so), han, parseInt(nguoiphutrach), filePath_doc,lienket,ngaydi);
+            // console.log(documentId, tenvb, noidung, ngayden, parseInt(so), han, parseInt(nguoiphutrach), filePath_doc,lienket,ngaydi);
             // Cập nhật thông tin văn bản
-            updateDocument_di(documentId, tenvb, noidung, ngayden, parseInt(so), han, parseInt(nguoiphutrach), filePath_doc, filePath,lienket,ngaydi)
+            updateDocument_di(documentId, tenvb, noidung, ngayden, parseInt(so), han, parseInt(nguoiphutrach), filePath_doc, filePath, parseInt(lienket),ngaydi)
                 .then(() => {
                     res.json({ success: true, message: 'Văn bản đã được cập nhật thành công.' });
                 })

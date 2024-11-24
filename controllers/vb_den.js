@@ -43,7 +43,7 @@ export const GetDocumentInfo = (req, res) => {
             info: info
         };
     });
-    console.log(documentInfo);
+    // console.log(documentInfo);
     // Trả về mảng documentInfo dưới dạng JSON
     res.json(documentInfo);
 };

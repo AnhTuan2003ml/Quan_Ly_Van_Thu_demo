@@ -5,7 +5,7 @@ import { addLogData } from './log.js'; // Import đúng file log.js trong cùng 
 import { getEmailById } from './users.js';
 import { testSendEmail_multi, testSendEmail_single } from "./sendEmail.js";
 import { readJSONFile, readJSONFileID, writeJSONFile, updateDocument_di, addDocument_di } from '../Utils/JsonFile.js';
-
+import {Get_link_vb_den} from './vb_den.js';
 
 // Lấy đường dẫn thư mục hiện tại, sửa lại để không có dấu '\' ở đầu
 export const __dirname = path.dirname(new URL(import.meta.url).pathname);
@@ -17,17 +17,45 @@ if (filePath.startsWith('\\')) {
 }
 
 
-export const Get_vb_di = (req, res) => {
+export const Get_vb_di = async (req, res) => {
     const userId = req.session.userId;
     const userRole = req.session.userRole;
 
     const data = readJSONFile(filePath);
+
+    // Sử dụng async/await để xử lý bất đồng bộ
+    const updatedData = await Promise.all(data.map(async (doc) => {
+        if (doc.lienket !== null) {
+            try {
+                // Gọi Get_link_vb_den với ID của lienket
+                const linkData = await Get_link_vb_den(doc.lienket);
+
+                // Nếu có lỗi, giữ lienket là null, nếu không thay thế lienket bằng link
+                if (linkData.error) {
+                    console.error(`Error fetching link for document with ID: ${doc.lienket}`, linkData.error);
+                    return { ...doc, lienket: null };  // Hoặc giá trị mặc định khác
+                }
+
+                return { ...doc, lienket: linkData.link };
+            } catch (error) {
+                // Xử lý lỗi nếu gặp sự cố
+                console.error(`Error fetching link for document with ID: ${doc.lienket}`, error);
+                return { ...doc, lienket: null }; // Hoặc giá trị mặc định khác
+            }
+        }
+        return doc;
+    }));
+
+    // Nếu người dùng là 'user', chỉ trả về các tài liệu được giao cho họ
     if (userRole === 'user') {
-        const userDocuments = data.filter(doc => doc.nguoiphutrach === userId);
+        const userDocuments = updatedData.filter(doc => doc.nguoiphutrach === userId);
         return res.json(userDocuments);
     }
-    return res.json(data);
-}
+
+    // Nếu là admin, trả về tất cả dữ liệu đã cập nhật
+    return res.json(updatedData);
+};
+
 
 export const Put_vb_di = (req, res) => {
     const documentId = parseInt(req.params.id);

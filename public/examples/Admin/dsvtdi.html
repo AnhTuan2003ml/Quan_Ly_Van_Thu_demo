@@ -38,13 +38,13 @@
                             <p>User Profile</p>
                         </a>
                     </li>
-                    <li class="nav-item active">
+                    <li>
                         <a class="nav-link" href="./dsvtden.html">
                             <i class="nc-icon nc-notes"></i>
                             <p>Danh sách văn thư đến</p>
                         </a>
                     </li>
-                    <li>
+                    <li class="nav-item active">
                         <a class="nav-link" href="./dsvtdi.html">
                             <i class="nc-icon nc-paper-2"></i>
                             <p>Danh sách văn thư đi</p>
@@ -106,7 +106,7 @@
 
             <div class="content">
                 <div class="container mt-5">
-                    <h2>Danh sách văn bản đến</h2>
+                    <h2>Danh sách văn bản đi</h2>
 
                     <!-- Add and Search Controls -->
                     <div class="d-flex justify-content-between mb-3">
@@ -266,7 +266,7 @@
             const documentId = document.getElementById('documentId').value;
             const isUpdate = !!documentId; // Xác định isUpdate dựa trên việc có documentId hay không
 
-            const url = isUpdate ? `/api/vb_den/${documentId}` : '/api/vb_den';
+            const url = isUpdate ? `/api/vb_di/${documentId}` : '/api/vb_di';
             const method = isUpdate ? 'PUT' : 'POST';
 
             fetch(url, {
@@ -348,7 +348,7 @@
         }
 
         function fetchDocuments() {
-            fetch('/api/vb_den')
+            fetch('/api/vb_di')
                 .then(response => response.json())
                 .then(data => {
                     const documentTableBody = document.querySelector('#documentTable tbody');
@@ -376,7 +376,7 @@
                             <td>${doc.so}</td>
                             <td>${doc.han}</td>
                             <td>${nguoiphutrachName}</td> <!-- Display user name -->
-                            <td>${nguoiphutrachName}</td>
+                            <td><a href="${doc.lienket}" target="_blank">Link</a></td>
                             <td><a href="${doc.link}" target="_blank">Link</a></td>
                             <td>
                                 <button class="btn btn-info btn-sm" onclick="editDocument(${doc.id}, '${doc.tenvb}', '${doc.noidung}', '${doc.ngayden}', '${doc.so}', '${doc.han}', '${doc.nguoiphutrach}', '${doc.link}','${doc.nguoiphutrach}')">Edit</button>
@@ -395,7 +395,7 @@
         // Delete document
         function deleteDocument(id) {
             if (confirm('Bạn có chắc chắn muốn xóa văn bản này?')) {
-                fetch(`/api/vb_den/${id}`, { method: 'DELETE' })
+                fetch(`/api/vb_di/${id}`, { method: 'DELETE' })
                     .then(() => fetchDocuments())
                     .catch(error => console.error('Error deleting document:', error));
             }

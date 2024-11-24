@@ -16,9 +16,22 @@ if (filePath.startsWith('\\')) {
     filePath = filePath.substring(1);
 }
 
-export const Get_basic_vb_den = (req,res) =>{
-    
-}
+export const Get_link_vb_den = async (id) => {
+    const data = readJSONFile(filePath);
+
+    // Tìm văn bản có ID trùng với id
+    const document = data.find(doc => doc.id === id);
+    // console.log(id,document)
+    // Nếu tìm thấy văn bản, trả về link của nó, nếu không trả về lỗi
+    if (document) {
+        return { link: document.link };
+    } else {
+        // Trả về một đối tượng có lỗi khi không tìm thấy tài liệu
+        return { link: null, error: 'Document not found' };
+    }
+};
+
+
 
 export const Get_vb_den = (req, res) => {
     const userId = req.session.userId;

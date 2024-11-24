@@ -6,6 +6,7 @@ import session from 'express-session';
 import apiVbDen from './routes/vb_den.js';
 import apiAuth from './routes/auth.js';
 import users from './routes/users.js';
+import apiVbDi from './routes/vb_di.js';
 
 import { fileURLToPath } from 'url';
 
@@ -41,7 +42,7 @@ app.get('/', (req, res) => {
 app.use('/api/users', users)
 app.use('/api/vb_den', apiVbDen);   // API cho văn bản đến
 app.use('/api/auth', apiAuth);
-
+app.use('/api/vb_di',apiVbDi);
 // app.use('/api/log', apiLog()); 
 
 // Cài đặt cổng mà server sẽ lắng nghe

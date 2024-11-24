@@ -88,3 +88,64 @@ export function addDocument_den(tenvb, noidung, ngayden, so, han, nguoiphutrach,
         }
     });
 }
+
+// Cập nhật thông tin văn bản vào JSON
+export function updateDocument_di(id, tenvb, noidung, ngayden, so, han, nguoiphutrach, link, filePath,lienket,ngaydi) {
+    console.log(id, tenvb, noidung, ngayden, so, han, nguoiphutrach, link,lienket,ngaydi);
+    return new Promise((resolve, reject) => {
+        const data = readJSONFile(filePath);
+        const documentIndex = data.findIndex(doc => doc.id === id);
+        if (documentIndex === -1) return reject('Document not found');
+        data[documentIndex] = {
+            ...data[documentIndex],
+            tenvb,
+            lienket,
+            ngayden,
+            ngaydi,
+            so,
+            han,
+            nguoiphutrach,
+            noidung,
+            link
+        };
+        writeJSONFile(filePath, data);
+        resolve();
+    });
+}
+
+// Thêm thông tin văn bản vào JSON
+export function addDocument_di(tenvb, noidung, ngayden, so, han, nguoiphutrach, link, filePath,lienket,ngaydi) {
+    return new Promise((resolve, reject) => {
+        try {
+            const data = readJSONFile(filePath);  // Đọc dữ liệu hiện tại từ file JSON
+
+            // Tạo ID mới cho văn bản (ID là số thứ tự tăng dần)
+            const newId = data.length > 0 ? data[data.length - 1].id + 1 : 1;  // Tính ID mới dựa trên ID cuối cùng
+
+            // Tạo đối tượng văn bản mới
+            const newDocument = {
+                id: newId,  // ID mới
+                tenvb: checkEmpty(tenvb),
+                lienket: checkEmpty(lienket),
+                ngayden: checkEmpty(ngayden),
+                ngaydi:checkEmpty(ngaydi),
+                so: checkEmpty(so),
+                han: checkEmpty(han),
+                nguoiphutrach: checkEmpty(nguoiphutrach),
+                noidung: checkEmpty(noidung),
+                link: checkEmpty(link)
+            };
+
+            // Thêm văn bản mới vào mảng dữ liệu
+            data.push(newDocument);
+
+            // Ghi lại dữ liệu vào file JSON
+            writeJSONFile(filePath, data);
+
+            // Trả về ID của văn bản mới thêm
+            resolve(newDocument.id);
+        } catch (error) {
+            reject('Lỗi khi thêm văn bản: ' + error.message);
+        }
+    });
+}

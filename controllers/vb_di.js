@@ -1,26 +1,23 @@
 
-import { existsSync, unlinkSync} from 'fs';
+import { existsSync, unlinkSync } from 'fs';
 import path from 'path';
 import { addLogData } from './log.js'; // Import đúng file log.js trong cùng thư mục
 import { getEmailById } from './users.js';
 import { testSendEmail_multi, testSendEmail_single } from "./sendEmail.js";
-import { readJSONFile, readJSONFileID, writeJSONFile, updateDocument_den,addDocument_den} from '../Utils/JsonFile.js';
+import { readJSONFile, readJSONFileID, writeJSONFile, updateDocument_di, addDocument_di } from '../Utils/JsonFile.js';
 
 
 // Lấy đường dẫn thư mục hiện tại, sửa lại để không có dấu '\' ở đầu
 export const __dirname = path.dirname(new URL(import.meta.url).pathname);
 // Xử lý đường dẫn sao cho hợp lệ trên hệ thống Windows
-export let filePath = path.join(__dirname, '../data/vb_den.json');
+export let filePath = path.join(__dirname, '../data/vb_di.json');
 // Đảm bảo đường dẫn không có dấu '/' thừa ở đầu
 if (filePath.startsWith('\\')) {
     filePath = filePath.substring(1);
 }
 
-export const Get_basic_vb_den = (req,res) =>{
-    
-}
 
-export const Get_vb_den = (req, res) => {
+export const Get_vb_di = (req, res) => {
     const userId = req.session.userId;
     const userRole = req.session.userRole;
 
@@ -32,14 +29,14 @@ export const Get_vb_den = (req, res) => {
     return res.json(data);
 }
 
-export const Put_vb_den = (req, res) => {
+export const Put_vb_di = (req, res) => {
     const documentId = parseInt(req.params.id);
-    const { tenvb, noidung, ngayden, so, han, nguoiphutrach } = req.body;
+    const { tenvb, noidung, ngayden, so, han, nguoiphutrach,lienket,ngaydi } = req.body;
     const userId = req.session.userId;
     const documentFile = req.file; // Tệp mới nếu có
     // Kiểm tra nếu không có tệp mới, sử dụng tệp cũ
     const filePath_doc = documentFile ? `../../doc/${path.basename(documentFile.filename)}` : req.body.oldFilePath || null;
-    console.log(documentId,tenvb, noidung, ngayden, so, han, nguoiphutrach);
+    console.log(tenvb, noidung, ngayden, so, han, nguoiphutrach, lienket, ngaydi);
     // Tìm thông tin văn bản cũ (có thể lấy từ cơ sở dữ liệu hoặc từ file JSON)
     readJSONFileID(filePath, documentId) // Giả sử bạn có hàm này để lấy thông tin văn bản cũ
         .then(oldDocument => {
@@ -70,22 +67,28 @@ export const Put_vb_den = (req, res) => {
             if (oldDocument.filePath !== filePath_doc) {
                 changes.push(`Tệp đính kèm thay đổi`);
             }
+            if(oldDocument.lienket !== lienket) {
+                changes.push(`Liên kết file văn bản đến thay đổi`);
+            }
+            if (oldDocument.ngaydi !== ngaydi) {
+                changes.push(`Ngày đi thay đổi`);
+            }
 
             // Nếu có thay đổi, ghi log
             if (changes.length > 0) {
                 const timestamp = new Date().toISOString(); // Thời gian thay đổi
-                console.log(userId, documentId, 'văn bản đến', changes.join('; '), timestamp);
+                console.log(userId, documentId, 'văn bản đi', changes.join('; '), timestamp);
                 addLogData({
                     userId: userId,
                     documentId: documentId,
-                    type: 'văn bản đến',
+                    type: 'văn bản đi',
                     changes: changes.join('; '),
                     timestamp: timestamp
                 });
             }
-            console.log(documentId, tenvb, noidung, ngayden, parseInt(so), han, parseInt(nguoiphutrach), filePath_doc);
+            console.log(documentId, tenvb, noidung, ngayden, parseInt(so), han, parseInt(nguoiphutrach), filePath_doc,lienket,ngaydi);
             // Cập nhật thông tin văn bản
-            updateDocument_den(documentId, tenvb, noidung, ngayden, parseInt(so), han, parseInt(nguoiphutrach), filePath_doc,filePath)
+            updateDocument_di(documentId, tenvb, noidung, ngayden, parseInt(so), han, parseInt(nguoiphutrach), filePath_doc, filePath,lienket,ngaydi)
                 .then(() => {
                     res.json({ success: true, message: 'Văn bản đã được cập nhật thành công.' });
                 })
@@ -98,8 +101,8 @@ export const Put_vb_den = (req, res) => {
         });
 }
 
-export const Post_vb_den = (req,res) => {
-    const { tenvb, noidung, ngayden, so, han, nguoiphutrach } = req.body;
+export const Post_vb_di = (req, res) => {
+    const { tenvb, noidung, ngayden, so, han, nguoiphutrach,lienket,ngaydi } = req.body;
     const documentFile = req.file; // Tệp mới nếu có
     const userId = req.session.userId;
     // Kiểm tra nếu không có tệp mới, sử dụng tệp cũ
@@ -109,21 +112,21 @@ export const Post_vb_den = (req,res) => {
     testSendEmail_single(newEmail);
 
     // Thêm văn bản mới vào cơ sở dữ liệu (hoặc file)
-    addDocument_den(tenvb, noidung, ngayden, parseInt(so), han, parseInt(nguoiphutrach), filePath_doc,filePath)
+    addDocument_di(tenvb, noidung, ngayden, parseInt(so), han, parseInt(nguoiphutrach), filePath_doc, filePath,parseInt(lienket),ngaydi)
         .then((documentId) => {
             const id_doc = documentId;
             const timestamp = new Date().toISOString(); // Thời gian thay đổi
 
             // Trả về phản hồi thành công trước khi gọi addLogData()
-            res.json({ success: true, message: 'Văn bản đến đã được thêm thành công.', documentId: id_doc });
+            res.json({ success: true, message: 'Văn bản đi đã được thêm thành công.', documentId: id_doc });
 
             // Ghi log vào cơ sở dữ liệu (hoặc file) sau khi phản hồi đã được gửi
             // Lưu ý là không gọi res.json() nữa sau khi đã gửi phản hồi
             addLogData({
                 userId: userId,
                 documentId: id_doc,
-                type: 'văn bản đến',
-                changes: 'Thêm văn bản đến',
+                type: 'văn bản đi',
+                changes: 'Thêm văn bản đi',
                 timestamp: timestamp
             }).catch(err => {
                 console.error('Có lỗi xảy ra khi thêm log:', err);
@@ -138,7 +141,7 @@ export const Post_vb_den = (req,res) => {
         });
 }
 
-export const Delete = (req,res) =>{
+export const Delete = (req, res) => {
     const documentId = parseInt(req.params.id); // Chuyển ID từ chuỗi sang số
     console.log("Văn bản cần xóa:", documentId);
 

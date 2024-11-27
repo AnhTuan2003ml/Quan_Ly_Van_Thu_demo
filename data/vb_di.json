@@ -7,7 +7,7 @@
     "ngaydi": "2024-11-15",
     "so": 1,
     "han": "2024-11-17",
-    "nguoiphutrach": 2,
+    "nguoiphutrach": 1,
     "noidung": "Nội dung văn bản đi 1",
     "link": "null"
   },
@@ -130,5 +130,17 @@
     "nguoiphutrach": 2,
     "noidung": "aaaa",
     "link": "../../doc/db.txt"
+  },
+  {
+    "id": 12,
+    "tenvb": "oke",
+    "lienket": 5,
+    "ngayden": "2024-11-13",
+    "ngaydi": "2024-11-16",
+    "so": 2,
+    "han": "2024-02-11",
+    "nguoiphutrach": 6,
+    "noidung": "hoàn thành ngay cho tôi",
+    "link": "../../doc/package-lock.json"
   }
 ]

@@ -3,7 +3,7 @@ import {Get_vb_den,Post_vb_den,Put_vb_den,Delete,__dirname,GetDocumentInfo} from
 import multer, { diskStorage } from 'multer';
 import { join } from 'path';
 import { existsSync, unlinkSync } from 'fs';
-
+import { ensureAuthenticated } from '../middleware/Middleware.js';
 // Định nghĩa thư mục để lưu file tải lên
 let uploadDir = join(__dirname, '../doc');
 if (uploadDir.startsWith('\\')) {
@@ -26,10 +26,10 @@ const storage = diskStorage({
 const upload = multer({ storage: storage });
 
 const router = Router();
-router.get('/',Get_vb_den);
-router.get('/info', GetDocumentInfo);
-router.put('/:id', upload.single('documentFile'),Put_vb_den);
-router.post('/', upload.single('documentFile'),Post_vb_den);
-router.delete('/:id',Delete);
+router.get('/',ensureAuthenticated,Get_vb_den);
+router.get('/info', ensureAuthenticated, GetDocumentInfo);
+router.put('/:id', ensureAuthenticated, upload.single('documentFile'),Put_vb_den);
+router.post('/', ensureAuthenticated, upload.single('documentFile'),Post_vb_den);
+router.delete('/:id', ensureAuthenticated, Delete);
 
 export default router;

@@ -3,6 +3,7 @@ import { Get_vb_di, Post_vb_di, Put_vb_di, Delete, __dirname} from '../controlle
 import multer, { diskStorage } from 'multer';
 import { join } from 'path';
 import { existsSync, unlinkSync } from 'fs';
+import { ensureAuthenticated } from '../middleware/Middleware.js';
 
 
 // Định nghĩa thư mục để lưu file tải lên
@@ -27,9 +28,9 @@ const storage = diskStorage({
 const upload = multer({ storage: storage });
 
 const router = Router();
-router.get('/', Get_vb_di);
-router.put('/:id', upload.single('documentFile'), Put_vb_di);
-router.post('/', upload.single('documentFile'), Post_vb_di);
-router.delete('/:id', Delete);
+router.get('/', ensureAuthenticated, Get_vb_di);
+router.put('/:id', ensureAuthenticated, upload.single('documentFile'), Put_vb_di);
+router.post('/', ensureAuthenticated, upload.single('documentFile'), Post_vb_di);
+router.delete('/:id', ensureAuthenticated, Delete);
 
 export default router;

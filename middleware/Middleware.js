@@ -1,5 +1,5 @@
 // Middleware kiểm tra đăng nhập
-function ensureAuthenticated(req, res, next) {
+export function ensureAuthenticated(req, res, next) {
     // console.log(req.session); // Kiểm tra session có tồn tại không
     if (!req.session.userId) {
         return res.status(401).json({ success: false, message: 'Bạn cần đăng nhập trước' });

@@ -133,6 +133,7 @@
                                 <th>Người Phụ Trách</th>
                                 <th>Văn Bản liên kết</th>
                                 <th>Link Văn Bản</th>
+                                <th>Trạng Thái</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -193,25 +194,37 @@
                                         <!-- Các option sẽ được điền tự động ở đây -->
                                     </select>
                                 </div>
+
                                 <div class="form-group">
-                                    <label for="documentFile">Tải lên văn bản:</label>
-                                    <input type="file" class="form-control" id="documentFile" name="documentFile">
-                                    <small id="fileNameDisplay" class="form-text text-muted"></small>
-                                    <!-- To display the file name -->
-                                    <input type="hidden" id="oldFilePath" name="oldFilePath" value="">
-                                    <!-- Đường dẫn cũ -->
+                                    <label for="status">Trạng Thái:</label>
+                                    <select id="status" class="form-control" onchange="updateStatus()">
+                                        <option value="not completed">Chưa hoàn thành</option>
+                                        <option value="completed">Đã hoàn thành</option>
+                                    </select>
                                 </div>
 
-                                <button type="submit" class="btn btn-primary" id="submitBtn"
-                                    onclick="saveDocument()">Lưu Văn Bản</button>
-                            </form>
+
                         </div>
+
+                        <div class="form-group">
+                            <label for="documentFile">Tải lên văn bản:</label>
+                            <input type="file" class="form-control" id="documentFile" name="documentFile">
+                            <small id="fileNameDisplay" class="form-text text-muted"></small>
+                            <!-- To display the file name -->
+                            <input type="hidden" id="oldFilePath" name="oldFilePath" value="">
+                            <!-- Đường dẫn cũ -->
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" id="submitBtn" onclick="saveDocument()">Lưu Văn
+                            Bản</button>
+                        </form>
                     </div>
                 </div>
             </div>
-
-           
         </div>
+
+
+    </div>
     </div>
 
     <!-- Core JavaScript Files -->
@@ -245,6 +258,7 @@
             formData.append('nguoiphutrach', document.getElementById('nguoiphutrach').value);
             formData.append('lienket', document.getElementById('vblk').value);
             formData.append('ngaydi', document.getElementById('ngaydi').value);
+            formData.append('status', document.getElementById('status').value);
 
             const fileInput = document.getElementById('documentFile');
             const oldFilePathInput = document.getElementById('oldFilePath'); // Trường lưu đường dẫn cũ
@@ -286,7 +300,7 @@
 
 
 
-        function editDocument(id, ten, noidung, ngayden, so, han, nguoiphutrach, link, nguoiphutrach_id, lienket, ngaydi) {
+        function editDocument(id, ten, noidung, ngayden, so, han, nguoiphutrach, link, nguoiphutrach_id, lienket, ngaydi, status) {
             document.getElementById('documentId').value = id;
             document.getElementById('tenvb').value = ten;
             document.getElementById('noidung').value = noidung;
@@ -298,6 +312,7 @@
             document.getElementById('vblk').value = lienket;
             document.getElementById('ngaydi').value = ngaydi;
             document.getElementById('oldFilePath').value = link;
+            document.getElementById('status').value = status;
             // Fetch users and set the selected user
             fetchUsers(nguoiphutrach_id);
             fetchVBDen(lienket);
@@ -312,6 +327,16 @@
 
             // Show the modal
             $('#documentModal').modal('show');
+        }
+
+        function updateStatus() {
+            // Lấy giá trị của trạng thái đã chọn
+            const statusSelect = document.getElementById('status');
+            const selectedStatus = statusSelect.value;
+
+            // Hiển thị trạng thái đã chọn
+            const statusDisplay = document.getElementById('statusDisplay');
+            statusDisplay.innerText = `Trạng Thái Hiện Tại: ${selectedStatus}`;
         }
         // Hàm lấy danh sách người dùng và thiết lập người phụ trách mặc định
         function fetchUsers(nguoiphutrach_id) {
@@ -350,7 +375,7 @@
             fetch('/api/vb_den/info')
                 .then(response => response.json()) // Chuyển đổi phản hồi thành JSON
                 .then(data => {
-                    const selectElement = document.getElementById('vblk'); 
+                    const selectElement = document.getElementById('vblk');
                     console.log(data);
                     // Xóa tất cả các option hiện tại trong select (để không bị trùng lặp)
                     selectElement.innerHTML = '';
@@ -414,8 +439,11 @@
                             <td>
                                 ${doc.link ? `<a href="${doc.link}" target="_blank">Xem chi tiết</a>` : 'Không có liên kết'}
                             </td>
+                                ${doc.status}
                             <td>
-                                <button class="btn btn-info btn-sm" onclick="editDocument(${doc.id}, '${doc.tenvb}', '${doc.noidung}', '${doc.ngayden}', '${doc.so}', '${doc.han}', '${doc.nguoiphutrach}', '${doc.link}','${doc.nguoiphutrach}','${doc.lienket}','${doc.ngaydi}')">Edit</button>
+                            </td>
+                            <td>
+                                <button class="btn btn-info btn-sm" onclick="editDocument(${doc.id}, '${doc.tenvb}', '${doc.noidung}', '${doc.ngayden}', '${doc.so}', '${doc.han}', '${doc.nguoiphutrach}', '${doc.link}','${doc.nguoiphutrach}','${doc.lienket}','${doc.ngaydi}','${doc.status}')">Edit</button>
                                 <button class="btn btn-danger btn-sm" onclick="deleteDocument(${doc.id})">Delete</button>
                             </td>
                         `;
@@ -448,6 +476,7 @@
             document.getElementById('nguoiphutrach').value = '';
             document.getElementById('documentFile').value = ''; // Clear file input
             document.getElementById('oldFilePath').value = ''; // Clear file input
+            document.getElementById('status').value = '';
         }
 
     </script>

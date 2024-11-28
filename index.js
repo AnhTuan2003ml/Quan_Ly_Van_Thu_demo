@@ -10,7 +10,8 @@ import apiVbDi from './routes/vb_di.js';
 import apiLog from './routes/log.js';
 
 import { fileURLToPath } from 'url';
-
+import { checkDeadlines as checkInboundDeadlines } from './controllers/vb_den.js'; // Nhập hàm kiểm tra văn bản đến
+import { checkDeadlines as checkOutboundDeadlines } from './controllers/vb_di.js'; // Nhập hàm kiểm tra văn bản đi
 
 
 const app = express();
@@ -49,8 +50,52 @@ app.use('/api/vb_di',apiVbDi);
 app.use('/api/log',apiLog);
 
 
+
+
+
+
+function scheduleDailyCheck() {
+    // Hàm để tính toán thời gian đến 6 giờ sáng
+    const now = new Date();
+    const firstRun = new Date();
+
+    // Đặt thời gian cho lần chạy đầu tiên vào 6 giờ sáng
+    firstRun.setHours(6, 0, 0, 0);
+
+    // Nếu thời gian hiện tại đã qua 6 giờ sáng, lên lịch cho ngày mai
+    if (now > firstRun) {
+        firstRun.setDate(firstRun.getDate() + 1);
+    }
+
+    // Tính toán thời gian còn lại đến 6 giờ sáng
+    const timeUntilFirstRun = firstRun - now;
+
+    // Thiết lập timeout để gọi hàm kiểm tra hạn và sau đó lặp lại mỗi 24 giờ
+    setTimeout(() => {
+        checkInboundDeadlines;
+        checkOutboundDeadlines // Gọi hàm kiểm tra ngay lập tức
+        setInterval(checkDeadlines, 24 * 60 * 60 * 1000); // Lặp lại hàng ngày
+    }, timeUntilFirstRun);
+
+
+
+    // Kiểm tra ngay lập tức
+    // checkInboundDeadlines();
+    // checkOutboundDeadlines();
+
+    // // Thiết lập interval để kiểm tra mỗi 60 giây (1 phút)
+    // setInterval(async () => {
+    //     await checkInboundDeadlines();
+    //     await checkOutboundDeadlines();
+    // }, 60 * 1000); // 60 giây
+}
+
+// Gọi hàm lên lịch
+scheduleDailyCheck();
 // Cài đặt cổng mà server sẽ lắng nghe
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Server đang chạy trên cổng ${port}`);
 });
+
+

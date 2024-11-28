@@ -1,92 +1,90 @@
 [
   {
     "id": 1,
-    "tenvb": "Văn bản 2",
-    "noidung": "Nội dung văn bản 2",
+    "tenvb": "Document 2",
+    "noidung": "Content of document 2",
     "ngayden": "2024-11-13",
     "so": 5,
-    "han": "2024-11-18",
+    "han": "2024-11-28",
     "nguoiphutrach": 2,
-    "link": "null"
+    "link": "null",
+    "status": "completed"
   },
   {
     "id": 2,
-    "tenvb": "Văn bản 5",
-    "noidung": "Nội dung văn bản 5",
+    "tenvb": "Document 5",
+    "noidung": "Content of document 5",
     "ngayden": "2024-11-10",
     "so": 5,
     "han": "2024-11-25",
     "nguoiphutrach": 2,
-    "link": "../../doc/ADN.docx"
+    "link": "../../doc/ADN.docx",
+    "status": "not completed"
   },
   {
     "id": 3,
-    "tenvb": "Văn bản 6",
-    "noidung": "Nội dung văn bản 6",
+    "tenvb": "Document 6",
+    "noidung": "Content of document 6",
     "ngayden": "2024-11-09",
     "so": 6,
     "han": "2024-11-21",
     "nguoiphutrach": 2,
-    "link": null
+    "link": null,
+    "status": "not completed"
   },
   {
     "id": 4,
-    "tenvb": "Văn bản 7",
-    "noidung": "Nội dung văn bản 7",
+    "tenvb": "Document 7",
+    "noidung": "Content of document 7",
     "ngayden": "2024-11-08",
     "so": 7,
     "han": "2024-11-30",
     "nguoiphutrach": 2,
-    "link": null
+    "link": null,
+    "status": "not completed"
   },
   {
     "id": 5,
-    "tenvb": "Văn bản 8",
-    "noidung": "Nội dung văn bản 8",
+    "tenvb": "Document 8",
+    "noidung": "Content of document 8",
     "ngayden": "2024-11-07",
     "so": 8,
     "han": "2024-11-27",
     "nguoiphutrach": 2,
-    "link": null
+    "link": null,
+    "status": "completed"
   },
   {
     "id": 6,
-    "tenvb": "Văn bản 9",
-    "noidung": "Nội dung văn bản 9",
+    "tenvb": "Document 9",
+    "noidung": "Content of document 9",
     "ngayden": "2024-11-06",
     "so": 9,
     "han": "2024-11-23",
     "nguoiphutrach": 2,
-    "link": null
+    "link": null,
+    "status": "not completed"
   },
   {
     "id": 7,
-    "tenvb": "Văn bản 10",
-    "noidung": "Nội dung văn bản 10",
+    "tenvb": "Document 10",
+    "noidung": "Content of document 10",
     "ngayden": "2024-11-05",
     "so": 10,
     "han": "2024-11-28",
     "nguoiphutrach": 10,
-    "link": null
+    "link": null,
+    "status": "not completed"
   },
   {
     "id": 8,
     "tenvb": "Văn bản 1",
-    "noidung": null,
-    "ngayden": null,
-    "so": 3,
-    "han": null,
-    "nguoiphutrach": 2,
-    "link": null
-  },
-  {
-    "id": 9,
-    "tenvb": "Văn bản 1",
-    "noidung": "aaa",
+    "noidung": "aaaaaaaaa",
     "ngayden": "2003-10-11",
-    "so": 3,
+    "so": 1,
     "han": "2003-11-11",
     "nguoiphutrach": 2,
-    "link": null
+    "link": null,
+    "status": "not completed"
   }
 ]

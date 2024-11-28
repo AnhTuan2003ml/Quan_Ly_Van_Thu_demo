@@ -4,7 +4,7 @@ import path from 'path';
 import { addLogData } from './log.js'; // Import đúng file log.js trong cùng thư mục
 import { getEmailById } from './users.js';
 import { testSendEmail_multi, testSendEmail_single } from "./sendEmail.js";
-import { readJSONFile, readJSONFileID, writeJSONFile, updateDocument_di, addDocument_di } from '../Utils/JsonFile.js';
+import { readJSONFile, readJSONFileID, writeJSONFile, updateDocument_di, addDocument_di, daysUntilDeadline } from '../Utils/JsonFile.js';
 import {Get_link_vb_den} from './vb_den.js';
 
 // Lấy đường dẫn thư mục hiện tại, sửa lại để không có dấu '\' ở đầu
@@ -60,7 +60,7 @@ export const Get_vb_di = async (req, res) => {
 
 export const Put_vb_di = (req, res) => {
     const documentId = parseInt(req.params.id);
-    const { tenvb, noidung, ngayden, so, han, nguoiphutrach,lienket,ngaydi } = req.body;
+    const { tenvb, noidung, ngayden, so, han, nguoiphutrach,lienket,ngaydi,status} = req.body;
     const userId = req.session.userId;
     const documentFile = req.file; // Tệp mới nếu có
     // Kiểm tra nếu không có tệp mới, sử dụng tệp cũ
@@ -93,10 +93,10 @@ export const Put_vb_di = (req, res) => {
                 const newEmail = getEmailById(nguoiphutrach)
                 testSendEmail_multi(oldEmail, newEmail);
             }
-            if (oldDocument.filePath !== filePath_doc) {
+            if (oldDocument.filePath !== filePath_doc && oldDocument.filePath !== null) {
                 changes.push(`Tệp đính kèm thay đổi`);
             }
-            if(oldDocument.lienket !== lienket) {
+            if (oldDocument.lienket !== lienket && oldDocument.lienket !== null) {
                 changes.push(`Liên kết file văn bản đến thay đổi`);
             }
             if (oldDocument.ngaydi !== ngaydi) {
@@ -117,7 +117,7 @@ export const Put_vb_di = (req, res) => {
             }
             // console.log(documentId, tenvb, noidung, ngayden, parseInt(so), han, parseInt(nguoiphutrach), filePath_doc,lienket,ngaydi);
             // Cập nhật thông tin văn bản
-            updateDocument_di(documentId, tenvb, noidung, ngayden, parseInt(so), han, parseInt(nguoiphutrach), filePath_doc, filePath, parseInt(lienket),ngaydi)
+            updateDocument_di(documentId, tenvb, noidung, ngayden, parseInt(so), han, parseInt(nguoiphutrach), filePath_doc, filePath, parseInt(lienket),ngaydi,status)
                 .then(() => {
                     res.json({ success: true, message: 'Văn bản đã được cập nhật thành công.' });
                 })
@@ -131,7 +131,7 @@ export const Put_vb_di = (req, res) => {
 }
 
 export const Post_vb_di = (req, res) => {
-    const { tenvb, noidung, ngayden, so, han, nguoiphutrach,lienket,ngaydi } = req.body;
+    const { tenvb, noidung, ngayden, so, han, nguoiphutrach,lienket,ngaydi,status } = req.body;
     const documentFile = req.file; // Tệp mới nếu có
     const userId = req.session.userId;
     // Kiểm tra nếu không có tệp mới, sử dụng tệp cũ
@@ -141,7 +141,7 @@ export const Post_vb_di = (req, res) => {
     testSendEmail_single(newEmail);
 
     // Thêm văn bản mới vào cơ sở dữ liệu (hoặc file)
-    addDocument_di(tenvb, noidung, ngayden, parseInt(so), han, parseInt(nguoiphutrach), filePath_doc, filePath,parseInt(lienket),ngaydi)
+    addDocument_di(tenvb, noidung, ngayden, parseInt(so), han, parseInt(nguoiphutrach), filePath_doc, filePath,parseInt(lienket),ngaydi,status)
         .then((documentId) => {
             const id_doc = documentId;
             const timestamp = new Date().toISOString(); // Thời gian thay đổi
@@ -220,3 +220,12 @@ export const Delete = (req, res) => {
 
 
 
+// Gọi hàm kiểm tra và gửi email
+export async function checkDeadlines() {
+    try {
+        await daysUntilDeadline(filePath,"Văn bản đi");
+        console.log('Đã kiểm tra tất cả các hạn.');
+    } catch (error) {
+        console.error('Lỗi khi kiểm tra hạn:', error);
+    }
+}

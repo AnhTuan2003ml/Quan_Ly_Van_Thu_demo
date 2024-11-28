@@ -1,6 +1,6 @@
 import { existsSync, writeFileSync, readFileSync } from 'fs';
-
-
+import { sendEmailNotification } from "../controllers/sendEmail.js";
+import {getEmailById}from '../controllers/users.js';
 // Hàm đọc dữ liệu từ tệp JSON
 export function readJSONFile(filePath) {
     if (existsSync(filePath)) {
@@ -36,13 +36,13 @@ export function readJSONFileID(filePath, id) {
 }
 
 // Cập nhật thông tin văn bản vào JSON
-export function updateDocument_den(id, tenvb, noidung, ngayden, so, han, nguoiphutrach, link,filePath) {
-    console.log(id, tenvb, noidung, ngayden, so, han, nguoiphutrach, link);
+export function updateDocument_den(id, tenvb, noidung, ngayden, so, han, nguoiphutrach, link,filePath,status) {
+    console.log(id, tenvb, noidung, ngayden, so, han, nguoiphutrach, link,status);
     return new Promise((resolve, reject) => {
         const data = readJSONFile(filePath);
         const documentIndex = data.findIndex(doc => doc.id === id);
         if (documentIndex === -1) return reject('Document not found');
-        data[documentIndex] = { ...data[documentIndex], tenvb, noidung, ngayden, so, han, nguoiphutrach, link };
+        data[documentIndex] = { ...data[documentIndex], tenvb, noidung, ngayden, so, han, nguoiphutrach, link, status};
         writeJSONFile(filePath, data);
         resolve();
     });
@@ -55,7 +55,7 @@ function checkEmpty(value) {
 }
 
 // Thêm thông tin văn bản vào JSON
-export function addDocument_den(tenvb, noidung, ngayden, so, han, nguoiphutrach, link,filePath) {
+export function addDocument_den(tenvb, noidung, ngayden, so, han, nguoiphutrach, link,filePath,status) {
     return new Promise((resolve, reject) => {
         try {
             const data = readJSONFile(filePath);  // Đọc dữ liệu hiện tại từ file JSON
@@ -72,7 +72,8 @@ export function addDocument_den(tenvb, noidung, ngayden, so, han, nguoiphutrach,
                 so: checkEmpty(so),
                 han: checkEmpty(han),
                 nguoiphutrach: checkEmpty(nguoiphutrach),
-                link: checkEmpty(link)
+                link: checkEmpty(link),
+                status:status
             };
 
             // Thêm văn bản mới vào mảng dữ liệu
@@ -90,7 +91,7 @@ export function addDocument_den(tenvb, noidung, ngayden, so, han, nguoiphutrach,
 }
 
 // Cập nhật thông tin văn bản vào JSON
-export function updateDocument_di(id, tenvb, noidung, ngayden, so, han, nguoiphutrach, link, filePath,lienket,ngaydi) {
+export function updateDocument_di(id, tenvb, noidung, ngayden, so, han, nguoiphutrach, link, filePath,lienket,ngaydi,status) {
     console.log(id, tenvb, noidung, ngayden, so, han, nguoiphutrach, link,lienket,ngaydi);
     return new Promise((resolve, reject) => {
         const data = readJSONFile(filePath);
@@ -106,7 +107,8 @@ export function updateDocument_di(id, tenvb, noidung, ngayden, so, han, nguoiphu
             han,
             nguoiphutrach,
             noidung,
-            link
+            link,
+            status: status
         };
         writeJSONFile(filePath, data);
         resolve();
@@ -114,7 +116,7 @@ export function updateDocument_di(id, tenvb, noidung, ngayden, so, han, nguoiphu
 }
 
 // Thêm thông tin văn bản vào JSON
-export function addDocument_di(tenvb, noidung, ngayden, so, han, nguoiphutrach, link, filePath,lienket,ngaydi) {
+export function addDocument_di(tenvb, noidung, ngayden, so, han, nguoiphutrach, link, filePath,lienket,ngaydi,status) {
     return new Promise((resolve, reject) => {
         try {
             const data = readJSONFile(filePath);  // Đọc dữ liệu hiện tại từ file JSON
@@ -133,7 +135,8 @@ export function addDocument_di(tenvb, noidung, ngayden, so, han, nguoiphutrach, 
                 han: checkEmpty(han),
                 nguoiphutrach: checkEmpty(nguoiphutrach),
                 noidung: checkEmpty(noidung),
-                link: checkEmpty(link)
+                link: checkEmpty(link),
+                status: status
             };
 
             // Thêm văn bản mới vào mảng dữ liệu
@@ -148,4 +151,44 @@ export function addDocument_di(tenvb, noidung, ngayden, so, han, nguoiphutrach, 
             reject('Lỗi khi thêm văn bản: ' + error.message);
         }
     });
+}
+
+// Hàm kiểm tra hợp lệ của hạn
+export function checkDeadlineValidity(han) {
+    const today = new Date();
+    const deadline = new Date(han);
+
+    // Kiểm tra xem hạn có hợp lệ và chưa qua
+    if (isNaN(deadline)) {
+        return 'Ngày hạn không hợp lệ';
+    }
+    if (deadline < today) {
+        return 'Ngày hạn đã qua';
+    }
+    return 'Ngày hạn hợp lệ';
+}
+// Hàm tính số ngày còn lại cho các tài liệu chưa hoàn thành
+export async function daysUntilDeadline(filePath,type) {
+    const data = readJSONFile(filePath);
+    const today = new Date();
+
+    for (const doc of data.filter(doc => doc.status === "not completed")) {
+        const deadline = new Date(doc.han);
+        const timeDiff = deadline - today;
+        const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)); // Chuyển đổi thành ngày
+
+        if (daysDiff >= 0 && daysDiff <= 3) {
+            const email = await getEmailById(doc.nguoiphutrach); // Lấy email của người phụ trách
+            const subject = `Reminder: Document ${doc.tenvb} Deadline Approaching`;
+            const text = `The deadline for document "${doc.tenvb}" is approaching in ${daysDiff} days. Please complete it by ${doc.han}.`;
+            const html = `<p>The deadline for document <strong>${doc.tenvb}</strong> is approaching in <strong>${daysDiff}</strong> days.</p><p>Please complete it by <strong>${doc.han}</strong>.</p><p>${type}</p>`;
+
+            try {
+                await sendEmailNotification(email, subject, text, html);
+                console.log(`Email đã được gửi đến ${email} cho tài liệu ${doc.tenvb}`);
+            } catch (error) {
+                console.error(`Không thể gửi email cho tài liệu ${doc.tenvb}:`, error);
+            }
+        }
+    }
 }

@@ -1,127 +1,137 @@
 [
   {
     "id": 1,
-    "tenvb": "Văn bản đi 1",
+    "tenvb": "Document Out 1",
     "lienket": 1,
     "ngayden": "2024-11-30",
     "ngaydi": "2024-11-15",
     "so": 1,
     "han": "2024-11-17",
     "nguoiphutrach": 1,
-    "noidung": "Nội dung văn bản đi 1",
-    "link": "null"
+    "noidung": "Content of document out 1",
+    "link": "null",
+    "status": "completed"
   },
   {
     "id": 2,
-    "tenvb": "Văn bản đi 2",
+    "tenvb": "Document Out 2",
     "lienket": 2,
     "ngayden": "2024-11-29",
     "ngaydi": "2024-11-16",
     "so": 2,
     "han": "2024-11-17",
     "nguoiphutrach": 2,
-    "noidung": "Nội dung văn bản đi 2",
-    "link": null
+    "noidung": "Content of document out 2",
+    "link": null,
+    "status": "not completed"
   },
   {
     "id": 3,
-    "tenvb": "Văn bản đi 3",
+    "tenvb": "Document Out 3",
     "lienket": null,
     "ngayden": "2024-11-28",
     "ngaydi": "2024-11-17",
     "so": 3,
     "han": "2024-11-17",
     "nguoiphutrach": 3,
-    "noidung": "Nội dung văn bản đi 3",
-    "link": null
+    "noidung": "Content of document out 3",
+    "link": null,
+    "status": "not completed"
   },
   {
     "id": 4,
-    "tenvb": "Văn bản đi 4",
+    "tenvb": "Document Out 4",
     "lienket": 2,
     "ngayden": "2024-11-27",
     "ngaydi": "2024-11-18",
     "so": 4,
     "han": "2024-11-17",
     "nguoiphutrach": 4,
-    "noidung": "Nội dung văn bản đi 4",
-    "link": null
+    "noidung": "Content of document out 4",
+    "link": null,
+    "status": "not completed"
   },
   {
     "id": 5,
-    "tenvb": "Văn bản đi 5",
+    "tenvb": "Document Out 5",
     "lienket": null,
     "ngayden": "2024-11-26",
     "ngaydi": "2024-11-19",
     "so": 5,
     "han": "2024-11-17",
     "nguoiphutrach": 5,
-    "noidung": "Nội dung văn bản đi 5",
-    "link": null
+    "noidung": "Content of document out 5",
+    "link": null,
+    "status": "completed"
   },
   {
     "id": 6,
-    "tenvb": "Văn bản đi 6",
+    "tenvb": "Document Out 6",
     "lienket": 1,
     "ngayden": "2024-11-25",
     "ngaydi": "2024-11-20",
     "so": 6,
     "han": "2024-11-17",
     "nguoiphutrach": 6,
-    "noidung": "Nội dung văn bản đi 6",
-    "link": null
+    "noidung": "Content of document out 6",
+    "link": null,
+    "status": "not completed"
   },
   {
     "id": 7,
-    "tenvb": "Văn bản đi 7",
+    "tenvb": "Document Out 7",
     "lienket": null,
     "ngayden": "2024-11-24",
     "ngaydi": "2024-11-21",
     "so": 7,
     "han": "2024-11-17",
     "nguoiphutrach": 7,
-    "noidung": "Nội dung văn bản đi 7",
-    "link": null
+    "noidung": "Content of document out 7",
+    "link": null,
+    "status": "not completed"
   },
   {
     "id": 8,
-    "tenvb": "Văn bản đi 8",
+    "tenvb": "Document Out 8",
     "lienket": 1,
     "ngayden": "2024-11-23",
     "ngaydi": "2024-11-22",
     "so": 8,
     "han": "2024-11-17",
     "nguoiphutrach": 8,
-    "noidung": "Nội dung văn bản đi 8",
-    "link": null
+    "noidung": "Content of document out 8",
+    "link": null,
+    "status": "not completed"
   },
   {
     "id": 9,
-    "tenvb": "Văn bản đi 9",
+    "tenvb": "Document Out 9",
     "lienket": null,
     "ngayden": "2024-11-22",
     "ngaydi": "2024-11-23",
     "so": 9,
     "han": "2024-11-17",
     "nguoiphutrach": 9,
-    "noidung": "Nội dung văn bản đi 9",
-    "link": null
+    "noidung": "Content of document out 9",
+    "link": null,
+    "status": "not completed"
   },
   {
     "id": 10,
-    "tenvb": "Văn bản đi 10",
+    "tenvb": "Document Out 10",
     "lienket": 5,
     "ngayden": "2024-11-21",
     "ngaydi": "2024-11-24",
     "so": 10,
     "han": "2024-11-17",
     "nguoiphutrach": 10,
-    "noidung": "Nội dung văn bản đi 10",
-    "link": null
+    "noidung": "Content of document out 10",
+    "link": null,
+    "status": "completed"
   },
   {
     "id": 11,
-    "tenvb": "Văn bản 1",
+    "tenvb": "Document 1",
     "lienket": 1,
     "ngayden": "2003-10-11",
     "ngaydi": "2024-11-15",
@@ -129,7 +139,8 @@
     "han": "2004-10-11",
     "nguoiphutrach": 2,
     "noidung": "aaaa",
-    "link": "../../doc/db.txt"
+    "link": "../../doc/db.txt",
+    "status": "not completed"
   },
   {
     "id": 12,
@@ -140,7 +151,8 @@
     "so": 2,
     "han": "2024-02-11",
     "nguoiphutrach": 6,
-    "noidung": "hoàn thành ngay cho tôi",
-    "link": "../../doc/package-lock.json"
+    "noidung": "complete it for me",
+    "link": "../../doc/package-lock.json",
+    "status": "completed"
   }
 ]

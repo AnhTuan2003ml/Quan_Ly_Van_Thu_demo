@@ -33,7 +33,7 @@ const createTransporter = async () => {
     }
 };
 
-const sendEmailNotification = async (to, subject, text, html) => {
+export const sendEmailNotification = async (to, subject, text, html) => {
     try {
         const transporter = await createTransporter();
 

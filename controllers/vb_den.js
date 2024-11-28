@@ -4,7 +4,7 @@ import path from 'path';
 import { addLogData } from './log.js'; // Import đúng file log.js trong cùng thư mục
 import { getEmailById } from './users.js';
 import { testSendEmail_multi, testSendEmail_single } from "./sendEmail.js";
-import { readJSONFile, readJSONFileID, writeJSONFile, updateDocument_den,addDocument_den} from '../Utils/JsonFile.js';
+import { readJSONFile, readJSONFileID, writeJSONFile, updateDocument_den, addDocument_den, daysUntilDeadline } from '../Utils/JsonFile.js';
 
 
 // Lấy đường dẫn thư mục hiện tại, sửa lại để không có dấu '\' ở đầu
@@ -65,7 +65,7 @@ export const Get_vb_den = (req, res) => {
 
 export const Put_vb_den = (req, res) => {
     const documentId = parseInt(req.params.id);
-    const { tenvb, noidung, ngayden, so, han, nguoiphutrach } = req.body;
+    const { tenvb, noidung, ngayden, so, han, nguoiphutrach ,status} = req.body;
     const userId = req.session.userId;
     const documentFile = req.file; // Tệp mới nếu có
     // Kiểm tra nếu không có tệp mới, sử dụng tệp cũ
@@ -98,7 +98,7 @@ export const Put_vb_den = (req, res) => {
                 const newEmail = getEmailById(nguoiphutrach)
                 testSendEmail_multi(oldEmail, newEmail);
             }
-            if (oldDocument.filePath !== filePath_doc) {
+            if (oldDocument.filePath !== filePath_doc && oldDocument.filePath !== null ) {
                 changes.push(`Tệp đính kèm thay đổi`);
             }
 
@@ -116,7 +116,7 @@ export const Put_vb_den = (req, res) => {
             }
             console.log(documentId, tenvb, noidung, ngayden, parseInt(so), han, parseInt(nguoiphutrach), filePath_doc);
             // Cập nhật thông tin văn bản
-            updateDocument_den(documentId, tenvb, noidung, ngayden, parseInt(so), han, parseInt(nguoiphutrach), filePath_doc,filePath)
+            updateDocument_den(documentId, tenvb, noidung, ngayden, parseInt(so), han, parseInt(nguoiphutrach), filePath_doc,filePath,status)
                 .then(() => {
                     res.json({ success: true, message: 'Văn bản đã được cập nhật thành công.' });
                 })
@@ -130,7 +130,7 @@ export const Put_vb_den = (req, res) => {
 }
 
 export const Post_vb_den = (req,res) => {
-    const { tenvb, noidung, ngayden, so, han, nguoiphutrach } = req.body;
+    const { tenvb, noidung, ngayden, so, han, nguoiphutrach ,status} = req.body;
     const documentFile = req.file; // Tệp mới nếu có
     const userId = req.session.userId;
     // Kiểm tra nếu không có tệp mới, sử dụng tệp cũ
@@ -140,7 +140,7 @@ export const Post_vb_den = (req,res) => {
     testSendEmail_single(newEmail);
 
     // Thêm văn bản mới vào cơ sở dữ liệu (hoặc file)
-    addDocument_den(tenvb, noidung, ngayden, parseInt(so), han, parseInt(nguoiphutrach), filePath_doc,filePath)
+    addDocument_den(tenvb, noidung, ngayden, parseInt(so), han, parseInt(nguoiphutrach), filePath_doc,filePath,status)
         .then((documentId) => {
             const id_doc = documentId;
             const timestamp = new Date().toISOString(); // Thời gian thay đổi
@@ -217,5 +217,14 @@ export const Delete = (req,res) =>{
     return res.status(200).json({ success: true, message: 'Văn bản và tệp tin đã được xóa.' });
 }
 
+// Gọi hàm kiểm tra và gửi email
+export async function checkDeadlines() {
+    try {
+        await daysUntilDeadline(filePath,"Văn bản đến");
+        console.log('Đã kiểm tra tất cả các hạn.');
+    } catch (error) {
+        console.error('Lỗi khi kiểm tra hạn:', error);
+    }
+}
 
 

@@ -131,6 +131,7 @@
                                 <th>Hạn</th>
                                 <th>Người Phụ Trách</th>
                                 <th>Link Văn Bản</th>
+                                <th>Trạng thái</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -182,6 +183,13 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
+                                    <label for="status">Trạng Thái:</label>
+                                    <select id="status" class="form-control" onchange="updateStatus()">
+                                        <option value="not completed">Chưa hoàn thành</option>
+                                        <option value="completed">Đã hoàn thành</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
                                     <label for="documentFile">Tải lên văn bản:</label>
                                     <input type="file" class="form-control" id="documentFile" name="documentFile">
                                     <small id="fileNameDisplay" class="form-text text-muted"></small>
@@ -217,6 +225,7 @@
 
     <!-- Custom JavaScript -->
     <script>
+
         document.addEventListener('DOMContentLoaded', () => {
             fetchDocuments(); // Fetch documents when the page loads
             fetchUsers(-1);
@@ -227,6 +236,15 @@
                 updateDocument();          // Trigger saveDocument function
             };
         });
+        function updateStatus() {
+                // Lấy giá trị của trạng thái đã chọn
+                const statusSelect = document.getElementById('status');
+                const selectedStatus = statusSelect.value;
+
+                // Hiển thị trạng thái đã chọn
+                const statusDisplay = document.getElementById('statusDisplay');
+                statusDisplay.innerText = `Trạng Thái Hiện Tại: ${selectedStatus}`;
+            }
         function saveDocument() {
             // Ngăn chặn hành động mặc định của form submit
             event.preventDefault();
@@ -238,6 +256,7 @@
             formData.append('so', document.getElementById('so').value);
             formData.append('han', document.getElementById('han').value);
             formData.append('nguoiphutrach', document.getElementById('nguoiphutrach').value);
+            formData.append('status', document.getElementById('status').value);
 
             const fileInput = document.getElementById('documentFile');
             const oldFilePathInput = document.getElementById('oldFilePath'); // Trường lưu đường dẫn cũ
@@ -279,7 +298,7 @@
 
 
 
-        function editDocument(id, ten, noidung, ngayden, so, han, nguoiphutrach, link, nguoiphutrach_id) {
+        function editDocument(id, ten, noidung, ngayden, so, han, nguoiphutrach, link, nguoiphutrach_id,status) {
             document.getElementById('documentId').value = id;
             document.getElementById('tenvb').value = ten;
             document.getElementById('noidung').value = noidung;
@@ -288,6 +307,7 @@
             document.getElementById('han').value = han;
             document.getElementById('nguoiphutrach').value = nguoiphutrach;
             document.getElementById('oldFilePath').value = link;
+            document.getElementById('status').value = status;
             // Fetch users and set the selected user
             fetchUsers(nguoiphutrach_id);
 
@@ -362,8 +382,9 @@
                             <td>${doc.han}</td>
                             <td>${nguoiphutrachName}</td> <!-- Display user name -->
                             <td><a href="${doc.link}" target="_blank">Link</a></td>
+                            <td>${doc.status}</td>
                             <td>
-                                <button class="btn btn-info btn-sm" onclick="editDocument(${doc.id}, '${doc.tenvb}', '${doc.noidung}', '${doc.ngayden}', '${doc.so}', '${doc.han}', '${doc.nguoiphutrach}', '${doc.link}','${doc.nguoiphutrach}')">Edit</button>
+                                <button class="btn btn-info btn-sm" onclick="editDocument(${doc.id}, '${doc.tenvb}', '${doc.noidung}', '${doc.ngayden}', '${doc.so}', '${doc.han}', '${doc.nguoiphutrach}', '${doc.link}','${doc.nguoiphutrach}','${doc.status}')">Edit</button>
                                 <button class="btn btn-danger btn-sm" onclick="deleteDocument(${doc.id})">Delete</button>
                             </td>
                         `;
@@ -395,7 +416,8 @@
             document.getElementById('han').value = '';
             document.getElementById('nguoiphutrach').value = '';
             document.getElementById('documentFile').value = ''; // Clear file input
-             document.getElementById('oldFilePath').value = ''; // Clear file input
+            document.getElementById('oldFilePath').value = ''; // Clear file input
+            document.getElementById('status').value = '';
         }
 
     </script>

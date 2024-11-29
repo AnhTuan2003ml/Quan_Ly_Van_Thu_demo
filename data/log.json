@@ -206,5 +206,45 @@
     "type": "văn bản đi",
     "changes": "Thêm văn bản đi",
     "timestamp": "2024-11-28T10:18:39.126Z"
+  },
+  {
+    "id": 27,
+    "userId": 1,
+    "documentId": 1,
+    "type": "văn bản đến",
+    "changes": "Tệp đính kèm thay đổi",
+    "timestamp": "2024-11-29T05:15:15.467Z"
+  },
+  {
+    "id": 28,
+    "userId": 1,
+    "documentId": 1,
+    "type": "văn bản đến",
+    "changes": "Tệp đính kèm thay đổi",
+    "timestamp": "2024-11-29T05:16:20.585Z"
+  },
+  {
+    "id": 29,
+    "userId": 1,
+    "documentId": 1,
+    "type": "văn bản đến",
+    "changes": "Tệp đính kèm thay đổi",
+    "timestamp": "2024-11-29T05:18:12.241Z"
+  },
+  {
+    "id": 30,
+    "userId": 1,
+    "documentId": 1,
+    "type": "văn bản đến",
+    "changes": "Tệp đính kèm thay đổi",
+    "timestamp": "2024-11-29T05:19:58.658Z"
+  },
+  {
+    "id": 31,
+    "userId": 1,
+    "documentId": 1,
+    "type": "văn bản đến",
+    "changes": "Tệp đính kèm thay đổi",
+    "timestamp": "2024-11-29T05:21:07.154Z"
   }
 ]

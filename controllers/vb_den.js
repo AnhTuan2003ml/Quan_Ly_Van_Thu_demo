@@ -238,8 +238,11 @@ export const Delete = (req,res) =>{
     // Kiểm tra xem fileLink có hợp lệ hay không
     if (fileLink && typeof fileLink === 'string') {
         // Xử lý đường dẫn tệp tin từ link trong JSON
-        const filePathToDelete = path.join(__dirname, '../doc', path.basename(fileLink));  // Đảm bảo đường dẫn chính xác
-
+        let filePathToDelete = path.join(__dirname, '../doc', path.basename(fileLink));  // Đảm bảo đường dẫn chính xác
+        if (filePathToDelete.startsWith('\\')) {
+            filePathToDelete = filePathToDelete.substring(1);
+        }
+        // console.log(filePathToDelete);
         // Xóa tệp tin nếu tồn tại
         if (existsSync(filePathToDelete)) {
             unlinkSync(filePathToDelete);  // Xóa tệp tin

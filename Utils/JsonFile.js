@@ -1,61 +1,52 @@
 import { existsSync, writeFileSync, readFileSync } from 'fs';
 import { sendEmailNotification } from "../controllers/sendEmail.js";
-import {getEmailById}from '../controllers/users.js';
-// Hàm đọc dữ liệu từ tệp JSON
+import { getEmailById } from '../controllers/users.js';
+
 export function readJSONFile(filePath) {
     if (existsSync(filePath)) {
         const fileContent = readFileSync(filePath, 'utf8');
-        return JSON.parse(fileContent);
+
+        // Kiểm tra xem nội dung file có rỗng không
+        if (!fileContent) {
+            console.error('Tệp JSON trống');
+            return [];
+        }
+
+        try {
+            return JSON.parse(fileContent);
+        } catch (error) {
+            console.error('Lỗi phân tích cú pháp JSON:', error);
+            return []; // Trả về mảng rỗng nếu có lỗi
+        }
     }
+
     return [];
 }
 
+
 // Hàm ghi dữ liệu vào tệp JSON
 export function writeJSONFile(filePath, data) {
-    writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
-}
-
-export function readJSONFileID(filePath, id) {
-    return new Promise((resolve, reject) => {
-        if (existsSync(filePath)) {
-            const fileContent = readFileSync(filePath, 'utf8');
-            const data = JSON.parse(fileContent);
-            // Lọc dữ liệu theo id
-            const filteredData = data.filter(item => item.id === id);
-
-            if (filteredData.length > 0) {
-                // console.log(filteredData[0]);
-                resolve(filteredData[0]);
-            } else {
-                reject('Không tìm thấy văn bản');
-            }
-        } else {
-            reject('Tệp không tồn tại');
+    try {
+        // Nếu file không tồn tại, tạo file mới
+        if (!existsSync(filePath)) {
+            writeFileSync(filePath, '[]', 'utf8'); // Tạo file JSON rỗng
         }
-    });
-}
 
-// Cập nhật thông tin văn bản vào JSON
-export function updateDocument_den(id, tenvb, noidung, ngayden, so, han, nguoiphutrach, link,filePath) {
-    console.log(id, tenvb, noidung, ngayden, so, han, nguoiphutrach, link);
-    return new Promise((resolve, reject) => {
-        const data = readJSONFile(filePath);
-        const documentIndex = data.findIndex(doc => doc.id === id);
-        if (documentIndex === -1) return reject('Document not found');
-        data[documentIndex] = { ...data[documentIndex], tenvb, noidung, ngayden, so, han, nguoiphutrach, link};
-        writeJSONFile(filePath, data);
-        resolve();
-    });
+        // Ghi lại dữ liệu vào file JSON
+        writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
+    } catch (error) {
+        console.error('Lỗi khi ghi file JSON:', error);
+        throw error;
+    }
 }
-
 
 // Hàm kiểm tra giá trị rỗng và thay thế bằng null
 function checkEmpty(value) {
-    return value === '' || value === null ? null : value;
+    return value === '' || value === null || value === undefined ? null : value;
 }
 
 // Thêm thông tin văn bản vào JSON
-export function addDocument_den(tenvb, noidung, ngayden, so, han, nguoiphutrach, link,filePath) {
+export function addDocument_den(tenvb, noidung, ngayden, so, han, nguoiphutrach, link, filePath) {
     return new Promise((resolve, reject) => {
         try {
             const data = readJSONFile(filePath);  // Đọc dữ liệu hiện tại từ file JSON
@@ -72,7 +63,8 @@ export function addDocument_den(tenvb, noidung, ngayden, so, han, nguoiphutrach,
                 so: checkEmpty(so),
                 han: checkEmpty(han),
                 nguoiphutrach: checkEmpty(nguoiphutrach),
-                link: checkEmpty(link)
+                link: checkEmpty(link),
+                status: "uncheck"
             };
 
             // Thêm văn bản mới vào mảng dữ liệu
@@ -90,8 +82,28 @@ export function addDocument_den(tenvb, noidung, ngayden, so, han, nguoiphutrach,
 }
 
 // Cập nhật thông tin văn bản vào JSON
-export function updateDocument_di(id, tenvb, noidung, ngayden, so, han, nguoiphutrach, link, filePath,lienket,ngaydi) {
-    console.log(id, tenvb, noidung, ngayden, so, han, nguoiphutrach, link,lienket,ngaydi);
+export function updateDocument_den(id, tenvb, noidung, ngayden, so, han, nguoiphutrach, link, filePath) {
+    return new Promise((resolve, reject) => {
+        const data = readJSONFile(filePath);
+        const documentIndex = data.findIndex(doc => doc.id === id);
+        if (documentIndex === -1) return reject('Document not found');
+        data[documentIndex] = {
+            ...data[documentIndex],
+            tenvb,
+            noidung,
+            ngayden,
+            so,
+            han,
+            nguoiphutrach,
+            link
+        };
+        writeJSONFile(filePath, data);
+        resolve();
+    });
+}
+
+// Cập nhật thông tin văn bản vào JSON (loại khác)
+export function updateDocument_di(id, tenvb, noidung, ngayden, so, han, nguoiphutrach, link, filePath, lienket, ngaydi) {
     return new Promise((resolve, reject) => {
         const data = readJSONFile(filePath);
         const documentIndex = data.findIndex(doc => doc.id === id);
@@ -108,13 +120,14 @@ export function updateDocument_di(id, tenvb, noidung, ngayden, so, han, nguoiphu
             noidung,
             link
         };
+        console.log(data);
         writeJSONFile(filePath, data);
         resolve();
     });
 }
 
-// Thêm thông tin văn bản vào JSON
-export function addDocument_di(tenvb, noidung, ngayden, so, han, nguoiphutrach, link, filePath,lienket,ngaydi) {
+// Thêm thông tin văn bản vào JSON (loại khác)
+export function addDocument_di(tenvb, noidung, ngayden, so, han, nguoiphutrach, link, filePath, lienket, ngaydi) {
     return new Promise((resolve, reject) => {
         try {
             const data = readJSONFile(filePath);  // Đọc dữ liệu hiện tại từ file JSON
@@ -128,12 +141,13 @@ export function addDocument_di(tenvb, noidung, ngayden, so, han, nguoiphutrach, 
                 tenvb: checkEmpty(tenvb),
                 lienket: checkEmpty(lienket),
                 ngayden: checkEmpty(ngayden),
-                ngaydi:checkEmpty(ngaydi),
+                ngaydi: checkEmpty(ngaydi),
                 so: checkEmpty(so),
                 han: checkEmpty(han),
                 nguoiphutrach: checkEmpty(nguoiphutrach),
                 noidung: checkEmpty(noidung),
-                link: checkEmpty(link)
+                link: checkEmpty(link),
+                status: "uncheck"
             };
 
             // Thêm văn bản mới vào mảng dữ liệu
@@ -164,6 +178,7 @@ export function checkDeadlineValidity(han) {
     }
     return 'Ngày hạn hợp lệ';
 }
+
 // Hàm tính số ngày còn lại cho các tài liệu
 export async function daysUntilDeadline(filePath, type) {
     const data = readJSONFile(filePath);
@@ -189,4 +204,52 @@ export async function daysUntilDeadline(filePath, type) {
             }
         }
     }
+}
+
+export function readJSONFileID(filePath, id) {
+    return new Promise((resolve, reject) => {
+        if (existsSync(filePath)) {
+            const fileContent = readFileSync(filePath, 'utf8');
+            const data = JSON.parse(fileContent);
+
+            // Lọc dữ liệu theo id sử dụng find, trả về phần tử đầu tiên nếu tìm thấy
+            const document = data.find(item => item.id === id);
+
+            if (document) {
+                resolve(document);
+            } else {
+                reject('Không tìm thấy văn bản');
+            }
+        } else {
+            reject('Tệp không tồn tại');
+        }
+    });
+}
+
+// Hàm thay đổi trạng thái (status) của văn bản
+export function updateDocumentStatus(id, newStatus, filePath) {
+    return new Promise((resolve, reject) => {
+        // Đọc dữ liệu từ file JSON
+        const data = readJSONFile(filePath);
+
+        // Tìm văn bản theo ID
+        const documentIndex = data.findIndex(doc => doc.id === id);
+
+        if (documentIndex === -1) {
+            return reject('Không tìm thấy văn bản với ID ' + id);
+        }
+
+        // Cập nhật trạng thái mới của văn bản
+        data[documentIndex].status = newStatus;
+
+        // Ghi lại dữ liệu vào file JSON
+        writeJSONFile(filePath, data);
+
+        // Trả về thành công
+        resolve({
+            success: true,
+            message: `Trạng thái của văn bản với ID ${id} đã được cập nhật thành ${newStatus}.`,
+            document: data[documentIndex]
+        });
+    });
 }

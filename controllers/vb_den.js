@@ -1,10 +1,10 @@
 
 import { existsSync, unlinkSync} from 'fs';
 import path from 'path';
-import { addLogData } from './log.js'; // Import đúng file log.js trong cùng thư mục
+import { addLogData, updateLogByDocumentIdAndType, deleteLogByDocumentIdAndType } from './log.js'; // Import đúng file log.js trong cùng thư mục
 import { getEmailById } from './users.js';
 import { testSendEmail_multi, testSendEmail_single } from "./sendEmail.js";
-import { readJSONFile, readJSONFileID, writeJSONFile, updateDocument_den, addDocument_den, daysUntilDeadline } from '../Utils/JsonFile.js';
+import { readJSONFile, readJSONFileID, writeJSONFile, updateDocument_den, addDocument_den, daysUntilDeadline, updateDocumentStatus } from '../Utils/JsonFile.js';
 import {generateConfirmLink} from './confirm.js';
 
 // Lấy đường dẫn thư mục hiện tại, sửa lại để không có dấu '\' ở đầu
@@ -66,7 +66,6 @@ export const Get_vb_den = (req, res) => {
 export const Put_vb_den = (req, res) => {
     const documentId = parseInt(req.params.id);
     const { tenvb, noidung, ngayden, so, han, nguoiphutrach } = req.body;
-    const userId = req.session.userId;
     const documentFile = req.file; // Tệp mới nếu có
     // Kiểm tra nếu không có tệp mới, sử dụng tệp cũ
     let filePath_doc = documentFile ? `../../doc/${path.basename(documentFile.filename)}` : req.body.oldFilePath || null;
@@ -96,30 +95,12 @@ export const Put_vb_den = (req, res) => {
         }
     }    // console.log(documentId,tenvb, noidung, ngayden, so, han, nguoiphutrach);
     // Tìm thông tin văn bản cũ (có thể lấy từ cơ sở dữ liệu hoặc từ file JSON)
-    readJSONFileID(filePath, documentId) // Giả sử bạn có hàm này để lấy thông tin văn bản cũ
+    readJSONFileID(filePath, parseInt(documentId)) // Giả sử bạn có hàm này để lấy thông tin văn bản cũ
         .then(oldDocument => {
             // So sánh và tạo danh sách các thuộc tính thay đổi
-            const changes = [];
             let token_old;
             let token_new;
-            // console.log(oldDocument);
-            if (oldDocument.tenvb !== tenvb) {
-                changes.push(`Tên văn bản thay đổi từ '${oldDocument.tenvb}' thành '${tenvb}'`);
-            }
-            if (oldDocument.noidung !== noidung) {
-                changes.push(`Nội dung thay đổi`);
-            }
-            if (oldDocument.ngayden !== ngayden) {
-                changes.push(`Ngày đến thay đổi từ '${oldDocument.ngayden}' thành '${ngayden}'`);
-            }
-            if (oldDocument.so !== parseInt(so)) {
-                changes.push(`Số văn bản thay đổi từ '${oldDocument.so}' thành '${so}'`);
-            }
-            if (oldDocument.han !== han) {
-                changes.push(`Hạn thay đổi từ '${oldDocument.han}' thành '${han}'`);
-            }
             if (oldDocument.nguoiphutrach !== parseInt(nguoiphutrach)) {
-                changes.push(`Người phụ trách thay đổi từ '${oldDocument.nguoiphutrach}' thành '${nguoiphutrach}'`);
                 const oldEmail = getEmailById(oldDocument.nguoiphutrach)
                 const newEmail = getEmailById(nguoiphutrach)
 
@@ -137,28 +118,12 @@ export const Put_vb_den = (req, res) => {
 
                 // Kiểm tra nếu ngày hết hạn còn lớn hơn ngày hiện tại
                 if (hoursRemaining > 0) {
-                    token_new = generateConfirmLink(newEmail, hoursRemaining);
-                    token_old = generateConfirmLink(oldEmail, hoursRemaining);
+                    token_new = generateConfirmLink(newEmail, hoursRemaining, oldDocument.id ,"văn bản đến");
+                    token_old = generateConfirmLink(oldEmail, hoursRemaining, oldDocument.id ,"văn bản đến");
+                    testSendEmail_multi(oldEmail, newEmail, token_new, token_old);
                 }
-                testSendEmail_multi(oldEmail, newEmail, token_new,token_new);
-            }
-            if (oldDocument.filePath !== filePath_doc && oldDocument.filePath !== null ) {
-                changes.push(`Tệp đính kèm thay đổi`);
-            }
-
-            // Nếu có thay đổi, ghi log
-            if (changes.length > 0) {
-                const timestamp = new Date().toISOString(); // Thời gian thay đổi
-                console.log(userId, documentId, 'văn bản đến', changes.join('; '), timestamp);
-                addLogData({
-                    userId: userId,
-                    documentId: documentId,
-                    type: 'văn bản đến',
-                    changes: changes.join('; '),
-                    timestamp: timestamp
-                });
-            }
-            
+                updateLogByDocumentIdAndType(parseInt(documentId), 'văn bản đến', parseInt(nguoiphutrach), currentDate.toISOString());
+            }           
             // Cập nhật thông tin văn bản
             updateDocument_den(documentId, tenvb, noidung, ngayden, parseInt(so), han, parseInt(nguoiphutrach), filePath_doc,filePath)
                 .then(() => {
@@ -176,11 +141,9 @@ export const Put_vb_den = (req, res) => {
 export const Post_vb_den = (req,res) => {
     const { tenvb, noidung, ngayden, so, han, nguoiphutrach} = req.body;
     const documentFile = req.file; // Tệp mới nếu có
-    const userId = req.session.userId;
     // Kiểm tra nếu không có tệp mới, sử dụng tệp cũ
     let filePath_doc = documentFile ? `../../doc/${path.basename(documentFile.filename)}` : null;
     const data = readJSONFile(filePath);
-    const documentId = parseInt(req.params.id);
     // Kiểm tra trùng lặp file
     if (filePath_doc) {
         const existingDocument = data.find(doc => doc.link === filePath_doc);
@@ -219,30 +182,29 @@ export const Post_vb_den = (req,res) => {
     // Chuyển đổi sự khác biệt thành giờ, phút
     const hoursRemaining = timeDifference / (1000 * 60 * 60);  // Chuyển từ milliseconds sang giờ
 
-    // Kiểm tra nếu ngày hết hạn còn lớn hơn ngày hiện tại
-    if (hoursRemaining > 0) {
-        token_new = generateConfirmLink(newEmail, hoursRemaining);
-    }
     
-    testSendEmail_single(newEmail, token_new);
-
     // Thêm văn bản mới vào cơ sở dữ liệu (hoặc file)
     addDocument_den(tenvb, noidung, ngayden, parseInt(so), han, parseInt(nguoiphutrach), filePath_doc,filePath)
         .then((documentId) => {
             const id_doc = documentId;
             const timestamp = new Date().toISOString(); // Thời gian thay đổi
-
+            // Kiểm tra nếu ngày hết hạn còn lớn hơn ngày hiện tại
+            if (hoursRemaining > 0) {
+                token_new = generateConfirmLink(newEmail, hoursRemaining, documentId, "văn bản đến");
+                testSendEmail_single(newEmail, token_new);
+            }
             // Trả về phản hồi thành công trước khi gọi addLogData()
             res.json({ success: true, message: 'Văn bản đến đã được thêm thành công.', documentId: id_doc });
 
             // Ghi log vào cơ sở dữ liệu (hoặc file) sau khi phản hồi đã được gửi
             // Lưu ý là không gọi res.json() nữa sau khi đã gửi phản hồi
             addLogData({
-                userId: userId,
-                documentId: id_doc,
+                documentId: documentId,
                 type: 'văn bản đến',
-                changes: 'Thêm văn bản đến',
-                timestamp: timestamp
+                nguoiphutrach: parseInt(nguoiphutrach),
+                timestamp: timestamp,
+                nguoiduocgiao:null,
+                ngaygiao:null
             }).catch(err => {
                 console.error('Có lỗi xảy ra khi thêm log:', err);
                 // Không gọi res.json() lại nữa vì phản hồi đã được gửi
@@ -302,7 +264,7 @@ export const Delete = (req,res) =>{
 
     // Ghi lại dữ liệu vào file JSON
     writeJSONFile(filePath, data);
-
+    deleteLogByDocumentIdAndType(documentId,'văn bản đến');
     // Trả về phản hồi thành công
     return res.status(200).json({ success: true, message: 'Văn bản và tệp tin đã được xóa.' });
 }
@@ -318,3 +280,24 @@ export async function checkDeadlines() {
 }
 
 
+// Hàm nhận vào ID và gọi hàm cập nhật trạng thái
+export function changeDocumentStatusById_den(id) {
+    return new Promise((resolve, reject) => {
+        // Gọi đến hàm updateDocumentStatus để thay đổi trạng thái
+        updateDocumentStatus(id, 'checked', filePath)
+            .then(result => {
+                // Nếu thành công, trả về thông báo thành công
+                resolve({
+                    success: true,
+                    document: result.document
+                });
+            })
+            .catch(error => {
+                // Nếu có lỗi, trả về thông báo lỗi
+                reject({
+                    success: false,
+                    message: `Không thể thay đổi trạng thái văn bản với ID ${id}: ${error}`
+                });
+            });
+    });
+}

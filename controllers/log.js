@@ -26,22 +26,11 @@ export function addLogData(newLogEntry) {
             }
         }
 
-        // Tìm id lớn nhất hiện có và tăng lên 1
-        let newId = 1; // Mặc định nếu logData rỗng
-        if (logData.length > 0) {
-            const maxId = Math.max(...logData.map(entry => entry.id || 0));
-            newId = maxId + 1;
-        }
-
-        // Thêm thuộc tính id vào bản ghi mới
-        const entryWithId = { id: newId, ...newLogEntry };
-
         // Thêm dữ liệu mới vào logData
-        logData.push(entryWithId);
+        logData.push(newLogEntry);
 
         // Ghi dữ liệu đã cập nhật trở lại vào file log.json
         writeFileSync(logFilePath, JSON.stringify(logData, null, 2), 'utf8');
-        console.log('Đã thêm dữ liệu mới vào log.json:', entryWithId);
     } catch (error) {
         console.error('Lỗi khi thêm dữ liệu vào log.json:', error);
     }
@@ -103,5 +92,77 @@ export const deleteLogByType = (req, res) => {
     } catch (error) {
         console.error('Lỗi khi xóa dữ liệu trong log.json:', error);
         return res.status(500).send('Đã xảy ra lỗi khi xóa dữ liệu.');
+    }
+};
+export const updateLogByDocumentIdAndType = (documentId, type, nguoiduocgiao, ngaygiao) => {
+    if (!documentId || !type || nguoiduocgiao === undefined || !ngaygiao) {
+        throw new Error('Thiếu documentId, type, nguoiduocgiao hoặc ngaygiao.');
+    }
+
+    try {
+        // Đọc lại dữ liệu log từ file
+        const fileContent = readFileSync(logFilePath, 'utf8');
+        logData = JSON.parse(fileContent); // Cập nhật logData từ file
+
+        // Tìm bản ghi cần chỉnh sửa theo documentId và type
+        const logIndex = logData.findIndex(
+            (entry) => entry.documentId === Number(documentId) && entry.type === type
+        );
+
+        if (logIndex === -1) {
+            throw new Error(`Không tìm thấy bản ghi với documentId "${documentId}" và type "${type}".`);
+        }
+
+        // Lấy bản ghi cần chỉnh sửa
+        const logEntry = logData[logIndex];
+
+        // Thêm nguoiduocgiao và ngaygiao vào mảng tương ứng nếu chưa tồn tại
+        if (!Array.isArray(logEntry.nguoiduocgiao)) logEntry.nguoiduocgiao = [];
+        if (!Array.isArray(logEntry.ngaygiao)) logEntry.ngaygiao = [];
+
+        
+        logEntry.nguoiduocgiao.push(parseInt(nguoiduocgiao));
+        logEntry.ngaygiao.push(ngaygiao);
+        
+
+        // Ghi dữ liệu đã chỉnh sửa trở lại vào file log.json
+        writeFileSync(logFilePath, JSON.stringify(logData, null, 2), 'utf8');
+        return logEntry; // Trả về bản ghi đã chỉnh sửa
+    } catch (error) {
+        console.error('Lỗi khi chỉnh sửa dữ liệu trong log.json:', error);
+        throw error; // Ném lỗi để xử lý ở nơi gọi hàm
+    }
+};
+
+// Hàm xóa bản ghi theo documentId và type
+export const deleteLogByDocumentIdAndType = (documentId, type) => {
+    if (!documentId || !type) {
+        throw new Error('Thiếu documentId hoặc type.');
+    }
+
+    try {
+        // Đọc lại dữ liệu log từ file
+        const fileContent = readFileSync(logFilePath, 'utf8');
+        logData = JSON.parse(fileContent); // Cập nhật logData từ file
+
+        // Lọc ra các bản ghi không có documentId và type cần xóa
+        const updatedLogData = logData.filter(
+            (entry) => !(entry.documentId === Number(documentId) && entry.type === type)
+        );
+
+        // Kiểm tra nếu không có bản ghi nào bị xóa
+        if (updatedLogData.length === logData.length) {
+            throw new Error(`Không tìm thấy bản ghi với documentId "${documentId}" và type "${type}".`);
+        }
+
+        // Ghi dữ liệu đã cập nhật trở lại vào file log.json
+        writeFileSync(logFilePath, JSON.stringify(updatedLogData, null, 2), 'utf8');
+        logData = updatedLogData; // Cập nhật lại logData trong bộ nhớ
+
+        console.log(`Đã xóa bản ghi với documentId "${documentId}" và type "${type}".`);
+        return { message: `Đã xóa bản ghi với documentId "${documentId}" và type "${type}".` };
+    } catch (error) {
+        console.error('Lỗi khi xóa dữ liệu trong log.json:', error);
+        throw error; // Ném lỗi để xử lý ở nơi gọi hàm
     }
 };

@@ -37,7 +37,7 @@ export const sendEmailNotification = async (to, subject, text, html,token) => {
     try {
         const transporter = await createTransporter();
         // Cập nhật nội dung văn bản (text)
-        const updatedText = `${text}\n\nVui lòng nhấp vào liên kết dưới đây để xác nhận đã đọc:\n${token}`;
+       
         // Cập nhật nội dung HTML với liên kết xác nhận
         const updatedHtml = `
             ${html}
@@ -48,7 +48,7 @@ export const sendEmailNotification = async (to, subject, text, html,token) => {
             from: process.env.EMAIL_USER,
             to: to,
             subject: subject,
-            text: updatedText,
+            text: text,
             html: updatedHtml
         };
 
@@ -64,7 +64,7 @@ export const testSendEmail_single = async (newEmail,token) => {
     try {
         const to = newEmail;
         const subject = 'Thông báo';
-        const text = `Thêm\n\nVui lòng nhấp vào liên kết dưới đây để xác nhận đã đọc:\n${token}`;
+        const text = `Thêm`;
         const html = `<h1>Thêm</h1>\n\nVui lòng nhấp vào liên kết dưới đây để xác nhận đã đọc:\n${token}`;
 
         await sendEmailNotification(to, subject, text, html);
@@ -84,7 +84,7 @@ export const testSendEmail_multi = async (oldEmail, newEmail, token_new, token_o
     try {
         for (const recipient of recipients) {
             // Cập nhật nội dung text và html với token
-            const updatedText = `${recipient.text}\n\nVui lòng nhấp vào liên kết dưới đây để xác nhận:\n${recipient.token}`;
+            const updatedText = `${recipient.text}\n\nVui lòng nhấp vào liên kết dưới đây để xác nhận.:\n`;
             const updatedHtml = `
                 ${recipient.html}
                 <p>Vui lòng nhấp vào liên kết dưới đây để xác nhận:</p>

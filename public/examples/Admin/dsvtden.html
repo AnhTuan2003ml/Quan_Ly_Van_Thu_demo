@@ -131,6 +131,7 @@
                                 <th>Hạn</th>
                                 <th>Người Phụ Trách</th>
                                 <th>Link Văn Bản</th>
+                                <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -361,6 +362,7 @@
                             <td>${doc.han}</td>
                             <td>${nguoiphutrachName}</td> <!-- Display user name -->
                             <td><a href="${doc.link}" target="_blank">Link</a></td>
+                            <td>${doc.status}</td>
                             <td>
                                 <button class="btn btn-info btn-sm" onclick="editDocument(${doc.id}, '${doc.tenvb}', '${doc.noidung}', '${doc.ngayden}', '${doc.so}', '${doc.han}', '${doc.nguoiphutrach}', '${doc.link}','${doc.nguoiphutrach}')">Edit</button>
                                 <button class="btn btn-danger btn-sm" onclick="deleteDocument(${doc.id})">Delete</button>

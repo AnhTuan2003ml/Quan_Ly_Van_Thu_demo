@@ -414,6 +414,7 @@
                             <td>
                                 ${doc.link ? `<a href="${doc.link}" target="_blank">Xem chi tiết</a>` : 'Không có liên kết'}
                             </td>
+                            <td>${doc.status}</td>
                             <td>
                                 <button class="btn btn-info btn-sm" onclick="editDocument(${doc.id}, '${doc.tenvb}', '${doc.noidung}', '${doc.ngayden}', '${doc.so}', '${doc.han}', '${doc.nguoiphutrach}', '${doc.link}','${doc.nguoiphutrach}','${doc.lienket}','${doc.ngaydi}')">Edit</button>
                                 <button class="btn btn-danger btn-sm" onclick="deleteDocument(${doc.id})">Delete</button>

@@ -193,25 +193,27 @@
                                         <!-- Các option sẽ được điền tự động ở đây -->
                                     </select>
                                 </div>
-                                <div class="form-group">
-                                    <label for="documentFile">Tải lên văn bản:</label>
-                                    <input type="file" class="form-control" id="documentFile" name="documentFile">
-                                    <small id="fileNameDisplay" class="form-text text-muted"></small>
-                                    <!-- To display the file name -->
-                                    <input type="hidden" id="oldFilePath" name="oldFilePath" value="">
-                                    <!-- Đường dẫn cũ -->
-                                </div>
-
-                                <button type="submit" class="btn btn-primary" id="submitBtn"
-                                    onclick="saveDocument()">Lưu Văn Bản</button>
-                            </form>
                         </div>
+
+                        <div class="form-group">
+                            <label for="documentFile">Tải lên văn bản:</label>
+                            <input type="file" class="form-control" id="documentFile" name="documentFile">
+                            <small id="fileNameDisplay" class="form-text text-muted"></small>
+                            <!-- To display the file name -->
+                            <input type="hidden" id="oldFilePath" name="oldFilePath" value="">
+                            <!-- Đường dẫn cũ -->
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" id="submitBtn" onclick="saveDocument()">Lưu Văn
+                            Bản</button>
+                        </form>
                     </div>
                 </div>
             </div>
-
-           
         </div>
+
+
+    </div>
     </div>
 
     <!-- Core JavaScript Files -->
@@ -233,21 +235,20 @@
             };
         });
         function saveDocument() {
-            // Ngăn chặn hành động mặc định của form submit
             event.preventDefault();
             const formData = new FormData();
             // Kiểm tra và thêm các giá trị vào FormData
             formData.append('tenvb', document.getElementById('tenvb').value);
             formData.append('noidung', document.getElementById('noidung').value);
             formData.append('ngayden', document.getElementById('ngayden').value);
+            formData.append('ngaydi', document.getElementById('ngaydi').value);
             formData.append('so', document.getElementById('so').value);
             formData.append('han', document.getElementById('han').value);
             formData.append('nguoiphutrach', document.getElementById('nguoiphutrach').value);
             formData.append('lienket', document.getElementById('vblk').value);
-            formData.append('ngaydi', document.getElementById('ngaydi').value);
 
             const fileInput = document.getElementById('documentFile');
-            const oldFilePathInput = document.getElementById('oldFilePath'); // Trường lưu đường dẫn cũ
+            const oldFilePathInput = document.getElementById('oldFilePath'); // Đường dẫn cũ
 
             if (fileInput.files.length > 0) {
                 // Nếu có tệp mới, thêm vào formData
@@ -256,7 +257,6 @@
                 // Nếu không có tệp mới, thêm đường dẫn cũ vào formData
                 formData.append('oldFilePath', oldFilePathInput.value);
             }
-            fe
 
             // Kiểm tra nếu có documentId thì sẽ cập nhật, nếu không thì tạo mới
             const documentId = document.getElementById('documentId').value;
@@ -273,7 +273,7 @@
                 .then(data => {
                     if (data.success) {
                         alert(isUpdate ? 'Văn bản đã được cập nhật thành công!' : 'Văn bản đã được thêm thành công!');
-                        $('addDocumentModal').modal('hide');
+                        $('#documentModal').modal('hide'); // Đóng modal sau khi lưu thành công
                         fetchDocuments(); // Làm mới danh sách văn bản
                     } else {
                         alert(isUpdate ? 'Cập nhật văn bản thất bại.' : 'Thêm văn bản thất bại.');
@@ -284,7 +284,6 @@
                     alert('Đã có lỗi xảy ra.');
                 });
         }
-
 
 
         function editDocument(id, ten, noidung, ngayden, so, han, nguoiphutrach, link, nguoiphutrach_id, lienket, ngaydi) {
@@ -351,7 +350,7 @@
             fetch('/api/vb_den/info')
                 .then(response => response.json()) // Chuyển đổi phản hồi thành JSON
                 .then(data => {
-                    const selectElement = document.getElementById('vblk'); 
+                    const selectElement = document.getElementById('vblk');
                     console.log(data);
                     // Xóa tất cả các option hiện tại trong select (để không bị trùng lặp)
                     selectElement.innerHTML = '';

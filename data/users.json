@@ -108,5 +108,15 @@
     "password": "0b376badc25761426f83de0698341d055acaa5af9faccf6c7b3486ac45b7aa1e",
     "role": "Nhân viên",
     "status": 2
+  },
+  {
+    "id": 12,
+    "name": "Nguyen Van B",
+    "phone": "0123456788",
+    "address": "Hà Nội",
+    "email": "tuankkffdncs@gmail.com",
+    "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+    "role": "Giám đốc",
+    "status": 3
   }
 ]

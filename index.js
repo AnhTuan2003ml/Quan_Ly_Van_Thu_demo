@@ -8,6 +8,7 @@ import apiAuth from './routes/auth.js';
 import users from './routes/users.js';
 import apiVbDi from './routes/vb_di.js';
 import apiLog from './routes/log.js';
+import confirm from './routes/confirm.js';
 
 import { fileURLToPath } from 'url';
 import { checkDeadlines as checkInboundDeadlines } from './controllers/vb_den.js'; // Nhập hàm kiểm tra văn bản đến
@@ -48,10 +49,7 @@ app.use('/api/vb_den', apiVbDen);   // API cho văn bản đến
 app.use('/api/auth', apiAuth);
 app.use('/api/vb_di',apiVbDi);
 app.use('/api/log',apiLog);
-
-
-
-
+app.use('/',confirm);
 
 
 function scheduleDailyCheck() {
@@ -77,8 +75,6 @@ function scheduleDailyCheck() {
         setInterval(checkDeadlines, 24 * 60 * 60 * 1000); // Lặp lại hàng ngày
     }, timeUntilFirstRun);
 
-
-
     // Kiểm tra ngay lập tức
     // checkInboundDeadlines();
     // checkOutboundDeadlines();
@@ -92,6 +88,8 @@ function scheduleDailyCheck() {
 
 // Gọi hàm lên lịch
 scheduleDailyCheck();
+
+
 // Cài đặt cổng mà server sẽ lắng nghe
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

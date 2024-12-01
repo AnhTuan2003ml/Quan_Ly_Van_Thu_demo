@@ -33,16 +33,23 @@ const createTransporter = async () => {
     }
 };
 
-export const sendEmailNotification = async (to, subject, text, html) => {
+export const sendEmailNotification = async (to, subject, text, html,token) => {
     try {
         const transporter = await createTransporter();
-
+        // Cập nhật nội dung văn bản (text)
+        const updatedText = `${text}\n\nVui lòng nhấp vào liên kết dưới đây để xác nhận đã đọc:\n${token}`;
+        // Cập nhật nội dung HTML với liên kết xác nhận
+        const updatedHtml = `
+            ${html}
+            <p>Vui lòng nhấp vào liên kết dưới đây để xác nhận đã đọc:</p>
+            <a href="${token}" target="_blank">${token}</a>
+        `;
         const mailOptions = {
             from: process.env.EMAIL_USER,
             to: to,
             subject: subject,
-            text: text,
-            html: html
+            text: updatedText,
+            html: updatedHtml
         };
 
         await transporter.sendMail(mailOptions);
@@ -53,12 +60,12 @@ export const sendEmailNotification = async (to, subject, text, html) => {
     }
 };
 
-export const testSendEmail_single = async (newEmail) => {
+export const testSendEmail_single = async (newEmail,token) => {
     try {
         const to = newEmail;
         const subject = 'Thông báo';
-        const text = 'Thêm';
-        const html = '<h1>Thêm</h1>';
+        const text = `Thêm\n\nVui lòng nhấp vào liên kết dưới đây để xác nhận đã đọc:\n${token}`;
+        const html = `<h1>Thêm</h1>\n\nVui lòng nhấp vào liên kết dưới đây để xác nhận đã đọc:\n${token}`;
 
         await sendEmailNotification(to, subject, text, html);
         console.log(`Email kiểm tra đã được gửi thành công đến ${to}!`);
@@ -67,19 +74,25 @@ export const testSendEmail_single = async (newEmail) => {
     }
 };
 
-export const testSendEmail_multi = async (oldEmail, newEmail) => {
-    const to = [oldEmail, newEmail];
+export const testSendEmail_multi = async (oldEmail, newEmail, token_new, token_old) => {
+    const recipients = [
+        { email: oldEmail, text: 'Hủy', html: '<h1>Hủy</h1>', token: token_old },
+        { email: newEmail, text: 'Thêm', html: '<h1>Thêm</h1>', token: token_new },
+    ];
     const subject = 'Thông báo';
-    const text = ['Hủy', 'Thêm'];
-    const html = ['<h1>Hủy</h1>', '<h1>Thêm</h1>'];
 
     try {
-        if (to.length !== text.length || to.length !== html.length) {
-            throw new Error('Số lượng email, nội dung văn bản và HTML không khớp!');
-        }
+        for (const recipient of recipients) {
+            // Cập nhật nội dung text và html với token
+            const updatedText = `${recipient.text}\n\nVui lòng nhấp vào liên kết dưới đây để xác nhận:\n${recipient.token}`;
+            const updatedHtml = `
+                ${recipient.html}
+                <p>Vui lòng nhấp vào liên kết dưới đây để xác nhận:</p>
+                <a href="${recipient.token}" target="_blank">${recipient.token}</a>
+            `;
 
-        for (let i = 0; i < to.length; i++) {
-            await sendEmailNotification(to[i], subject, text[i], html[i]);
+            // Gửi email
+            await sendEmailNotification(recipient.email, subject, updatedText, updatedHtml, recipient.token);
         }
     } catch (error) {
         console.error('Lỗi khi gửi email kiểm tra:', error);

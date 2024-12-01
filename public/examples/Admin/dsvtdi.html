@@ -133,7 +133,6 @@
                                 <th>Người Phụ Trách</th>
                                 <th>Văn Bản liên kết</th>
                                 <th>Link Văn Bản</th>
-                                <th>Trạng Thái</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -194,16 +193,6 @@
                                         <!-- Các option sẽ được điền tự động ở đây -->
                                     </select>
                                 </div>
-
-                                <div class="form-group">
-                                    <label for="status">Trạng Thái:</label>
-                                    <select id="status" class="form-control" onchange="updateStatus()">
-                                        <option value="not completed">Chưa hoàn thành</option>
-                                        <option value="completed">Đã hoàn thành</option>
-                                    </select>
-                                </div>
-
-
                         </div>
 
                         <div class="form-group">
@@ -246,61 +235,58 @@
             };
         });
         function saveDocument() {
-            // Ngăn chặn hành động mặc định của form submit
-            event.preventDefault();
-            const formData = new FormData();
-            // Kiểm tra và thêm các giá trị vào FormData
-            formData.append('tenvb', document.getElementById('tenvb').value);
-            formData.append('noidung', document.getElementById('noidung').value);
-            formData.append('ngayden', document.getElementById('ngayden').value);
-            formData.append('so', document.getElementById('so').value);
-            formData.append('han', document.getElementById('han').value);
-            formData.append('nguoiphutrach', document.getElementById('nguoiphutrach').value);
-            formData.append('lienket', document.getElementById('vblk').value);
-            formData.append('ngaydi', document.getElementById('ngaydi').value);
-            formData.append('status', document.getElementById('status').value);
+                event.preventDefault();
+                const formData = new FormData();
+                // Kiểm tra và thêm các giá trị vào FormData
+                formData.append('tenvb', document.getElementById('tenvb').value);
+                formData.append('noidung', document.getElementById('noidung').value);
+                formData.append('ngayden', document.getElementById('ngayden').value);
+                formData.append('ngaydi', document.getElementById('ngaydi').value);
+                formData.append('so', document.getElementById('so').value);
+                formData.append('han', document.getElementById('han').value);
+                formData.append('nguoiphutrach', document.getElementById('nguoiphutrach').value);
+                formData.append('lienket', document.getElementById('vblk').value);
 
-            const fileInput = document.getElementById('documentFile');
-            const oldFilePathInput = document.getElementById('oldFilePath'); // Trường lưu đường dẫn cũ
+                const fileInput = document.getElementById('documentFile');
+                const oldFilePathInput = document.getElementById('oldFilePath'); // Đường dẫn cũ
 
-            if (fileInput.files.length > 0) {
-                // Nếu có tệp mới, thêm vào formData
-                formData.append('documentFile', fileInput.files[0]);
-            } else {
-                // Nếu không có tệp mới, thêm đường dẫn cũ vào formData
-                formData.append('oldFilePath', oldFilePathInput.value);
+                if (fileInput.files.length > 0) {
+                    // Nếu có tệp mới, thêm vào formData
+                    formData.append('documentFile', fileInput.files[0]);
+                } else {
+                    // Nếu không có tệp mới, thêm đường dẫn cũ vào formData
+                    formData.append('oldFilePath', oldFilePathInput.value);
+                }
+
+                // Kiểm tra nếu có documentId thì sẽ cập nhật, nếu không thì tạo mới
+                const documentId = document.getElementById('documentId').value;
+                const isUpdate = !!documentId; // Xác định isUpdate dựa trên việc có documentId hay không
+
+                const url = isUpdate ? `/api/vb_di/${documentId}` : '/api/vb_di';
+                const method = isUpdate ? 'PUT' : 'POST';
+
+                fetch(url, {
+                    method: method,
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert(isUpdate ? 'Văn bản đã được cập nhật thành công!' : 'Văn bản đã được thêm thành công!');
+                            $('#documentModal').modal('hide'); // Đóng modal sau khi lưu thành công
+                            fetchDocuments(); // Làm mới danh sách văn bản
+                        } else {
+                            alert(isUpdate ? 'Cập nhật văn bản thất bại.' : 'Thêm văn bản thất bại.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Lỗi:', error);
+                        alert('Đã có lỗi xảy ra.');
+                    });
             }
 
-            // Kiểm tra nếu có documentId thì sẽ cập nhật, nếu không thì tạo mới
-            const documentId = document.getElementById('documentId').value;
-            const isUpdate = !!documentId; // Xác định isUpdate dựa trên việc có documentId hay không
 
-            const url = isUpdate ? `/api/vb_di/${documentId}` : '/api/vb_di';
-            const method = isUpdate ? 'PUT' : 'POST';
-
-            fetch(url, {
-                method: method,
-                body: formData
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert(isUpdate ? 'Văn bản đã được cập nhật thành công!' : 'Văn bản đã được thêm thành công!');
-                        $('addDocumentModal').modal('hide');
-                        fetchDocuments(); // Làm mới danh sách văn bản
-                    } else {
-                        alert(isUpdate ? 'Cập nhật văn bản thất bại.' : 'Thêm văn bản thất bại.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Lỗi:', error);
-                    alert('Đã có lỗi xảy ra.');
-                });
-        }
-
-
-
-        function editDocument(id, ten, noidung, ngayden, so, han, nguoiphutrach, link, nguoiphutrach_id, lienket, ngaydi, status) {
+        function editDocument(id, ten, noidung, ngayden, so, han, nguoiphutrach, link, nguoiphutrach_id, lienket, ngaydi) {
             document.getElementById('documentId').value = id;
             document.getElementById('tenvb').value = ten;
             document.getElementById('noidung').value = noidung;
@@ -312,7 +298,6 @@
             document.getElementById('vblk').value = lienket;
             document.getElementById('ngaydi').value = ngaydi;
             document.getElementById('oldFilePath').value = link;
-            document.getElementById('status').value = status;
             // Fetch users and set the selected user
             fetchUsers(nguoiphutrach_id);
             fetchVBDen(lienket);
@@ -327,16 +312,6 @@
 
             // Show the modal
             $('#documentModal').modal('show');
-        }
-
-        function updateStatus() {
-            // Lấy giá trị của trạng thái đã chọn
-            const statusSelect = document.getElementById('status');
-            const selectedStatus = statusSelect.value;
-
-            // Hiển thị trạng thái đã chọn
-            const statusDisplay = document.getElementById('statusDisplay');
-            statusDisplay.innerText = `Trạng Thái Hiện Tại: ${selectedStatus}`;
         }
         // Hàm lấy danh sách người dùng và thiết lập người phụ trách mặc định
         function fetchUsers(nguoiphutrach_id) {
@@ -439,11 +414,8 @@
                             <td>
                                 ${doc.link ? `<a href="${doc.link}" target="_blank">Xem chi tiết</a>` : 'Không có liên kết'}
                             </td>
-                                ${doc.status}
                             <td>
-                            </td>
-                            <td>
-                                <button class="btn btn-info btn-sm" onclick="editDocument(${doc.id}, '${doc.tenvb}', '${doc.noidung}', '${doc.ngayden}', '${doc.so}', '${doc.han}', '${doc.nguoiphutrach}', '${doc.link}','${doc.nguoiphutrach}','${doc.lienket}','${doc.ngaydi}','${doc.status}')">Edit</button>
+                                <button class="btn btn-info btn-sm" onclick="editDocument(${doc.id}, '${doc.tenvb}', '${doc.noidung}', '${doc.ngayden}', '${doc.so}', '${doc.han}', '${doc.nguoiphutrach}', '${doc.link}','${doc.nguoiphutrach}','${doc.lienket}','${doc.ngaydi}')">Edit</button>
                                 <button class="btn btn-danger btn-sm" onclick="deleteDocument(${doc.id})">Delete</button>
                             </td>
                         `;
@@ -476,7 +448,6 @@
             document.getElementById('nguoiphutrach').value = '';
             document.getElementById('documentFile').value = ''; // Clear file input
             document.getElementById('oldFilePath').value = ''; // Clear file input
-            document.getElementById('status').value = '';
         }
 
     </script>

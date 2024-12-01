@@ -262,16 +262,16 @@
             document.getElementById('submitBtn').innerText = 'Add User'; // Reset button text
         }
         function editUser(id, name, phone, address, email, position, isAdmin) {
-            document.getElementById('userId').value = id;
-            document.getElementById('name').value = name;
-            document.getElementById('phone').value = phone;
-            document.getElementById('address').value = address;
-            document.getElementById('email').value = email;
-            document.getElementById('position').value = position;
-            document.getElementById('isAdmin').value = isAdmin; // Thiết lập vai trò đã chọn
-            document.getElementById('submitBtn').innerText = 'Update User';
-            $('#userModal').modal('show'); // Hiện modal để chỉnh sửa
-        }
+                document.getElementById('userId').value = id;
+                document.getElementById('name').value = name;
+                document.getElementById('phone').value = phone;
+                document.getElementById('address').value = address;
+                document.getElementById('email').value = email;
+                document.getElementById('position').value = position;
+                document.getElementById('isAdmin').value = isAdmin; // Thiết lập vai trò đã chọn
+                document.getElementById('submitBtn').innerText = 'Update User'; // Thay đổi nút thành "Cập nhật"
+                $('#userModal').modal('show'); // Hiện modal để chỉnh sửa
+            }
 
         // Hàm để lấy và hiển thị danh sách người phụ trách
         function populateNguoiPhutrach() {
@@ -304,64 +304,64 @@
         populateNguoiPhutrach();
 
         function addUser() {
-            const id = document.getElementById('userId').value;
-            const name = document.getElementById('name').value;
-            const phone = document.getElementById('phone').value;
-            const address = document.getElementById('address').value;
-            const email = document.getElementById('email').value;
-            const position = document.getElementById('position').value;
-            const isAdmin = document.getElementById('isAdmin').value;
+                const id = document.getElementById('userId').value;
+                const name = document.getElementById('name').value;
+                const phone = document.getElementById('phone').value;
+                const address = document.getElementById('address').value;
+                const email = document.getElementById('email').value;
+                const position = document.getElementById('position').value;
+                const isAdmin = document.getElementById('isAdmin').value;
 
-           // Tạo đối tượng dữ liệu người dùng
-            const userData = {
-                name: name,
-                phone: phone,
-                address: address,
-                email: email,
-                role: position,  // Bao gồm vị trí ở đây
-                status: parseInt(isAdmin) // Chuyển isAdmin thành số
-            };
+                // Tạo đối tượng dữ liệu người dùng
+                const userData = {
+                    name: name,
+                    phone: phone,
+                    address: address,
+                    email: email,
+                    role: position,  // Bao gồm vị trí ở đây
+                    status: parseInt(isAdmin) // Chuyển isAdmin thành số
+                };
 
-            // Xác định URL API và phương thức
-            const url = id ? `/api/users/${id}` : '/api/users';  // URL để cập nhật hoặc tạo mới
-            const method = id ? 'PUT' : 'POST';  // Sử dụng PUT cho cập nhật, POST cho tạo mới người dùng
+                // Xác định URL API và phương thức
+                const url = id ? `/api/users/${id}` : '/api/users';  // URL để cập nhật hoặc tạo mới
+                const method = id ? 'PUT' : 'POST';  // Sử dụng PUT cho cập nhật, POST cho tạo mới người dùng
 
-            // Gọi API để thêm mới hoặc cập nhật người dùng
-            fetch(url, {
-                method: method,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(userData), // Gửi dữ liệu người dùng dưới dạng JSON
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        return response.json().then(data => {
-                            // Xử lý phản hồi lỗi từ API, hiển thị thông báo lỗi
-                            throw new Error('Lỗi trong phản hồi: ' + data.message);
-                        });
-                    }
-                    return response.json();
+                // Gọi API để thêm mới hoặc cập nhật người dùng
+                fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(userData), // Gửi dữ liệu người dùng dưới dạng JSON
                 })
-                .then(data => {
-                    // Thông báo thành công
-                    alert(`Người dùng ${id ? 'đã cập nhật' : 'đã thêm'} thành công`);
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(data => {
+                                // Xử lý phản hồi lỗi từ API, hiển thị thông báo lỗi
+                                throw new Error('Lỗi trong phản hồi: ' + data.message);
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Thông báo thành công
+                        alert(`Người dùng ${id ? 'đã cập nhật' : 'đã thêm'} thành công`);
 
-                    // Tùy chọn làm mới danh sách người dùng
-                    fetchUsers();
+                        // Tùy chọn làm mới danh sách người dùng
+                        fetchUsers();
 
-                    // Xóa form sau khi thành công
-                    clearForm();
+                        // Xóa form sau khi thành công
+                        clearForm();
 
-                    // Ẩn modal sau khi hoàn tất
-                    $('#userModal').modal('hide');
-                })
-                .catch(error => {
-                    // Xử lý lỗi trong quá trình gọi fetch
-                    console.error('Lỗi:', error);
-                });
+                        // Ẩn modal sau khi hoàn tất
+                        $('#userModal').modal('hide');
+                    })
+                    .catch(error => {
+                        // Xử lý lỗi trong quá trình gọi fetch
+                        console.error('Lỗi:', error);
+                    });
+            }
 
-        }
         function deleteUser(id) {
             if (confirm("Are you sure you want to delete this user?")) {
                 fetch(`/api/users/${id}`, {

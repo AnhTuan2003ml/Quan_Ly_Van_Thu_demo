@@ -246,5 +246,157 @@
     "type": "văn bản đến",
     "changes": "Tệp đính kèm thay đổi",
     "timestamp": "2024-11-29T05:21:07.154Z"
+  },
+  {
+    "id": 32,
+    "userId": 1,
+    "documentId": 1,
+    "type": "văn bản đến",
+    "changes": "Tên văn bản thay đổi từ 'Document 10' thành 'Document 1'; Tệp đính kèm thay đổi",
+    "timestamp": "2024-11-30T12:21:42.741Z"
+  },
+  {
+    "id": 33,
+    "userId": 1,
+    "documentId": 1,
+    "type": "văn bản đến",
+    "changes": "Tên văn bản thay đổi từ 'Document 1' thành 'Document 2'; Tệp đính kèm thay đổi",
+    "timestamp": "2024-11-30T12:22:37.730Z"
+  },
+  {
+    "id": 34,
+    "userId": 1,
+    "documentId": 1,
+    "type": "văn bản đến",
+    "changes": "Tên văn bản thay đổi từ 'Document 2' thành 'Document 1'; Tệp đính kèm thay đổi",
+    "timestamp": "2024-11-30T12:24:16.928Z"
+  },
+  {
+    "id": 35,
+    "userId": 1,
+    "documentId": 1,
+    "type": "văn bản đến",
+    "changes": "Tên văn bản thay đổi từ 'Document 1' thành 'Document 2'; Tệp đính kèm thay đổi",
+    "timestamp": "2024-11-30T12:27:46.572Z"
+  },
+  {
+    "id": 36,
+    "userId": 1,
+    "documentId": 4,
+    "type": "văn bản đến",
+    "changes": "Thêm văn bản đến",
+    "timestamp": "2024-11-30T12:28:12.228Z"
+  },
+  {
+    "id": 37,
+    "userId": 1,
+    "documentId": 1,
+    "type": "văn bản đi",
+    "changes": "Tên văn bản thay đổi từ 'Document Out 1' thành 'Document Out 2'; Tệp đính kèm thay đổi; Liên kết file văn bản đến thay đổi",
+    "timestamp": "2024-11-30T12:29:01.051Z"
+  },
+  {
+    "id": 38,
+    "userId": 1,
+    "documentId": 1,
+    "type": "văn bản đi",
+    "changes": "Tên văn bản thay đổi từ 'Document Out 2' thành 'Document Out 1'; Tệp đính kèm thay đổi; Liên kết file văn bản đến thay đổi",
+    "timestamp": "2024-11-30T12:30:51.497Z"
+  },
+  {
+    "id": 39,
+    "userId": 1,
+    "documentId": 14,
+    "type": "văn bản đi",
+    "changes": "Thêm văn bản đi",
+    "timestamp": "2024-11-30T12:31:12.320Z"
+  },
+  {
+    "id": 40,
+    "userId": 2,
+    "documentId": 2,
+    "type": "văn bản đi",
+    "changes": "Tên văn bản thay đổi từ 'Document Out 2' thành 'Document Out 1'; Tệp đính kèm thay đổi; Liên kết file văn bản đến thay đổi",
+    "timestamp": "2024-11-30T12:43:54.487Z"
+  },
+  {
+    "id": 41,
+    "userId": 2,
+    "documentId": 15,
+    "type": "văn bản đi",
+    "changes": "Thêm văn bản đi",
+    "timestamp": "2024-11-30T12:44:17.030Z"
+  },
+  {
+    "id": 42,
+    "userId": 1,
+    "documentId": 1,
+    "type": "văn bản đi",
+    "changes": "Người phụ trách thay đổi từ '1' thành '2'; Tệp đính kèm thay đổi; Liên kết file văn bản đến thay đổi",
+    "timestamp": "2024-11-30T13:02:21.731Z"
+  },
+  {
+    "id": 43,
+    "userId": 1,
+    "documentId": 16,
+    "type": "văn bản đi",
+    "changes": "Thêm văn bản đi",
+    "timestamp": "2024-11-30T13:02:44.027Z"
+  },
+  {
+    "id": 44,
+    "userId": 1,
+    "documentId": 1,
+    "type": "văn bản đến",
+    "changes": "Người phụ trách thay đổi từ '10' thành '3'; Tệp đính kèm thay đổi",
+    "timestamp": "2024-11-30T13:03:10.784Z"
+  },
+  {
+    "id": 45,
+    "userId": 2,
+    "documentId": 1,
+    "type": "văn bản đi",
+    "changes": "Số văn bản thay đổi từ '1' thành '2'; Tệp đính kèm thay đổi; Liên kết file văn bản đến thay đổi",
+    "timestamp": "2024-11-30T13:04:18.660Z"
+  },
+  {
+    "id": 46,
+    "userId": 1,
+    "documentId": 1,
+    "type": "văn bản đến",
+    "changes": "Người phụ trách thay đổi từ '3' thành '2'; Tệp đính kèm thay đổi",
+    "timestamp": "2024-12-01T04:15:37.290Z"
+  },
+  {
+    "id": 47,
+    "userId": 1,
+    "documentId": 1,
+    "type": "văn bản đến",
+    "changes": "Hạn thay đổi từ '2024-11-28' thành '2024-12-03'; Tệp đính kèm thay đổi",
+    "timestamp": "2024-12-01T04:17:11.082Z"
+  },
+  {
+    "id": 48,
+    "userId": 1,
+    "documentId": 2,
+    "type": "văn bản đến",
+    "changes": "Hạn thay đổi từ '2003-11-11' thành '2024-12-11'; Tệp đính kèm thay đổi",
+    "timestamp": "2024-12-01T04:26:06.060Z"
+  },
+  {
+    "id": 49,
+    "userId": 1,
+    "documentId": 1,
+    "type": "văn bản đến",
+    "changes": "Người phụ trách thay đổi từ '2' thành '3'; Tệp đính kèm thay đổi",
+    "timestamp": "2024-12-01T04:32:29.467Z"
+  },
+  {
+    "id": 50,
+    "userId": 1,
+    "documentId": 1,
+    "type": "văn bản đến",
+    "changes": "Người phụ trách thay đổi từ '3' thành '2'; Tệp đính kèm thay đổi",
+    "timestamp": "2024-12-01T04:35:14.295Z"
   }
 ]

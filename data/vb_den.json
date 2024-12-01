@@ -1,14 +1,13 @@
 [
   {
     "id": 1,
-    "tenvb": "Document 10",
-    "noidung": "Content of document 10",
-    "ngayden": "2024-11-05",
-    "so": 10,
-    "han": "2024-11-28",
-    "nguoiphutrach": 10,
-    "link": null,
-    "status": "not completed"
+    "tenvb": "Văn bản 1",
+    "noidung": "aaaaaaaaa",
+    "ngayden": "2003-10-11",
+    "so": 1,
+    "han": "2024-12-11",
+    "nguoiphutrach": 2,
+    "link": "../../doc/null_1"
   },
   {
     "id": 2,
@@ -18,18 +17,16 @@
     "so": 1,
     "han": "2003-11-11",
     "nguoiphutrach": 2,
-    "link": null,
-    "status": "not completed"
+    "link": "../../doc/ADN_2.docx"
   },
   {
     "id": 3,
     "tenvb": "Văn bản 1",
-    "noidung": "aaaaaaaaa",
+    "noidung": "aaaa",
     "ngayden": "2003-10-11",
     "so": 1,
     "han": "2003-11-11",
     "nguoiphutrach": 2,
-    "link": "../../doc/ADN_2.docx",
-    "status": "not completed"
+    "link": null
   }
 ]

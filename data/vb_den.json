@@ -1,24 +1,24 @@
 [
   {
     "id": 1,
-    "tenvb": "Văn bản 2",
-    "noidung": "Anh Tuấn",
-    "ngayden": "2024-12-11",
-    "so": 1,
-    "han": "2024-12-12",
+    "tenvb": "văn bản 1",
+    "sovanban": 2,
+    "ngayphathanh": "2024-11-12",
+    "soDen": 456,
+    "ngayden": "2024-11-15",
+    "noidung": "Anh Tuấn Đẹp trai",
+    "chidao": "Anh Tuấn",
+    "ngayxuly": "2024-11-16",
+    "hantheovanban": "2024-11-20",
+    "hantheochidao": null,
+    "nguonphathanh": [
+      {
+        "type": "Ngoài Trường",
+        "address": "HD-005"
+      }
+    ],
     "nguoiphutrach": 2,
     "link": "null",
-    "status": "checked"
-  },
-  {
-    "id": 2,
-    "tenvb": "Văn bản 1",
-    "noidung": "Anh Tuấn Siêu đẹp trai",
-    "ngayden": "2024-11-12",
-    "so": 1,
-    "han": "2024-12-15",
-    "nguoiphutrach": 2,
-    "link": "../../doc/null_1",
     "status": "checked"
   }
 ]

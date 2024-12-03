@@ -1,22 +1,6 @@
 [
   {
     "documentId": 1,
-    "type": "văn bản đến",
-    "nguoiphutrach": 4,
-    "timestamp": "2024-12-01T15:47:30.715Z",
-    "nguoiduocgiao": [
-      2,
-      3,
-      2
-    ],
-    "ngaygiao": [
-      "2024-12-01T15:47:42.192Z",
-      "2024-12-01T16:38:22.763Z",
-      "2024-12-01T16:42:49.802Z"
-    ]
-  },
-  {
-    "documentId": 1,
     "type": "văn bản đi",
     "nguoiphutrach": 3,
     "timestamp": "2024-12-01T15:48:22.226Z",
@@ -31,22 +15,26 @@
   },
   {
     "documentId": 2,
-    "type": "văn bản đến",
-    "nguoiphutrach": 4,
-    "timestamp": "2024-12-01T16:56:59.157Z",
-    "nguoiduocgiao": [
-      2
-    ],
-    "ngaygiao": [
-      "2024-12-01T16:57:13.002Z"
-    ]
-  },
-  {
-    "documentId": 2,
     "type": "văn bản đi",
     "nguoiphutrach": 2,
     "timestamp": "2024-12-01T17:00:53.691Z",
     "nguoiduocgiao": null,
     "ngaygiao": null
+  },
+  {
+    "documentId": 1,
+    "type": "văn bản đến",
+    "nguoiphutrach": 3,
+    "timestamp": "2024-12-03T01:46:10.031Z",
+    "nguoiduocgiao": [
+      2,
+      3,
+      2
+    ],
+    "ngaygiao": [
+      "2024-12-03T01:48:28.766Z",
+      "2024-12-03T01:51:31.132Z",
+      "2024-12-03T01:56:17.452Z"
+    ]
   }
 ]

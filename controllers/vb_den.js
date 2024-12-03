@@ -65,7 +65,7 @@ export const Get_vb_den = (req, res) => {
 
 export const Put_vb_den = (req, res) => {
     const documentId = parseInt(req.params.id);
-    const { tenvb, noidung, ngayden, so, han, nguoiphutrach } = req.body;
+    const { tenvb, sovanban, ngayphathanh, soDen, ngayden, noidung, chidao, ngayxuly, hantheovanban, hantheochidao, nguonphathanh, diachiphathanh, nguoiphutrach, link } = req.body;
     const documentFile = req.file; // Tệp mới nếu có
     // Kiểm tra nếu không có tệp mới, sử dụng tệp cũ
     let filePath_doc = documentFile ? `../../doc/${path.basename(documentFile.filename)}` : req.body.oldFilePath || null;
@@ -97,6 +97,7 @@ export const Put_vb_den = (req, res) => {
     // Tìm thông tin văn bản cũ (có thể lấy từ cơ sở dữ liệu hoặc từ file JSON)
     readJSONFileID(filePath, parseInt(documentId)) // Giả sử bạn có hàm này để lấy thông tin văn bản cũ
         .then(oldDocument => {
+            console.log("vb_den.js: ",documentId);
             // So sánh và tạo danh sách các thuộc tính thay đổi
             let token_old;
             let token_new;
@@ -104,28 +105,45 @@ export const Put_vb_den = (req, res) => {
                 const oldEmail = getEmailById(oldDocument.nguoiphutrach)
                 const newEmail = getEmailById(nguoiphutrach)
 
+
                 // Lấy ngày hiện tại
                 const currentDate = new Date();
 
-                // Lấy ngày hết hạn từ oldDocument.han
-                const expirationDate = new Date(oldDocument.han);
+                // Lấy ngày hết hạn từ hantheochidao hoặc hantheovanban
+                const expirationDate = new Date(
+                    oldDocument.hantheochidao || oldDocument.hantheovanban
+                );
 
-                // Tính toán sự khác biệt giữa ngày hết hạn và ngày hiện tại
-                const timeDifference = expirationDate - currentDate;
+                // Kiểm tra nếu ngày hết hạn hợp lệ
+                if (isNaN(expirationDate.getTime())) {
+                    console.error("Ngày hết hạn không hợp lệ.");
+                } else {
+                    // Tính toán sự khác biệt giữa ngày hết hạn và ngày hiện tại (mili giây)
+                    const timeDifference = expirationDate - currentDate;
 
-                // Chuyển đổi sự khác biệt thành giờ, phút
-                const hoursRemaining = timeDifference / (1000 * 60 * 60);  // Chuyển từ milliseconds sang giờ
+                    // Chuyển đổi sự khác biệt thành giờ và phút
+                    const hoursRemaining = Math.floor(timeDifference / (1000 * 60 * 60));  // Chuyển từ mili giây sang giờ
+                    const minutesRemaining = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60)); // Phần dư tính phút
 
-                // Kiểm tra nếu ngày hết hạn còn lớn hơn ngày hiện tại
-                if (hoursRemaining > 0) {
-                    token_new = generateConfirmLink(newEmail, hoursRemaining, oldDocument.id ,"văn bản đến");
-                    token_old = generateConfirmLink(oldEmail, hoursRemaining, oldDocument.id ,"văn bản đến");
+                    // Kiểm tra nếu ngày hết hạn còn lớn hơn ngày hiện tại
+                    if (hoursRemaining > 0 || minutesRemaining > 0) {
+                        // Nếu thời gian còn lại lớn hơn 0 (còn giờ hoặc phút)
+                        token_new = generateConfirmLink(newEmail, hoursRemaining, oldDocument.id, "văn bản đến");
+                        token_old = generateConfirmLink(oldEmail, hoursRemaining, oldDocument.id, "văn bản đến");
+                    } else {
+                        console.log("Ngày hết hạn đã qua.");
+                        token_new = generateConfirmLink(newEmail, 24, oldDocument.id, "văn bản đến");
+                        token_old = generateConfirmLink(oldEmail, 24, oldDocument.id, "văn bản đến");
+                    }
+
+                    // Gửi email cho các địa chỉ
                     testSendEmail_multi(oldEmail, newEmail, token_new, token_old);
                 }
+
                 updateLogByDocumentIdAndType(parseInt(documentId), 'văn bản đến', parseInt(nguoiphutrach), currentDate.toISOString());
             }           
             // Cập nhật thông tin văn bản
-            updateDocument_den(documentId, tenvb, noidung, ngayden, parseInt(so), han, parseInt(nguoiphutrach), filePath_doc,filePath)
+            updateDocument_den(documentId, tenvb, parseInt(sovanban), ngayphathanh, parseInt(soDen), ngayden, noidung, chidao, ngayxuly, hantheovanban, hantheochidao, nguonphathanh, parseInt(nguoiphutrach),  filePath_doc,filePath)
                 .then(() => {
                     res.json({ success: true, message: 'Văn bản đã được cập nhật thành công.' });
                 })
@@ -139,7 +157,7 @@ export const Put_vb_den = (req, res) => {
 }
 
 export const Post_vb_den = (req,res) => {
-    const { tenvb, noidung, ngayden, so, han, nguoiphutrach} = req.body;
+    const { tenvb, sovanban, ngayphathanh, soDen, ngayden, noidung, chidao, ngayxuly, hantheovanban, hantheochidao, nguonphathanh, nguoiphutrach} = req.body;
     const documentFile = req.file; // Tệp mới nếu có
     // Kiểm tra nếu không có tệp mới, sử dụng tệp cũ
     let filePath_doc = documentFile ? `../../doc/${path.basename(documentFile.filename)}` : null;
@@ -173,26 +191,40 @@ export const Post_vb_den = (req,res) => {
     // Lấy ngày hiện tại
     const currentDate = new Date();
 
-    // Lấy ngày hết hạn từ oldDocument.han
-    const expirationDate = new Date(han);
 
-    // Tính toán sự khác biệt giữa ngày hết hạn và ngày hiện tại
-    const timeDifference = expirationDate - currentDate;
+    // Lấy ngày hết hạn từ hantheochidao hoặc hantheovanban
+    const expirationDate = new Date(
+        hantheochidao || hantheovanban
+    );
+    let hoursRemaining;
+    // Kiểm tra nếu ngày hết hạn hợp lệ
+    if (isNaN(expirationDate.getTime())) {
+        console.error("Ngày hết hạn không hợp lệ.");
+    } else {
+        // Tính toán sự khác biệt giữa ngày hết hạn và ngày hiện tại (mili giây)
+        const timeDifference = expirationDate - currentDate;
 
-    // Chuyển đổi sự khác biệt thành giờ, phút
-    const hoursRemaining = timeDifference / (1000 * 60 * 60);  // Chuyển từ milliseconds sang giờ
+        // Chuyển đổi sự khác biệt thành giờ và phút
+        hoursRemaining = Math.floor(timeDifference / (1000 * 60 * 60));  // Chuyển từ mili giây sang giờ
+        
+    }
+
 
     
     // Thêm văn bản mới vào cơ sở dữ liệu (hoặc file)
-    addDocument_den(tenvb, noidung, ngayden, parseInt(so), han, parseInt(nguoiphutrach), filePath_doc,filePath)
+    addDocument_den(tenvb, parseInt(sovanban), ngayphathanh, parseInt(soDen), ngayden, noidung, chidao, ngayxuly, hantheovanban, hantheochidao, nguonphathanh, nguoiphutrach, filePath_doc,filePath)
         .then((documentId) => {
             const id_doc = documentId;
             const timestamp = new Date().toISOString(); // Thời gian thay đổi
             // Kiểm tra nếu ngày hết hạn còn lớn hơn ngày hiện tại
             if (hoursRemaining > 0) {
                 token_new = generateConfirmLink(newEmail, hoursRemaining, documentId, "văn bản đến");
-                testSendEmail_single(newEmail, token_new);
+                
             }
+            else{
+                token_new = generateConfirmLink(newEmail, 24, documentId, "văn bản đến");
+            }
+            testSendEmail_single(newEmail, token_new);
             // Trả về phản hồi thành công trước khi gọi addLogData()
             res.json({ success: true, message: 'Văn bản đến đã được thêm thành công.', documentId: id_doc });
 

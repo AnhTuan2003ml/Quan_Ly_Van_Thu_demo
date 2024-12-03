@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import {Get_vb_den,Post_vb_den,Put_vb_den,Delete,__dirname,GetDocumentInfo} from '../controllers/vb_den.js';
+import { Get_vb_den, Post_vb_den, Put_vb_den, Delete, __dirname, GetDocumentInfo, getFileCSV } from '../controllers/vb_den.js';
 import multer from 'multer';
 import path from 'path';  // Đảm bảo rằng path đã được import
 import fs from 'fs';  // Đảm bảo rằng fs đã được import
@@ -40,5 +40,5 @@ router.get('/info', ensureAuthenticated, GetDocumentInfo);
 router.put('/:id', ensureAuthenticated, upload.single('documentFile'), Put_vb_den);
 router.post('/', ensureAuthenticated, upload.single('documentFile'), Post_vb_den);
 router.delete('/:id', ensureAuthenticated, Delete);
-
+router.get('/getfile', ensureAuthenticated,getFileCSV);
 export default router;

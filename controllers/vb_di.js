@@ -4,7 +4,7 @@ import path from 'path';
 import { addLogData, updateLogByDocumentIdAndType, deleteLogByDocumentIdAndType } from './log.js'; // Import đúng file log.js trong cùng thư mục
 import { getEmailById } from './users.js';
 import { testSendEmail_multi, testSendEmail_single } from "./sendEmail.js";
-import { readJSONFile, readJSONFileID, writeJSONFile, updateDocument_di, addDocument_di, daysUntilDeadline, updateDocumentStatus } from '../Utils/JsonFile.js';
+import { readJSONFile, readJSONFileID, writeJSONFile, updateDocument_di, addDocument_di, daysUntilDeadline, updateDocumentStatus, convertJSONToCSV } from '../Utils/JsonFile.js';
 import {Get_link_vb_den} from './vb_den.js';
 import { generateConfirmLink } from './confirm.js';
 
@@ -299,3 +299,21 @@ export function changeDocumentStatusById_di(id) {
             });
     });
 }
+// Hàm API trả về file CSV
+export const getFileCSV = (req, res) => {
+    try {
+        // Chuyển đổi file JSON thành CSV
+        const csvData = convertJSONToCSV(filePath);
+
+        // Cấu hình headers để trả về file CSV với mã hóa UTF-8
+        res.header('Content-Type', 'text/csv; charset=utf-8'); // Mã hóa UTF-8
+        res.header('Content-Disposition', 'attachment; filename=output.csv'); // Đặt tên file khi tải về
+
+        // Gửi CSV data về cho người dùng, đảm bảo mã hóa UTF-8
+        res.send(Buffer.from(csvData, 'utf8'));  // Gửi CSV với UTF-8 encoding
+
+    } catch (error) {
+        console.error('Lỗi khi xuất file CSV:', error.message);
+        res.status(500).json({ success: false, message: 'Có lỗi xảy ra khi xuất file CSV.' });
+    }
+};

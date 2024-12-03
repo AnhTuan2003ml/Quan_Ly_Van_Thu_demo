@@ -4,7 +4,7 @@ import path from 'path';
 import { addLogData, updateLogByDocumentIdAndType, deleteLogByDocumentIdAndType } from './log.js'; // Import đúng file log.js trong cùng thư mục
 import { getEmailById } from './users.js';
 import { testSendEmail_multi, testSendEmail_single } from "./sendEmail.js";
-import { readJSONFile, readJSONFileID, writeJSONFile, updateDocument_den, addDocument_den, daysUntilDeadline, updateDocumentStatus } from '../Utils/JsonFile.js';
+import { readJSONFile, readJSONFileID, writeJSONFile, updateDocument_den, addDocument_den, daysUntilDeadline, updateDocumentStatus, convertJSONToCSV } from '../Utils/JsonFile.js';
 import {generateConfirmLink} from './confirm.js';
 
 // Lấy đường dẫn thư mục hiện tại, sửa lại để không có dấu '\' ở đầu
@@ -62,21 +62,20 @@ export const Get_vb_den = (req, res) => {
     }
     return res.json(data);
 }
-
 export const Put_vb_den = (req, res) => {
     const documentId = parseInt(req.params.id);
-    const { tenvb, sovanban, ngayphathanh, soDen, ngayden, noidung, chidao, ngayxuly, hantheovanban, hantheochidao, nguonphathanh, diachiphathanh, nguoiphutrach, link } = req.body;
+    const { tenvb, sovanban, ngayphathanh, soDen, ngayden, noidung, chidao, ngayxuly, hantheovanban, hantheochidao, nguonphathanh, nguoiphutrach, kinhchuyen } = req.body;
     const documentFile = req.file; // Tệp mới nếu có
+
     // Kiểm tra nếu không có tệp mới, sử dụng tệp cũ
     let filePath_doc = documentFile ? `../../doc/${path.basename(documentFile.filename)}` : req.body.oldFilePath || null;
     const data = readJSONFile(filePath);
+
     // Kiểm tra sự trùng lặp đường dẫn với các văn bản khác
-    // Kiểm tra trùng lặp file
     if (filePath_doc) {
         const existingDocument = data.find(doc => doc.link === filePath_doc);
 
         if (existingDocument) {
-            // Nếu trùng với văn bản khác, thay đổi tên tệp
             if (parseInt(existingDocument.id) !== documentId) {
                 const ext = path.extname(filePath_doc);
                 const baseName = path.basename(filePath_doc, ext);
@@ -91,43 +90,39 @@ export const Put_vb_den = (req, res) => {
                 filePath_doc = newFilePath;
                 console.log(`Tên tệp mới: ${filePath_doc}`);
             }
-            // Nếu trùng với chính văn bản đó, không thay đổi tên file, chỉ ghi đè
         }
-    }    // console.log(documentId,tenvb, noidung, ngayden, so, han, nguoiphutrach);
-    // Tìm thông tin văn bản cũ (có thể lấy từ cơ sở dữ liệu hoặc từ file JSON)
-    readJSONFileID(filePath, parseInt(documentId)) // Giả sử bạn có hàm này để lấy thông tin văn bản cũ
-        .then(oldDocument => {
-            console.log("vb_den.js: ",documentId);
-            // So sánh và tạo danh sách các thuộc tính thay đổi
-            let token_old;
-            let token_new;
-            if (oldDocument.nguoiphutrach !== parseInt(nguoiphutrach)) {
-                const oldEmail = getEmailById(oldDocument.nguoiphutrach)
-                const newEmail = getEmailById(nguoiphutrach)
+    }
 
+    // Tìm thông tin văn bản cũ
+    readJSONFileID(filePath, parseInt(documentId))
+        .then(oldDocument => {
+            console.log("Kính chuyển: ", kinhchuyen);
+
+            // So sánh và tạo danh sách các thuộc tính thay đổi
+            let minutesRemaining, hoursRemaining;
+            if (oldDocument.nguoiphutrach !== parseInt(nguoiphutrach)) {
+                const oldEmail = getEmailById(oldDocument.nguoiphutrach);
+                const newEmail = getEmailById(nguoiphutrach);
 
                 // Lấy ngày hiện tại
                 const currentDate = new Date();
 
                 // Lấy ngày hết hạn từ hantheochidao hoặc hantheovanban
-                const expirationDate = new Date(
-                    oldDocument.hantheochidao || oldDocument.hantheovanban
-                );
+                const expirationDate = new Date(oldDocument.hantheochidao || oldDocument.hantheovanban);
 
-                // Kiểm tra nếu ngày hết hạn hợp lệ
                 if (isNaN(expirationDate.getTime())) {
                     console.error("Ngày hết hạn không hợp lệ.");
                 } else {
-                    // Tính toán sự khác biệt giữa ngày hết hạn và ngày hiện tại (mili giây)
                     const timeDifference = expirationDate - currentDate;
 
                     // Chuyển đổi sự khác biệt thành giờ và phút
-                    const hoursRemaining = Math.floor(timeDifference / (1000 * 60 * 60));  // Chuyển từ mili giây sang giờ
-                    const minutesRemaining = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60)); // Phần dư tính phút
+                    hoursRemaining = Math.floor(timeDifference / (1000 * 60 * 60));  // Giờ
+                    minutesRemaining = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60)); // Phút
 
-                    // Kiểm tra nếu ngày hết hạn còn lớn hơn ngày hiện tại
+                    let token_old;
+                    let token_new;
+
                     if (hoursRemaining > 0 || minutesRemaining > 0) {
-                        // Nếu thời gian còn lại lớn hơn 0 (còn giờ hoặc phút)
                         token_new = generateConfirmLink(newEmail, hoursRemaining, oldDocument.id, "văn bản đến");
                         token_old = generateConfirmLink(oldEmail, hoursRemaining, oldDocument.id, "văn bản đến");
                     } else {
@@ -135,15 +130,44 @@ export const Put_vb_den = (req, res) => {
                         token_new = generateConfirmLink(newEmail, 24, oldDocument.id, "văn bản đến");
                         token_old = generateConfirmLink(oldEmail, 24, oldDocument.id, "văn bản đến");
                     }
-
-                    // Gửi email cho các địa chỉ
                     testSendEmail_multi(oldEmail, newEmail, token_new, token_old);
-                }
 
-                updateLogByDocumentIdAndType(parseInt(documentId), 'văn bản đến', parseInt(nguoiphutrach), currentDate.toISOString());
-            }           
+                    updateLogByDocumentIdAndType(parseInt(documentId), 'văn bản đến', parseInt(nguoiphutrach), currentDate.toISOString());
+                }
+            }
+
+            // Kiểm tra nếu người kính chuyển đã thay đổi
+            if (parseInt(oldDocument.nguoikinhgui) !== parseInt(kinhchuyen)) {
+                let kinhchuyen_email;
+                let kinhchuye_token;
+
+                try {
+                    kinhchuyen_email = getEmailById(parseInt(kinhchuyen)); // Lấy email người kính chuyển
+
+                    if (kinhchuyen_email) {
+                        // Tạo token cho người kính chuyển
+                        kinhchuye_token = generateConfirmLink(
+                            kinhchuyen_email,
+                            hoursRemaining > 0 ? hoursRemaining : 24,
+                            oldDocument.id,
+                            'văn bản đến'
+                        );
+
+                        console.log("ID người kính chuyển:", kinhchuyen);
+                        console.log("Email người kính chuyển:", kinhchuyen_email);
+
+                        // Gửi email đến người kính chuyển
+                        testSendEmail_single(kinhchuyen_email, kinhchuye_token);
+                    } else {
+                        console.error("Không tìm thấy email của người kính chuyển.");
+                    }
+                } catch (error) {
+                    console.error("Lỗi khi xử lý email cho người kính chuyển:", error);
+                }
+            }
+
             // Cập nhật thông tin văn bản
-            updateDocument_den(documentId, tenvb, parseInt(sovanban), ngayphathanh, parseInt(soDen), ngayden, noidung, chidao, ngayxuly, hantheovanban, hantheochidao, nguonphathanh, parseInt(nguoiphutrach),  filePath_doc,filePath)
+            updateDocument_den(documentId, tenvb, parseInt(sovanban), ngayphathanh, parseInt(soDen), ngayden, noidung, chidao, ngayxuly, hantheovanban, hantheochidao, nguonphathanh, parseInt(nguoiphutrach), parseInt(kinhchuyen), filePath_doc, filePath)
                 .then(() => {
                     res.json({ success: true, message: 'Văn bản đã được cập nhật thành công.' });
                 })
@@ -156,8 +180,9 @@ export const Put_vb_den = (req, res) => {
         });
 }
 
+
 export const Post_vb_den = (req,res) => {
-    const { tenvb, sovanban, ngayphathanh, soDen, ngayden, noidung, chidao, ngayxuly, hantheovanban, hantheochidao, nguonphathanh, nguoiphutrach} = req.body;
+    const { tenvb, sovanban, ngayphathanh, soDen, ngayden, noidung, chidao, ngayxuly, hantheovanban, hantheochidao, nguonphathanh, nguoiphutrach, kinhchuyen } = req.body;
     const documentFile = req.file; // Tệp mới nếu có
     // Kiểm tra nếu không có tệp mới, sử dụng tệp cũ
     let filePath_doc = documentFile ? `../../doc/${path.basename(documentFile.filename)}` : null;
@@ -212,7 +237,7 @@ export const Post_vb_den = (req,res) => {
 
     
     // Thêm văn bản mới vào cơ sở dữ liệu (hoặc file)
-    addDocument_den(tenvb, parseInt(sovanban), ngayphathanh, parseInt(soDen), ngayden, noidung, chidao, ngayxuly, hantheovanban, hantheochidao, nguonphathanh, nguoiphutrach, filePath_doc,filePath)
+    addDocument_den(tenvb, parseInt(sovanban), ngayphathanh, parseInt(soDen), ngayden, noidung, chidao, ngayxuly, hantheovanban, hantheochidao, nguonphathanh, parseInt(nguoiphutrach), parseInt(kinhchuyen), filePath_doc,filePath)
         .then((documentId) => {
             const id_doc = documentId;
             const timestamp = new Date().toISOString(); // Thời gian thay đổi
@@ -235,7 +260,7 @@ export const Post_vb_den = (req,res) => {
                 type: 'văn bản đến',
                 nguoiphutrach: parseInt(nguoiphutrach),
                 timestamp: timestamp,
-                nguoiduocgiao:null,
+                nguoiduocgiao:parseInt(kinhchuyen),
                 ngaygiao:null
             }).catch(err => {
                 console.error('Có lỗi xảy ra khi thêm log:', err);
@@ -333,3 +358,24 @@ export function changeDocumentStatusById_den(id) {
             });
     });
 }
+
+
+
+// Hàm API trả về file CSV
+export const getFileCSV = (req, res) => {
+    try {
+        // Chuyển đổi file JSON thành CSV
+        const csvData = convertJSONToCSV(filePath);
+
+        // Cấu hình headers để trả về file CSV với mã hóa UTF-8
+        res.header('Content-Type', 'text/csv; charset=utf-8'); // Mã hóa UTF-8
+        res.header('Content-Disposition', 'attachment; filename=output.csv'); // Đặt tên file khi tải về
+
+        // Gửi CSV data về cho người dùng, đảm bảo mã hóa UTF-8
+        res.send(Buffer.from(csvData, 'utf8'));  // Gửi CSV với UTF-8 encoding
+
+    } catch (error) {
+        console.error('Lỗi khi xuất file CSV:', error.message);
+        res.status(500).json({ success: false, message: 'Có lỗi xảy ra khi xuất file CSV.' });
+    }
+};

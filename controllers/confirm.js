@@ -6,6 +6,7 @@ const secretKey = 'your-secret-key';
 
 // Hàm tạo token bằng email và thời gian hết hạn được truyền vào
 export  function generateToken(email, expiresInDays,id,type) {
+    console.log(email);
     const payload = {
         email: email,  // Lưu email vào payload
         issuedAt: new Date().toISOString(), 

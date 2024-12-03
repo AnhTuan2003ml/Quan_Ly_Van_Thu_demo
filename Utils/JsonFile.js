@@ -1,6 +1,7 @@
 import { existsSync, writeFileSync, readFileSync } from 'fs';
 import { sendEmailNotification } from "../controllers/sendEmail.js";
 import { getEmailById } from '../controllers/users.js';
+import { parse } from 'json2csv'  ;
 
 export function readJSONFile(filePath) {
     if (existsSync(filePath)) {
@@ -59,6 +60,7 @@ export function addDocument_den(
     hantheochidao,
     nguonphathanh,
     nguoiphutrach_id,
+    kinhchuyen,
     link,
     filePath
 ) {
@@ -93,6 +95,7 @@ export function addDocument_den(
                 hantheochidao: checkEmpty(hantheochidao),
                 nguonphathanh: Array.isArray(parsedNguonPhatHanh) ? parsedNguonPhatHanh : [],
                 nguoiphutrach: checkEmpty(nguoiphutrach_id),
+                nguoikinhgui: checkEmpty(kinhchuyen),
                 link: checkEmpty(link),
                 status: "uncheck" // Trạng thái mặc định
             };
@@ -114,25 +117,26 @@ export function addDocument_den(
 
 // Cập nhật thông tin văn bản vào JSON
 export function updateDocument_den(
-    documentId, tenvb, sovanban, ngayphathanh, soDen, ngayden, noidung, chidao, ngayxuly, hantheovanban, hantheochidao, nguonphathanh, nguoiphutrach, link, filePath) {
+    documentId, tenvb, sovanban, ngayphathanh, soDen, ngayden, noidung, chidao, ngayxuly, hantheovanban, hantheochidao, nguonphathanh, nguoiphutrach,kinhchuyen, link, filePath) {
 
-    // Console.log hiển thị dữ liệu theo thứ tự yêu cầu
-    console.log(JSON.stringify({
-        id: documentId, // id phải đứng đầu
-        tenvb: tenvb,
-        sovanban: sovanban,
-        ngayphathanh: ngayphathanh,
-        soDen: soDen,
-        ngayden: ngayden,
-        noidung: noidung,
-        chidao: chidao,
-        ngayxuly: ngayxuly,
-        hantheovanban: hantheovanban,
-        hantheochidao: hantheochidao,
-        nguonphathanh: JSON.parse(nguonphathanh), // nguonphathanh sau chidao
-        nguoiphutrach: nguoiphutrach,
-        link: link, // Đổi từ filePath_doc thành link
-    }, null, 2)); // null và 2 là các tham số để thêm indent (thụt đầu dòng)
+    // // Console.log hiển thị dữ liệu theo thứ tự yêu cầu
+    // console.log(JSON.stringify({
+    //     id: documentId, // id phải đứng đầu
+    //     tenvb: tenvb,
+    //     sovanban: sovanban,
+    //     ngayphathanh: ngayphathanh,
+    //     soDen: soDen,
+    //     ngayden: ngayden,
+    //     noidung: noidung,
+    //     chidao: chidao,
+    //     ngayxuly: ngayxuly,
+    //     hantheovanban: hantheovanban,
+    //     hantheochidao: hantheochidao,
+    //     nguonphathanh: JSON.parse(nguonphathanh), // nguonphathanh sau chidao
+    //     nguoiphutrach: nguoiphutrach,
+    //     kinhchuyen: kinhchuyen,
+    //     link: link, // Đổi từ filePath_doc thành link
+    // }, null, 2)); // null và 2 là các tham số để thêm indent (thụt đầu dòng)
 
     return new Promise((resolve, reject) => {
         try {
@@ -167,6 +171,7 @@ export function updateDocument_den(
                 hantheochidao: checkEmpty(hantheochidao) || data[documentIndex].hantheochidao,
                 nguonphathanh: parsedNguonPhatHanh || data[documentIndex].nguonphathanh, // Cập nhật nguonphathanh
                 nguoiphutrach: checkEmpty(nguoiphutrach) || data[documentIndex].nguoiphutrach,
+                nguoikinhgui : checkEmpty(kinhchuyen),
                 link: checkEmpty(link) || data[documentIndex].link, // Cập nhật link thay vì filePath_doc
                 status: "uncheck", // Giữ nguyên status
             };
@@ -332,4 +337,15 @@ export function updateDocumentStatus(id, newStatus, filePath) {
             document: data[documentIndex]
         });
     });
+}
+
+// Hàm chuyển đổi JSON thành CSV
+export function convertJSONToCSV(jsonFilePath) {
+    const jsonData = JSON.parse(readFileSync(jsonFilePath, 'utf8')); // Đọc dữ liệu JSON từ file
+    if (!jsonData || jsonData.length === 0) {
+        throw new Error('File JSON trống hoặc không hợp lệ');
+    }
+
+    // Sử dụng json2csv để chuyển đổi JSON thành CSV
+    return parse(jsonData);
 }

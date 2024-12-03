@@ -18,7 +18,31 @@
       }
     ],
     "nguoiphutrach": 2,
+    "nguoikinhgui": 3,
     "link": "null",
     "status": "checked"
+  },
+  {
+    "id": 2,
+    "tenvb": "văn bản 1",
+    "sovanban": 1,
+    "ngayphathanh": "2024-12-03",
+    "soDen": 456,
+    "ngayden": "2024-12-03",
+    "noidung": "Tuấn",
+    "chidao": "Đẹp trai",
+    "ngayxuly": "2024-12-03",
+    "hantheovanban": "2024-12-12",
+    "hantheochidao": null,
+    "nguonphathanh": [
+      {
+        "type": "Ngoài Trường",
+        "address": "HD-005"
+      }
+    ],
+    "nguoiphutrach": 3,
+    "nguoikinhgui": 2,
+    "link": "../../doc/null_1",
+    "status": "uncheck"
   }
 ]

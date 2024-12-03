@@ -167,7 +167,7 @@
                     <!-- Add and Search Controls -->
                     <div class="d-flex justify-content-between mb-3">
                         <!-- Nút Thêm Văn Bản -->
-                        <button class="btn btn-primary" data-toggle="modal" data-target="#documentModal" onclick="clearForm()">Thêm Văn
+                        <button class="btn btn-primary"  onclick="clearForm()">Thêm Văn
                             Bản</button>
                     
                         <div class="form-group mb-0 d-flex">
@@ -389,207 +389,207 @@
             };
         });
 
-        function saveDocument() {
-            const formData = new FormData();
+        // function saveDocument() {
+        //     const formData = new FormData();
 
-            // Lấy tất cả các giá trị từ form và thêm vào FormData
-            formData.append('theochidao', document.getElementById('theochidao').value);
-            formData.append('ngayxuly', document.getElementById('ngayxuly').value);
-            formData.append('chidao', document.getElementById('chidao').value);
-            formData.append('ngayphathanh', document.getElementById('ngayphathanh').value);
-            formData.append('sovanban', document.getElementById('sovanban').value);
-            formData.append('tenvb', document.getElementById('tenvb').value);
-            formData.append('noidung', document.getElementById('noidung').value);
-            formData.append('ngayden', document.getElementById('ngayden').value);
-            formData.append('soDen', document.getElementById('soDen').value);
-            formData.append('hantheovanban', document.getElementById('theovanban').value);
-            formData.append('nguoiphutrach', document.getElementById('nguoiphutrach').value);
-            formData.append('kinhchuyen', document.getElementById('kinhchuyen').value);
+        //     // Lấy tất cả các giá trị từ form và thêm vào FormData
+        //     formData.append('theochidao', document.getElementById('theochidao').value);
+        //     formData.append('ngayxuly', document.getElementById('ngayxuly').value);
+        //     formData.append('chidao', document.getElementById('chidao').value);
+        //     formData.append('ngayphathanh', document.getElementById('ngayphathanh').value);
+        //     formData.append('sovanban', document.getElementById('sovanban').value);
+        //     formData.append('tenvb', document.getElementById('tenvb').value);
+        //     formData.append('noidung', document.getElementById('noidung').value);
+        //     formData.append('ngayden', document.getElementById('ngayden').value);
+        //     formData.append('soDen', document.getElementById('soDen').value);
+        //     formData.append('hantheovanban', document.getElementById('theovanban').value);
+        //     formData.append('nguoiphutrach', document.getElementById('nguoiphutrach').value);
+        //     formData.append('kinhchuyen', document.getElementById('kinhchuyen').value);
 
-            // Xử lý Nguồn Phát Hành
-            const nguonTrongTruong = document.getElementById("nguonTrongTruong").value.trim();
-            const nguonNgoaiTruong = document.getElementById("nguonNgoaiTruong").value.trim();
-            const nguonPhatHanhArray = [];
+        //     // Xử lý Nguồn Phát Hành
+        //     const nguonTrongTruong = document.getElementById("nguonTrongTruong").value.trim();
+        //     const nguonNgoaiTruong = document.getElementById("nguonNgoaiTruong").value.trim();
+        //     const nguonPhatHanhArray = [];
 
-            if (nguonTrongTruong) {
-                nguonPhatHanhArray.push({ type: "Trong Trường", address: nguonTrongTruong });
-            }
-            if (nguonNgoaiTruong) {
-                nguonPhatHanhArray.push({ type: "Ngoài Trường", address: nguonNgoaiTruong });
-            }
+        //     if (nguonTrongTruong) {
+        //         nguonPhatHanhArray.push({ type: "Trong Trường", address: nguonTrongTruong });
+        //     }
+        //     if (nguonNgoaiTruong) {
+        //         nguonPhatHanhArray.push({ type: "Ngoài Trường", address: nguonNgoaiTruong });
+        //     }
 
-            formData.append('nguonphathanh', JSON.stringify(nguonPhatHanhArray));
+        //     formData.append('nguonphathanh', JSON.stringify(nguonPhatHanhArray));
 
-            // Kiểm tra và xử lý tệp tải lên
-            const fileInput = document.getElementById('documentFile');
-            const oldFilePathInput = document.getElementById('oldFilePath'); // Đường dẫn tệp cũ nếu có
+        //     // Kiểm tra và xử lý tệp tải lên
+        //     const fileInput = document.getElementById('documentFile');
+        //     const oldFilePathInput = document.getElementById('oldFilePath'); // Đường dẫn tệp cũ nếu có
 
-            if (fileInput.files.length > 0) {
-                // Nếu có tệp mới, thêm vào FormData
-                formData.append('documentFile', fileInput.files[0]);
-            } else if (oldFilePathInput.value) {
-                // Nếu không có tệp mới, thêm đường dẫn tệp cũ
-                formData.append('oldFilePath', oldFilePathInput.value);
-            }
+        //     if (fileInput.files.length > 0) {
+        //         // Nếu có tệp mới, thêm vào FormData
+        //         formData.append('documentFile', fileInput.files[0]);
+        //     } else if (oldFilePathInput.value) {
+        //         // Nếu không có tệp mới, thêm đường dẫn tệp cũ
+        //         formData.append('oldFilePath', oldFilePathInput.value);
+        //     }
 
-            // Kiểm tra xem là cập nhật hay thêm mới
-            const documentId = document.getElementById('documentId').value;
-            const isUpdate = !!documentId; // Nếu có documentId, tức là đang cập nhật
+        //     // Kiểm tra xem là cập nhật hay thêm mới
+        //     const documentId = document.getElementById('documentId').value;
+        //     const isUpdate = !!documentId; // Nếu có documentId, tức là đang cập nhật
 
-            const url = isUpdate ? `/api/vb_den/${documentId}` : '/api/vb_den';
-            const method = isUpdate ? 'PUT' : 'POST';
+        //     const url = isUpdate ? `/api/vb_den/${documentId}` : '/api/vb_den';
+        //     const method = isUpdate ? 'PUT' : 'POST';
 
-            // Gửi dữ liệu tới server
-            fetch(url, {
-                method: method,
-                body: formData
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Thông báo thành công
-                        alert(isUpdate ? 'Văn bản đã được cập nhật thành công!' : 'Văn bản đã được thêm thành công!');
-                        $('#documentModal').modal('hide'); // Đóng modal
-                        fetchDocuments(); // Làm mới danh sách văn bản
-                    } else {
-                        // Thông báo thất bại
-                        alert(isUpdate ? 'Cập nhật văn bản thất bại.' : 'Thêm văn bản thất bại.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Lỗi:', error);
-                    alert('Đã có lỗi xảy ra trong quá trình gửi yêu cầu.');
-                });
-        }
-        function exportCSV() {
-                // Gửi yêu cầu đến API để xuất file CSV
-                fetch('/api/vb_den/getfile', {
-                    method: 'GET',
-                })
-                    .then(response => {
-                        if (response.ok) {
-                            return response.blob();
-                        }
-                        throw new Error('Không thể tải file CSV');
-                    })
-                    .then(blob => {
-                        const link = document.createElement('a');
-                        link.href = URL.createObjectURL(blob);
-                        link.download = 'documents.csv'; // Tên file khi tải về
-                        link.click();
-                    })
-                    .catch(error => {
-                        alert(error.message);
-                    });
-            }
+        //     // Gửi dữ liệu tới server
+        //     fetch(url, {
+        //         method: method,
+        //         body: formData
+        //     })
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             if (data.success) {
+        //                 // Thông báo thành công
+        //                 alert(isUpdate ? 'Văn bản đã được cập nhật thành công!' : 'Văn bản đã được thêm thành công!');
+        //                 $('#documentModal').modal('hide'); // Đóng modal
+        //                 fetchDocuments(); // Làm mới danh sách văn bản
+        //             } else {
+        //                 // Thông báo thất bại
+        //                 alert(isUpdate ? 'Cập nhật văn bản thất bại.' : 'Thêm văn bản thất bại.');
+        //             }
+        //         })
+        //         .catch(error => {
+        //             console.error('Lỗi:', error);
+        //             alert('Đã có lỗi xảy ra trong quá trình gửi yêu cầu.');
+        //         });
+        // }
+        // function exportCSV() {
+        //         // Gửi yêu cầu đến API để xuất file CSV
+        //         fetch('/api/vb_den/getfile', {
+        //             method: 'GET',
+        //         })
+        //             .then(response => {
+        //                 if (response.ok) {
+        //                     return response.blob();
+        //                 }
+        //                 throw new Error('Không thể tải file CSV');
+        //             })
+        //             .then(blob => {
+        //                 const link = document.createElement('a');
+        //                 link.href = URL.createObjectURL(blob);
+        //                 link.download = 'documents.csv'; // Tên file khi tải về
+        //                 link.click();
+        //             })
+        //             .catch(error => {
+        //                 alert(error.message);
+        //             });
+        //     }
 
 
-        function editDocument(id, tenvb, sovanban, ngayphathanh, soDen, ngayden, noidung, chidao, ngayxuly, hantheovanban, hantheochidao, nguonphathanh, diachiphathanh, nguoiphutrach_id, nguoikinhgui, link) {
-            document.getElementById("documentId").value = id;
-            document.getElementById("tenvb").value = tenvb;
-            document.getElementById("sovanban").value = sovanban;
-            document.getElementById("ngayphathanh").value = ngayphathanh;
-            document.getElementById("soDen").value = soDen;
-            document.getElementById("ngayden").value = ngayden;
-            document.getElementById("noidung").value = noidung;
-            document.getElementById("chidao").value = chidao;
-            document.getElementById("ngayxuly").value = ngayxuly;
-            document.getElementById("theovanban").value = hantheovanban;
-            document.getElementById("theochidao").value = hantheochidao;
-            if (nguonphathanh === "Trong Trường") {
-                document.getElementById("nguonTrongTruong").value = diachiphathanh;
-                document.getElementById("nguonNgoaiTruong").value = '';
-            }
-            if (nguonphathanh === "Ngoài Trường") {
-                document.getElementById("nguonTrongTruong").value = '';
-                document.getElementById("nguonNgoaiTruong").value = diachiphathanh;
-            }
+        // function editDocument(id, tenvb, sovanban, ngayphathanh, soDen, ngayden, noidung, chidao, ngayxuly, hantheovanban, hantheochidao, nguonphathanh, diachiphathanh, nguoiphutrach_id, nguoikinhgui, link) {
+        //     document.getElementById("documentId").value = id;
+        //     document.getElementById("tenvb").value = tenvb;
+        //     document.getElementById("sovanban").value = sovanban;
+        //     document.getElementById("ngayphathanh").value = ngayphathanh;
+        //     document.getElementById("soDen").value = soDen;
+        //     document.getElementById("ngayden").value = ngayden;
+        //     document.getElementById("noidung").value = noidung;
+        //     document.getElementById("chidao").value = chidao;
+        //     document.getElementById("ngayxuly").value = ngayxuly;
+        //     document.getElementById("theovanban").value = hantheovanban;
+        //     document.getElementById("theochidao").value = hantheochidao;
+        //     if (nguonphathanh === "Trong Trường") {
+        //         document.getElementById("nguonTrongTruong").value = diachiphathanh;
+        //         document.getElementById("nguonNgoaiTruong").value = '';
+        //     }
+        //     if (nguonphathanh === "Ngoài Trường") {
+        //         document.getElementById("nguonTrongTruong").value = '';
+        //         document.getElementById("nguonNgoaiTruong").value = diachiphathanh;
+        //     }
 
-            // Hiển thị combobox Kính Chuyển khi chỉnh sửa
-            const kinhChuyenRow = document.getElementById("kinhChuyenRow");
-            const kinhChuyenSelect = document.getElementById("kinhchuyen");
+        //     // Hiển thị combobox Kính Chuyển khi chỉnh sửa
+        //     const kinhChuyenRow = document.getElementById("kinhChuyenRow");
+        //     const kinhChuyenSelect = document.getElementById("kinhchuyen");
 
-            kinhChuyenRow.style.display = "flex"; // Hiển thị hàng kính chuyển
-            kinhChuyenSelect.value = ''; // Thiết lập giá trị mặc định cho kính chuyển
+        //     kinhChuyenRow.style.display = "flex"; // Hiển thị hàng kính chuyển
+        //     kinhChuyenSelect.value = ''; // Thiết lập giá trị mặc định cho kính chuyển
 
-            // Fetch users and populate the responsible person dropdown
-            fetchUsers(nguoiphutrach_id, nguoikinhgui);
+        //     // Fetch users and populate the responsible person dropdown
+        //     fetchUsers(nguoiphutrach_id, nguoikinhgui);
 
-            // Display the file name if available
-            const fileNameDisplay = document.getElementById('fileNameDisplay');
-            if (link) {
-                fileNameDisplay.textContent = `Tên văn bản đã tải lên: ${link.split('/').pop()}`;
-            } else {
-                fileNameDisplay.textContent = ''; // Clear the file name if not present
-            }
+        //     // Display the file name if available
+        //     const fileNameDisplay = document.getElementById('fileNameDisplay');
+        //     if (link) {
+        //         fileNameDisplay.textContent = `Tên văn bản đã tải lên: ${link.split('/').pop()}`;
+        //     } else {
+        //         fileNameDisplay.textContent = ''; // Clear the file name if not present
+        //     }
 
-            // Set old file path
-            document.getElementById('oldFilePath').value = link || '';
+        //     // Set old file path
+        //     document.getElementById('oldFilePath').value = link || '';
 
-            // Show the modal
-            $('#documentModal').modal('show');
-        }
-        // Fetch Users for the responsible person and the "kinh chuyển" combobox
-        function fetchUsers(nguoiphutrach_id, kinhchuyen_id) {
-            fetch('/api/users/basic')
-                .then(response => response.json())
-                .then(users => {
-                    const nguoiphutrachSelect = document.getElementById('nguoiphutrach');
-                    const kinhchuyenSelect = document.getElementById('kinhchuyen');
+        //     // Show the modal
+        //     $('#documentModal').modal('show');
+        // }
+        // // Fetch Users for the responsible person and the "kinh chuyển" combobox
+        // function fetchUsers(nguoiphutrach_id, kinhchuyen_id) {
+        //     fetch('/api/users/basic')
+        //         .then(response => response.json())
+        //         .then(users => {
+        //             const nguoiphutrachSelect = document.getElementById('nguoiphutrach');
+        //             const kinhchuyenSelect = document.getElementById('kinhchuyen');
 
-                    // Clear previous options
-                    nguoiphutrachSelect.innerHTML = '';
-                    kinhchuyenSelect.innerHTML = '';
+        //             // Clear previous options
+        //             nguoiphutrachSelect.innerHTML = '';
+        //             kinhchuyenSelect.innerHTML = '';
 
-                    // Default option for nguoiphutrach
-                    const defaultOptionNguoiPhuTrach = document.createElement('option');
-                    defaultOptionNguoiPhuTrach.value = '';
-                    defaultOptionNguoiPhuTrach.textContent = 'Chọn người phụ trách';
-                    nguoiphutrachSelect.appendChild(defaultOptionNguoiPhuTrach);
+        //             // Default option for nguoiphutrach
+        //             const defaultOptionNguoiPhuTrach = document.createElement('option');
+        //             defaultOptionNguoiPhuTrach.value = '';
+        //             defaultOptionNguoiPhuTrach.textContent = 'Chọn người phụ trách';
+        //             nguoiphutrachSelect.appendChild(defaultOptionNguoiPhuTrach);
 
-                    // Default option for kinhchuyen
-                    const defaultOptionKinhChuyen = document.createElement('option');
-                    defaultOptionKinhChuyen.value = '';
-                    defaultOptionKinhChuyen.textContent = 'Chọn người kinh chuyển';
-                    kinhchuyenSelect.appendChild(defaultOptionKinhChuyen);
+        //             // Default option for kinhchuyen
+        //             const defaultOptionKinhChuyen = document.createElement('option');
+        //             defaultOptionKinhChuyen.value = '';
+        //             defaultOptionKinhChuyen.textContent = 'Chọn người kinh chuyển';
+        //             kinhchuyenSelect.appendChild(defaultOptionKinhChuyen);
 
-                    // Add users to both dropdowns
-                    users.forEach(user => {
-                        const nguoiphutrachOption = document.createElement('option');
-                        nguoiphutrachOption.value = user.id;
-                        nguoiphutrachOption.textContent = user.name;
-                        nguoiphutrachSelect.appendChild(nguoiphutrachOption);
+        //             // Add users to both dropdowns
+        //             users.forEach(user => {
+        //                 const nguoiphutrachOption = document.createElement('option');
+        //                 nguoiphutrachOption.value = user.id;
+        //                 nguoiphutrachOption.textContent = user.name;
+        //                 nguoiphutrachSelect.appendChild(nguoiphutrachOption);
 
-                        const kinhchuyenOption = document.createElement('option');
-                        kinhchuyenOption.value = user.id;
-                        kinhchuyenOption.textContent = user.name;
-                        kinhchuyenSelect.appendChild(kinhchuyenOption);
-                    });
+        //                 const kinhchuyenOption = document.createElement('option');
+        //                 kinhchuyenOption.value = user.id;
+        //                 kinhchuyenOption.textContent = user.name;
+        //                 kinhchuyenSelect.appendChild(kinhchuyenOption);
+        //             });
 
-                    // Set selected values if applicable
-                    if (nguoiphutrach_id && users.some(user => user.id == nguoiphutrach_id)) {
-                        nguoiphutrachSelect.value = nguoiphutrach_id;
-                    } else {
-                        nguoiphutrachSelect.value = '';
-                    }
+        //             // Set selected values if applicable
+        //             if (nguoiphutrach_id && users.some(user => user.id == nguoiphutrach_id)) {
+        //                 nguoiphutrachSelect.value = nguoiphutrach_id;
+        //             } else {
+        //                 nguoiphutrachSelect.value = '';
+        //             }
 
-                    if (kinhchuyen_id && users.some(user => user.id == kinhchuyen_id)) {
-                        kinhchuyenSelect.value = kinhchuyen_id;
-                    } else {
-                        kinhchuyenSelect.value = '';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching users:', error);
+        //             if (kinhchuyen_id && users.some(user => user.id == kinhchuyen_id)) {
+        //                 kinhchuyenSelect.value = kinhchuyen_id;
+        //             } else {
+        //                 kinhchuyenSelect.value = '';
+        //             }
+        //         })
+        //         .catch(error => {
+        //             console.error('Error fetching users:', error);
 
-                    // Add a fallback option in case of error
-                    const nguoiphutrachSelect = document.getElementById('nguoiphutrach');
-                    const kinhchuyenSelect = document.getElementById('kinhchuyen');
+        //             // Add a fallback option in case of error
+        //             const nguoiphutrachSelect = document.getElementById('nguoiphutrach');
+        //             const kinhchuyenSelect = document.getElementById('kinhchuyen');
 
-                    nguoiphutrachSelect.innerHTML = '<option value="">Không thể tải danh sách</option>';
-                    kinhchuyenSelect.innerHTML = '<option value="">Không thể tải danh sách</option>';
-                });
-        }
+        //             nguoiphutrachSelect.innerHTML = '<option value="">Không thể tải danh sách</option>';
+        //             kinhchuyenSelect.innerHTML = '<option value="">Không thể tải danh sách</option>';
+        //         });
+        // }
         // Fetch Documents and display them in a table
         function fetchDocuments() {
             fetch('/api/vb_den')
@@ -647,57 +647,57 @@
                 .catch(error => console.error('Error fetching documents:', error));
         }
 
-        // Delete document
-        function deleteDocument(id) {
-            if (confirm('Bạn có chắc chắn muốn xóa văn bản này?')) {
-                fetch(`/api/vb_den/${id}`, { method: 'DELETE' })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert('Xóa văn bản thành công!');
-                            fetchDocuments(); // Refresh the documents list
-                        } else {
-                            alert('Xóa văn bản thất bại.');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Lỗi:', error);
-                        alert('Đã có lỗi xảy ra.');
-                    });
-                clearForm();
-            }
-        }
+        // // Delete document
+        // function deleteDocument(id) {
+        //     if (confirm('Bạn có chắc chắn muốn xóa văn bản này?')) {
+        //         fetch(`/api/vb_den/${id}`, { method: 'DELETE' })
+        //             .then(response => response.json())
+        //             .then(data => {
+        //                 if (data.success) {
+        //                     alert('Xóa văn bản thành công!');
+        //                     fetchDocuments(); // Refresh the documents list
+        //                 } else {
+        //                     alert('Xóa văn bản thất bại.');
+        //                 }
+        //             })
+        //             .catch(error => {
+        //                 console.error('Lỗi:', error);
+        //                 alert('Đã có lỗi xảy ra.');
+        //             });
+        //         clearForm();
+        //     }
+        // }
 
-        function clearForm() {
-            document.getElementById("tenvb").value = '';
-            document.getElementById("documentId").value = '';
-            document.getElementById("sovanban").value = '';
-            document.getElementById("ngayphathanh").value = '';
-            document.getElementById("soDen").value = '';
-            document.getElementById("ngayden").value = '';
-            document.getElementById("noidung").value = '';
-            document.getElementById("chidao").value = '';
-            document.getElementById("ngayxuly").value = '';
-            document.getElementById("theovanban").value = '';
-            document.getElementById("theochidao").value = '';
-            document.getElementById("nguonTrongTruong").value = '';
-            document.getElementById("nguonNgoaiTruong").value = '';
-            document.getElementById("documentFile").value = '';
-            document.getElementById("fileNameDisplay").value = '';
-            document.getElementById("oldFilePath").value = '';
+        // function clearForm() {
+        //     document.getElementById("tenvb").value = '';
+        //     document.getElementById("documentId").value = '';
+        //     document.getElementById("sovanban").value = '';
+        //     document.getElementById("ngayphathanh").value = '';
+        //     document.getElementById("soDen").value = '';
+        //     document.getElementById("ngayden").value = '';
+        //     document.getElementById("noidung").value = '';
+        //     document.getElementById("chidao").value = '';
+        //     document.getElementById("ngayxuly").value = '';
+        //     document.getElementById("theovanban").value = '';
+        //     document.getElementById("theochidao").value = '';
+        //     document.getElementById("nguonTrongTruong").value = '';
+        //     document.getElementById("nguonNgoaiTruong").value = '';
+        //     document.getElementById("documentFile").value = '';
+        //     document.getElementById("fileNameDisplay").value = '';
+        //     document.getElementById("oldFilePath").value = '';
 
-            fetchUsers(-1, -1);
+        //     fetchUsers(-1, -1);
 
-            // Ẩn form "Kính chuyển" khi thêm mới
-            const kinhChuyenRow = document.getElementById("kinhChuyenRow");
-            const kinhChuyenSelect = document.getElementById("kinhchuyen");
+        //     // Ẩn form "Kính chuyển" khi thêm mới
+        //     const kinhChuyenRow = document.getElementById("kinhChuyenRow");
+        //     const kinhChuyenSelect = document.getElementById("kinhchuyen");
 
-            kinhChuyenRow.style.display = "none"; // Ẩn hàng kính chuyển
-            kinhChuyenSelect.value = ''; // Reset giá trị chọn kính chuyển
+        //     kinhChuyenRow.style.display = "none"; // Ẩn hàng kính chuyển
+        //     kinhChuyenSelect.value = ''; // Reset giá trị chọn kính chuyển
 
-            // Gọi lại hàm fetchUsers để tải lại danh sách người dùng (với tham số -1)
-            document.getElementById("formContainer").style.display = 'none'; // Ẩn form container nếu cần
-        }
+        //     // Gọi lại hàm fetchUsers để tải lại danh sách người dùng (với tham số -1)
+        //     document.getElementById("formContainer").style.display = 'none'; // Ẩn form container nếu cần
+        // }
 
     </script>
 

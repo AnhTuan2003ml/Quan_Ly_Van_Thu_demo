@@ -167,20 +167,29 @@
                     <!-- Add and Search Controls -->
                     <div class="d-flex justify-content-between mb-3">
                         <!-- Nút Thêm Văn Bản -->
-                        <button class="btn btn-primary"  onclick="clearForm()">Thêm Văn
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#documentModal"
+                            onclick="clearForm()">Thêm Văn
                             Bản</button>
-                    
+
                         <div class="form-group mb-0 d-flex">
                             <!-- Ô Tìm Kiếm -->
-                            <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm theo tên hoặc nội dung..."
-                                style="width: 300px;">
-                    
+                            <input type="text" id="searchInput" class="form-control"
+                                placeholder="Nhập số, cụm từ nội dung, hoặc nguồn phát hành..." style="width: 300px;">
+
+                            <!-- Ngày Bắt Đầu -->
+                            <input type="date" id="startDateInput" class="form-control ml-2" placeholder="Ngày bắt đầu"
+                                style="width: 150px;">
+
+                            <!-- Ngày Kết Thúc -->
+                            <input type="date" id="endDateInput" class="form-control ml-2" placeholder="Ngày kết thúc"
+                                style="width: 150px;">
+
                             <!-- Nút Tìm Kiếm -->
                             <button class="btn btn-secondary ml-2" onclick="searchDocuments()">Tìm Kiếm</button>
-                    
-                            <!-- Nút Xuất File CSV -->
-                            <button class="btn btn-success ml-2" onclick="exportCSV()">Xuất File CSV</button>
                         </div>
+                        <!-- Nút Xuất File CSV -->
+                        <button class="btn btn-success ml-2" onclick="exportCSV()">Xuất File CSV</button>
+
                     </div>
 
                     <!-- Document Table -->
@@ -188,25 +197,17 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Tên Văn Bản</th>
                                 <th>Số Văn Bản</th>
-                                <th>Nội Dung</th>
+                                <th>Nội Dung Trích Yếu</th>
                                 <th>Ngày Phát Hành</th>
-                                <th>Nguồn Phát Hành</th>
-                                <th>Ngày Đến</th>
-                                <th>Số Đến</th>
-                                <th>Nội Dung Chỉ Đạo</th>
-                                <th>Ngày Xử Lý Văn Bản</th>
-                                <th>Hạn Theo Văn Bản</th>
-                                <th>Hạn Theo Chỉ Đạo</th>
                                 <th>Người Phụ Trách</th>
                                 <th>Người Kính chuyển</th>
+                                <th>Hạn Theo Văn Bản</th>
+                                <th>Hạn Theo Chỉ Đạo</th>
                                 <th>Link Văn Bản</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
-
-
                         </thead>
                         <tbody>
                             <!-- Document data will be populated here -->
@@ -228,14 +229,6 @@
                         </div>
                         <form id="documentForm" class="custom-form">
                             <input type="hidden" id="documentId">
-
-                            <!-- Form Group for tên văn bản -->
-                            <div class="form-group row">
-                                <label for="tenvb" class="col-sm-2 col-form-label">Tên văn bản:</label>
-                                <div class="col-sm-10">
-                                    <textarea class="form-control" id="tenvb" rows="2"></textarea>
-                                </div>
-                            </div>
                             <!-- Form Group for Số Văn Bản and Ngày Phát Hành -->
                             <div class="form-group row">
                                 <label for="sovanban" class="col-sm-2 col-form-label">Số Văn Bản:</label>
@@ -361,15 +354,106 @@
                     </div>
                 </div>
             </div>
+            <div class="modal fade" id="formContainer" tabindex="-1" role="dialog" aria-labelledby="documentModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="documentModalLabel">Văn Bản Đi</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form id="documentFormdi" class="custom-form">
+                            <div class="modal-body">
+                                <div class="form-group row">
+                                    <label for="sovanban_di" class="col-sm-4 col-form-label">Sinh Từ :</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" id="thongtin" required readonly>
+                                    </div>
+                                </div>
+                                <!-- Form Group for Số Văn Bản and Ngày Phát Hành -->
+                                <div class="form-group row">
+                                    <label for="sovanban_di" class="col-sm-4 col-form-label">Số Văn Bản:</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" id="sovanban_di" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="ngayphathanh_di" class="col-sm-4 col-form-label">Ngày Phát Hành:</label>
+                                    <div class="col-sm-8">
+                                        <input type="date" class="form-control" id="ngayphathanh_di" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="donvitiepnhan" class="col-sm-4 col-form-label">Đơn Vị Tiếp Nhận:</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" id="donvitiepnhan">
+                                    </div>
+                                </div>
 
-            <footer class="footer">
-                <div class="container-fluid">
-                    <p class="copyright text-center">
-                    </p>
+                                <!-- Form Group for Nội Dung Trích Yếu -->
+                                <div class="form-group row">
+                                    <label for="noidung_di" class="col-sm-4 col-form-label">Nội Dung Trích Yếu:</label>
+                                    <div class="col-sm-8">
+                                        <textarea class="form-control" id="noidung_di" rows="3"></textarea>
+                                    </div>
+                                </div>
+
+                                <!-- Cán Bộ Soạn Thảo and Lãnh Đạo Phòng Kí -->
+                                <div class="form-group row">
+                                    <label for="canbosoanthao" class="col-sm-4 col-form-label">Cán Bộ Soạn Thảo:</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" id="canbosoanthao">
+                                            <option value="">Chọn cán bộ</option>
+                                            <!-- Populate options here -->
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="lanhdaophongki" class="col-sm-4 col-form-label">Lãnh Đạo Phòng
+                                        Kí:</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" id="lanhdaophongki">
+                                            <option value="">Chọn lãnh đạo phòng kí</option>
+                                            <!-- Populate options here -->
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Ban Giám Hiệu Duyệt -->
+                                <div class="form-group row">
+                                    <label for="BGHduyet" class="col-sm-4 col-form-label">Ban Giám Hiệu Duyệt:</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" id="BGHduyet">
+                                    </div>
+                                </div>
+
+                                <!-- Tải lên văn bản -->
+                                <div class="form-group">
+                                    <label for="documentFile_di">Tải lên văn bản:</label>
+                                    <input type="file" class="form-control" id="documentFile_di" name="oldFilePath">
+                                    <small id="fileNameDisplay_di" class="form-text text-muted">Để hiển thị tên
+                                        tệp</small>
+                                </div>
+                            </div>
+                            <!-- Submit Button -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                <button type="submit" class="btn btn-primary">Lưu Văn Bản</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </footer>
+            </div>
         </div>
     </div>
+    <footer class="footer">
+        <div class="container-fluid">
+            <p class="copyright text-center">
+            </p>
+        </div>
+    </footer>
 
     <!-- Core JavaScript Files -->
     <script src="../../assets/js/core/jquery.3.2.1.min.js" type="text/javascript"></script>
@@ -378,218 +462,88 @@
     <!-- Custom JavaScript -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            fetchDocuments(); // Fetch documents when the page loads
-            fetchUsers(-1);
-
-
+            fetchDocuments(); // Gọi hàm lấy danh sách văn bản (nếu có).
+            fetchUsers(-1, -1); // Gọi hàm lấy danh sách người dùng.
             // Event listener for form submission
+            document.getElementById('documentFormdi').onsubmit = function (event) {
+                event.preventDefault();  // Prevent the default form submission
+                taovanbandi(event);         // Trigger saveDocument function
+            };
+
             document.getElementById('documentForm').onsubmit = function (event) {
                 event.preventDefault();  // Prevent the default form submission
-                saveDocument();          // Trigger saveDocument function
+                saveDocument(event);         // Trigger saveDocument function
             };
+            clearForm();
         });
 
-        // function saveDocument() {
-        //     const formData = new FormData();
+        // Hàm hiển thị form với thông tin văn bản
+        function toggleForm(id_vbden, soDen, ngayden) {
+            document.getElementById("documentId").value = id_vbden;
+            document.getElementById("thongtin").value = `Văn bản đến số: ${soDen} Ngày: ${ngayden}`;
+            $('#formContainer').modal('show');
+        }
 
-        //     // Lấy tất cả các giá trị từ form và thêm vào FormData
-        //     formData.append('theochidao', document.getElementById('theochidao').value);
-        //     formData.append('ngayxuly', document.getElementById('ngayxuly').value);
-        //     formData.append('chidao', document.getElementById('chidao').value);
-        //     formData.append('ngayphathanh', document.getElementById('ngayphathanh').value);
-        //     formData.append('sovanban', document.getElementById('sovanban').value);
-        //     formData.append('tenvb', document.getElementById('tenvb').value);
-        //     formData.append('noidung', document.getElementById('noidung').value);
-        //     formData.append('ngayden', document.getElementById('ngayden').value);
-        //     formData.append('soDen', document.getElementById('soDen').value);
-        //     formData.append('hantheovanban', document.getElementById('theovanban').value);
-        //     formData.append('nguoiphutrach', document.getElementById('nguoiphutrach').value);
-        //     formData.append('kinhchuyen', document.getElementById('kinhchuyen').value);
+        // Hàm lấy danh sách người dùng
+        function fetchUsers(nguoiphutrach_id, kinhchuyen_id) {
+            fetch('/api/users/basic')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Lỗi khi lấy danh sách người dùng');
+                    }
+                    return response.json();
+                })
+                .then(users => {
+                    populateDropdowns(users, nguoiphutrach_id, kinhchuyen_id);
+                })
+                .catch(error => {
+                    console.error('Error fetching users:', error);
+                    alert('Không thể tải danh sách người dùng. Vui lòng thử lại sau.');
+                });
+        }
 
-        //     // Xử lý Nguồn Phát Hành
-        //     const nguonTrongTruong = document.getElementById("nguonTrongTruong").value.trim();
-        //     const nguonNgoaiTruong = document.getElementById("nguonNgoaiTruong").value.trim();
-        //     const nguonPhatHanhArray = [];
+        // Hàm cập nhật danh sách vào các dropdown
+        function populateDropdowns(users, nguoiphutrach_id, kinhchuyen_id) {
+            const dropdowns = {
+                nguoiphutrach: document.getElementById('nguoiphutrach'),
+                kinhchuyen: document.getElementById('kinhchuyen'),
+                canbosoanthao: document.getElementById('canbosoanthao'),
+                lanhdaophongki: document.getElementById('lanhdaophongki')
+            };
 
-        //     if (nguonTrongTruong) {
-        //         nguonPhatHanhArray.push({ type: "Trong Trường", address: nguonTrongTruong });
-        //     }
-        //     if (nguonNgoaiTruong) {
-        //         nguonPhatHanhArray.push({ type: "Ngoài Trường", address: nguonNgoaiTruong });
-        //     }
+            // Hàm thêm tùy chọn mặc định
+            const addDefaultOption = (dropdown, text) => {
+                dropdown.innerHTML = ''; // Xóa tất cả tùy chọn trước đó
+                const option = document.createElement('option');
+                option.value = '';
+                option.textContent = text;
+                dropdown.appendChild(option);
+            };
 
-        //     formData.append('nguonphathanh', JSON.stringify(nguonPhatHanhArray));
+            // Thêm các tùy chọn mặc định
+            addDefaultOption(dropdowns.nguoiphutrach, 'Chọn người phụ trách');
+            addDefaultOption(dropdowns.kinhchuyen, 'Chọn người kinh chuyển');
+            addDefaultOption(dropdowns.canbosoanthao, 'Chọn cán bộ soạn thảo');
+            addDefaultOption(dropdowns.lanhdaophongki, 'Chọn lãnh đạo phòng kí');
 
-        //     // Kiểm tra và xử lý tệp tải lên
-        //     const fileInput = document.getElementById('documentFile');
-        //     const oldFilePathInput = document.getElementById('oldFilePath'); // Đường dẫn tệp cũ nếu có
+            // Thêm người dùng vào dropdown
+            users.forEach(user => {
+                const option = document.createElement('option');
+                option.value = user.id;
+                option.textContent = user.name;
 
-        //     if (fileInput.files.length > 0) {
-        //         // Nếu có tệp mới, thêm vào FormData
-        //         formData.append('documentFile', fileInput.files[0]);
-        //     } else if (oldFilePathInput.value) {
-        //         // Nếu không có tệp mới, thêm đường dẫn tệp cũ
-        //         formData.append('oldFilePath', oldFilePathInput.value);
-        //     }
+                dropdowns.nguoiphutrach.appendChild(option.cloneNode(true));
+                dropdowns.kinhchuyen.appendChild(option.cloneNode(true));
+                dropdowns.canbosoanthao.appendChild(option.cloneNode(true));
+                dropdowns.lanhdaophongki.appendChild(option.cloneNode(true));
+            });
 
-        //     // Kiểm tra xem là cập nhật hay thêm mới
-        //     const documentId = document.getElementById('documentId').value;
-        //     const isUpdate = !!documentId; // Nếu có documentId, tức là đang cập nhật
-
-        //     const url = isUpdate ? `/api/vb_den/${documentId}` : '/api/vb_den';
-        //     const method = isUpdate ? 'PUT' : 'POST';
-
-        //     // Gửi dữ liệu tới server
-        //     fetch(url, {
-        //         method: method,
-        //         body: formData
-        //     })
-        //         .then(response => response.json())
-        //         .then(data => {
-        //             if (data.success) {
-        //                 // Thông báo thành công
-        //                 alert(isUpdate ? 'Văn bản đã được cập nhật thành công!' : 'Văn bản đã được thêm thành công!');
-        //                 $('#documentModal').modal('hide'); // Đóng modal
-        //                 fetchDocuments(); // Làm mới danh sách văn bản
-        //             } else {
-        //                 // Thông báo thất bại
-        //                 alert(isUpdate ? 'Cập nhật văn bản thất bại.' : 'Thêm văn bản thất bại.');
-        //             }
-        //         })
-        //         .catch(error => {
-        //             console.error('Lỗi:', error);
-        //             alert('Đã có lỗi xảy ra trong quá trình gửi yêu cầu.');
-        //         });
-        // }
-        // function exportCSV() {
-        //         // Gửi yêu cầu đến API để xuất file CSV
-        //         fetch('/api/vb_den/getfile', {
-        //             method: 'GET',
-        //         })
-        //             .then(response => {
-        //                 if (response.ok) {
-        //                     return response.blob();
-        //                 }
-        //                 throw new Error('Không thể tải file CSV');
-        //             })
-        //             .then(blob => {
-        //                 const link = document.createElement('a');
-        //                 link.href = URL.createObjectURL(blob);
-        //                 link.download = 'documents.csv'; // Tên file khi tải về
-        //                 link.click();
-        //             })
-        //             .catch(error => {
-        //                 alert(error.message);
-        //             });
-        //     }
+            // Gán giá trị được chọn nếu có
+            if (nguoiphutrach_id) dropdowns.nguoiphutrach.value = nguoiphutrach_id;
+            if (kinhchuyen_id) dropdowns.kinhchuyen.value = kinhchuyen_id;
+        }
 
 
-        // function editDocument(id, tenvb, sovanban, ngayphathanh, soDen, ngayden, noidung, chidao, ngayxuly, hantheovanban, hantheochidao, nguonphathanh, diachiphathanh, nguoiphutrach_id, nguoikinhgui, link) {
-        //     document.getElementById("documentId").value = id;
-        //     document.getElementById("tenvb").value = tenvb;
-        //     document.getElementById("sovanban").value = sovanban;
-        //     document.getElementById("ngayphathanh").value = ngayphathanh;
-        //     document.getElementById("soDen").value = soDen;
-        //     document.getElementById("ngayden").value = ngayden;
-        //     document.getElementById("noidung").value = noidung;
-        //     document.getElementById("chidao").value = chidao;
-        //     document.getElementById("ngayxuly").value = ngayxuly;
-        //     document.getElementById("theovanban").value = hantheovanban;
-        //     document.getElementById("theochidao").value = hantheochidao;
-        //     if (nguonphathanh === "Trong Trường") {
-        //         document.getElementById("nguonTrongTruong").value = diachiphathanh;
-        //         document.getElementById("nguonNgoaiTruong").value = '';
-        //     }
-        //     if (nguonphathanh === "Ngoài Trường") {
-        //         document.getElementById("nguonTrongTruong").value = '';
-        //         document.getElementById("nguonNgoaiTruong").value = diachiphathanh;
-        //     }
-
-        //     // Hiển thị combobox Kính Chuyển khi chỉnh sửa
-        //     const kinhChuyenRow = document.getElementById("kinhChuyenRow");
-        //     const kinhChuyenSelect = document.getElementById("kinhchuyen");
-
-        //     kinhChuyenRow.style.display = "flex"; // Hiển thị hàng kính chuyển
-        //     kinhChuyenSelect.value = ''; // Thiết lập giá trị mặc định cho kính chuyển
-
-        //     // Fetch users and populate the responsible person dropdown
-        //     fetchUsers(nguoiphutrach_id, nguoikinhgui);
-
-        //     // Display the file name if available
-        //     const fileNameDisplay = document.getElementById('fileNameDisplay');
-        //     if (link) {
-        //         fileNameDisplay.textContent = `Tên văn bản đã tải lên: ${link.split('/').pop()}`;
-        //     } else {
-        //         fileNameDisplay.textContent = ''; // Clear the file name if not present
-        //     }
-
-        //     // Set old file path
-        //     document.getElementById('oldFilePath').value = link || '';
-
-        //     // Show the modal
-        //     $('#documentModal').modal('show');
-        // }
-        // // Fetch Users for the responsible person and the "kinh chuyển" combobox
-        // function fetchUsers(nguoiphutrach_id, kinhchuyen_id) {
-        //     fetch('/api/users/basic')
-        //         .then(response => response.json())
-        //         .then(users => {
-        //             const nguoiphutrachSelect = document.getElementById('nguoiphutrach');
-        //             const kinhchuyenSelect = document.getElementById('kinhchuyen');
-
-        //             // Clear previous options
-        //             nguoiphutrachSelect.innerHTML = '';
-        //             kinhchuyenSelect.innerHTML = '';
-
-        //             // Default option for nguoiphutrach
-        //             const defaultOptionNguoiPhuTrach = document.createElement('option');
-        //             defaultOptionNguoiPhuTrach.value = '';
-        //             defaultOptionNguoiPhuTrach.textContent = 'Chọn người phụ trách';
-        //             nguoiphutrachSelect.appendChild(defaultOptionNguoiPhuTrach);
-
-        //             // Default option for kinhchuyen
-        //             const defaultOptionKinhChuyen = document.createElement('option');
-        //             defaultOptionKinhChuyen.value = '';
-        //             defaultOptionKinhChuyen.textContent = 'Chọn người kinh chuyển';
-        //             kinhchuyenSelect.appendChild(defaultOptionKinhChuyen);
-
-        //             // Add users to both dropdowns
-        //             users.forEach(user => {
-        //                 const nguoiphutrachOption = document.createElement('option');
-        //                 nguoiphutrachOption.value = user.id;
-        //                 nguoiphutrachOption.textContent = user.name;
-        //                 nguoiphutrachSelect.appendChild(nguoiphutrachOption);
-
-        //                 const kinhchuyenOption = document.createElement('option');
-        //                 kinhchuyenOption.value = user.id;
-        //                 kinhchuyenOption.textContent = user.name;
-        //                 kinhchuyenSelect.appendChild(kinhchuyenOption);
-        //             });
-
-        //             // Set selected values if applicable
-        //             if (nguoiphutrach_id && users.some(user => user.id == nguoiphutrach_id)) {
-        //                 nguoiphutrachSelect.value = nguoiphutrach_id;
-        //             } else {
-        //                 nguoiphutrachSelect.value = '';
-        //             }
-
-        //             if (kinhchuyen_id && users.some(user => user.id == kinhchuyen_id)) {
-        //                 kinhchuyenSelect.value = kinhchuyen_id;
-        //             } else {
-        //                 kinhchuyenSelect.value = '';
-        //             }
-        //         })
-        //         .catch(error => {
-        //             console.error('Error fetching users:', error);
-
-        //             // Add a fallback option in case of error
-        //             const nguoiphutrachSelect = document.getElementById('nguoiphutrach');
-        //             const kinhchuyenSelect = document.getElementById('kinhchuyen');
-
-        //             nguoiphutrachSelect.innerHTML = '<option value="">Không thể tải danh sách</option>';
-        //             kinhchuyenSelect.innerHTML = '<option value="">Không thể tải danh sách</option>';
-        //         });
-        // }
         // Fetch Documents and display them in a table
         function fetchDocuments() {
             fetch('/api/vb_den')
@@ -611,33 +565,28 @@
                             data.forEach((doc, index) => {
                                 const row = document.createElement('tr');
                                 const nguoiphutrachName = usersMap[doc.nguoiphutrach] || 'Không tìm thấy'; // Get user name
-                                const nguoikinhchuyen = usersMap[doc.nguoikinhgui] || "";
+                                const nguoikinhchuyen = usersMap[doc.nguoikinhgui] || '';
 
                                 row.innerHTML = `
-                                <td>${index + 1}</td>
-                                <td>${doc.tenvb}</td>
-                                <td>${doc.sovanban}</td>
-                                <td style="width: 980px;  text-align: center;">${doc.noidung}</td>
-                                <td>${doc.ngayphathanh}</td>
-                                <td>
-                                    ${doc.nguonphathanh.map(item => `${item.type}<br> ${item.address}`).join('<br>')}
-                                </td>
-
-                                <td>${doc.ngayden}</td>
-                                <td>${doc.soDen}</td>
-                                <td style="width: 980px;  text-align: center;">${doc.chidao}</td>
-                                <td>${doc.ngayxuly}</td>
-                                <td>${doc.hantheovanban}</td>
-                                <td>${doc.hantheochidao || 'Chưa có hạn'}</td>
-                                <td>${nguoiphutrachName}</td>
-                                <td>${nguoikinhchuyen}</td>
-                                <td><a href="${doc.link}" target="_blank">Link</a></td>
-                                <td>${doc.status}</td>
-                                <td>
-                                    <button class="btn btn-info btn-sm" onclick="editDocument('${doc.id}','${doc.tenvb}', '${doc.sovanban}','${doc.ngayphathanh}', '${doc.soDen}', '${doc.ngayden}', '${doc.noidung}', '${doc.chidao}', '${doc.ngayxuly}', '${doc.hantheovanban}', '${doc.hantheochidao}', '${doc.nguonphathanh[0].type}','${doc.nguonphathanh[0].address}', '${doc.nguoiphutrach}','${doc.nguoikinhgui}', '${doc.link}')">Edit</button>
-                                    <button class="btn btn-danger btn-sm" onclick="deleteDocument(${doc.id})">Delete</button>
-                                </td>
-                            `;
+                            <td>${index + 1}</td>
+                            <td>${doc.sovanban}</td>
+                            <td style="width: 1000px; text-align: center;">${doc.noidung}</td>
+                            <td>${doc.ngayphathanh}</td>
+                             <td>${nguoiphutrachName}</td>
+                            <td>${nguoikinhchuyen}</td>
+                            <td>${doc.hantheovanban}</td>
+                            <td>${doc.hantheochidao || 'Chưa có hạn'}</td>
+                            <td><a href="${doc.link}" target="_blank">Link</a></td>
+                            <td>${doc.status}</td>
+                            <td>
+                                <button class="btn btn-info btn-sm" 
+                                    onclick="editDocument('${doc.id}', '${doc.sovanban}','${doc.ngayphathanh}', '${doc.soDen}', '${doc.ngayden}', '${doc.noidung}', '${doc.chidao}', '${doc.ngayxuly}', '${doc.hantheovanban}', '${doc.hantheochidao}', '${doc.nguonphathanh[0].type}','${doc.nguonphathanh[0].address}', '${doc.nguoiphutrach}','${doc.nguoikinhgui}', '${doc.link}')">
+                                    Chi Tiết
+                                </button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteDocument(${doc.id})">Delete</button>
+                                <button class="btn btn-success" onclick="toggleForm('${doc.id}','${doc.soDen}','${doc.ngayden}')">Tạo Văn Bản Đi</button>
+                            </td>
+                        `;
 
                                 documentTableBody.appendChild(row);
                             });
@@ -647,57 +596,310 @@
                 .catch(error => console.error('Error fetching documents:', error));
         }
 
-        // // Delete document
-        // function deleteDocument(id) {
-        //     if (confirm('Bạn có chắc chắn muốn xóa văn bản này?')) {
-        //         fetch(`/api/vb_den/${id}`, { method: 'DELETE' })
-        //             .then(response => response.json())
-        //             .then(data => {
-        //                 if (data.success) {
-        //                     alert('Xóa văn bản thành công!');
-        //                     fetchDocuments(); // Refresh the documents list
-        //                 } else {
-        //                     alert('Xóa văn bản thất bại.');
-        //                 }
-        //             })
-        //             .catch(error => {
-        //                 console.error('Lỗi:', error);
-        //                 alert('Đã có lỗi xảy ra.');
-        //             });
-        //         clearForm();
-        //     }
-        // }
 
-        // function clearForm() {
-        //     document.getElementById("tenvb").value = '';
-        //     document.getElementById("documentId").value = '';
-        //     document.getElementById("sovanban").value = '';
-        //     document.getElementById("ngayphathanh").value = '';
-        //     document.getElementById("soDen").value = '';
-        //     document.getElementById("ngayden").value = '';
-        //     document.getElementById("noidung").value = '';
-        //     document.getElementById("chidao").value = '';
-        //     document.getElementById("ngayxuly").value = '';
-        //     document.getElementById("theovanban").value = '';
-        //     document.getElementById("theochidao").value = '';
-        //     document.getElementById("nguonTrongTruong").value = '';
-        //     document.getElementById("nguonNgoaiTruong").value = '';
-        //     document.getElementById("documentFile").value = '';
-        //     document.getElementById("fileNameDisplay").value = '';
-        //     document.getElementById("oldFilePath").value = '';
+        function searchDocuments() {
+            const searchInput = document.getElementById('searchInput').value.trim().toLowerCase();
+            const startDateInput = document.getElementById('startDateInput').value;
+            const endDateInput = document.getElementById('endDateInput').value;
 
-        //     fetchUsers(-1, -1);
+            const table = document.getElementById('documentTable');
+            const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
 
-        //     // Ẩn form "Kính chuyển" khi thêm mới
-        //     const kinhChuyenRow = document.getElementById("kinhChuyenRow");
-        //     const kinhChuyenSelect = document.getElementById("kinhchuyen");
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                const cells = row.getElementsByTagName('td');
 
-        //     kinhChuyenRow.style.display = "none"; // Ẩn hàng kính chuyển
-        //     kinhChuyenSelect.value = ''; // Reset giá trị chọn kính chuyển
+                // Lấy giá trị từ các cột cần tìm kiếm
+                const soVanBan = cells[1].textContent.toLowerCase(); // Cột số văn bản
+                const noiDung = cells[2].textContent.toLowerCase();  // Cột nội dung
+                const nguonPhatHanh = cells[4].textContent.toLowerCase(); // Cột nguồn phát hành
+                const ngayPhatHanh = cells[3].textContent;           // Cột ngày phát hành
 
-        //     // Gọi lại hàm fetchUsers để tải lại danh sách người dùng (với tham số -1)
-        //     document.getElementById("formContainer").style.display = 'none'; // Ẩn form container nếu cần
-        // }
+                // Kiểm tra khớp chuỗi tìm kiếm
+                const matchesSearch =
+                    soVanBan.includes(searchInput) ||
+                    noiDung.includes(searchInput) ||
+                    nguonPhatHanh.includes(searchInput);
+
+                // Kiểm tra khớp ngày
+                const ngayPhatHanhDate = new Date(ngayPhatHanh);
+                const startDate = startDateInput ? new Date(startDateInput) : null;
+                const endDate = endDateInput ? new Date(endDateInput) : null;
+
+                const matchesDate =
+                    (!startDate || ngayPhatHanhDate >= startDate) &&
+                    (!endDate || ngayPhatHanhDate <= endDate);
+
+                // Hiển thị hoặc ẩn dòng
+                if (matchesSearch && matchesDate) {
+                    row.style.display = ''; // Hiển thị dòng
+                } else {
+                    row.style.display = 'none'; // Ẩn dòng
+                }
+            }
+        }
+
+        function saveDocument(event) {
+            event.preventDefault();
+            const formData = new FormData();
+
+            // Lấy tất cả các giá trị từ form và thêm vào FormData
+            formData.append('theochidao', document.getElementById('theochidao').value);
+            formData.append('ngayxuly', document.getElementById('ngayxuly').value);
+            formData.append('chidao', document.getElementById('chidao').value);
+            formData.append('ngayphathanh', document.getElementById('ngayphathanh').value);
+            formData.append('sovanban', document.getElementById('sovanban').value);
+            formData.append('noidung', document.getElementById('noidung').value);
+            formData.append('ngayden', document.getElementById('ngayden').value);
+            formData.append('soDen', document.getElementById('soDen').value);
+            formData.append('hantheovanban', document.getElementById('theovanban').value);
+            formData.append('nguoiphutrach', document.getElementById('nguoiphutrach').value);
+            formData.append('kinhchuyen', document.getElementById('kinhchuyen').value);
+
+            // Xử lý Nguồn Phát Hành
+            const nguonTrongTruong = document.getElementById("nguonTrongTruong").value.trim();
+            const nguonNgoaiTruong = document.getElementById("nguonNgoaiTruong").value.trim();
+            const nguonPhatHanhArray = [];
+
+            if (nguonTrongTruong) {
+                nguonPhatHanhArray.push({ type: "Trong Trường", address: nguonTrongTruong });
+            }
+            if (nguonNgoaiTruong) {
+                nguonPhatHanhArray.push({ type: "Ngoài Trường", address: nguonNgoaiTruong });
+            }
+
+            formData.append('nguonphathanh', JSON.stringify(nguonPhatHanhArray));
+
+            // Kiểm tra và xử lý tệp tải lên
+            const fileInput = document.getElementById('documentFile');
+            const oldFilePathInput = document.getElementById('oldFilePath'); // Đường dẫn tệp cũ nếu có
+
+            if (fileInput.files.length > 0) {
+                // Nếu có tệp mới, thêm vào FormData
+                formData.append('documentFile', fileInput.files[0]);
+            } else if (oldFilePathInput.value) {
+                // Nếu không có tệp mới, thêm đường dẫn tệp cũ
+                formData.append('oldFilePath', oldFilePathInput.value);
+            }
+
+            // Kiểm tra xem là cập nhật hay thêm mới
+            const documentId = document.getElementById('documentId').value;
+            const isUpdate = !!documentId; // Nếu có documentId, tức là đang cập nhật
+
+            const url = isUpdate ? `/api/vb_den/${documentId}` : '/api/vb_den';
+            const method = isUpdate ? 'PUT' : 'POST';
+
+            // Gửi dữ liệu tới server
+            fetch(url, {
+                method: method,
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Thông báo thành công
+                        alert(isUpdate ? 'Văn bản đã được cập nhật thành công!' : 'Văn bản đã được thêm thành công!');
+                        $('#documentModal').modal('hide'); // Đóng modal
+                        fetchDocuments(); // Làm mới danh sách văn bản
+                    } else {
+                        // Thông báo thất bại
+                        alert(isUpdate ? 'Cập nhật văn bản thất bại.' : 'Thêm văn bản thất bại.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Lỗi:', error);
+                    alert('Đã có lỗi xảy ra trong quá trình gửi yêu cầu.');
+                });
+        }
+        function exportCSV() {
+            // Gửi yêu cầu đến API để xuất file CSV
+            fetch('/api/vb_den/getfile', {
+                method: 'GET',
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.blob();
+                    }
+                    throw new Error('Không thể tải file CSV');
+                })
+                .then(blob => {
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = 'documents.csv'; // Tên file khi tải về
+                    link.click();
+                })
+                .catch(error => {
+                    alert(error.message);
+                });
+        }
+
+        function editDocument(id, sovanban, ngayphathanh, soDen, ngayden, noidung, chidao, ngayxuly, hantheovanban, hantheochidao, nguonphathanh, diachiphathanh, nguoiphutrach_id, nguoikinhgui, link) {
+            document.getElementById("documentId").value = id;
+            document.getElementById("sovanban").value = sovanban;
+            document.getElementById("ngayphathanh").value = ngayphathanh;
+            document.getElementById("soDen").value = soDen;
+            document.getElementById("ngayden").value = ngayden;
+            document.getElementById("noidung").value = noidung;
+            document.getElementById("chidao").value = chidao;
+            document.getElementById("ngayxuly").value = ngayxuly;
+            document.getElementById("theovanban").value = hantheovanban;
+            document.getElementById("theochidao").value = hantheochidao;
+            if (nguonphathanh === "Trong Trường") {
+                document.getElementById("nguonTrongTruong").value = diachiphathanh;
+                document.getElementById("nguonNgoaiTruong").value = '';
+            }
+            if (nguonphathanh === "Ngoài Trường") {
+                document.getElementById("nguonTrongTruong").value = '';
+                document.getElementById("nguonNgoaiTruong").value = diachiphathanh;
+            }
+
+            // Hiển thị combobox Kính Chuyển khi chỉnh sửa
+            const kinhChuyenRow = document.getElementById("kinhChuyenRow");
+            const kinhChuyenSelect = document.getElementById("kinhchuyen");
+
+            kinhChuyenRow.style.display = "flex"; // Hiển thị hàng kính chuyển
+            kinhChuyenSelect.value = ''; // Thiết lập giá trị mặc định cho kính chuyển
+
+            // Fetch users and populate the responsible person dropdown
+            fetchUsers(nguoiphutrach_id, nguoikinhgui);
+
+            // Display the file name if available
+            const fileNameDisplay = document.getElementById('fileNameDisplay');
+            if (link) {
+                fileNameDisplay.textContent = `Tên văn bản đã tải lên: ${link.split('/').pop()}`;
+            } else {
+                fileNameDisplay.textContent = ''; // Clear the file name if not present
+            }
+
+            // Set old file path
+            document.getElementById('oldFilePath').value = link || '';
+
+            // Show the modal
+            $('#documentModal').modal('show');
+        }
+        // Delete document
+        function deleteDocument(id) {
+            if (confirm('Bạn có chắc chắn muốn xóa văn bản này?')) {
+                fetch(`/api/vb_den/${id}`, { method: 'DELETE' })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Xóa văn bản thành công!');
+                            fetchDocuments(); // Refresh the documents list
+                        } else {
+                            alert('Xóa văn bản thất bại.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Lỗi:', error);
+                        alert('Đã có lỗi xảy ra.');
+                    });
+                clearForm();
+            }
+        }
+
+        function clearForm() {
+            document.getElementById("documentId").value = '';
+            document.getElementById("sovanban").value = '';
+            document.getElementById("ngayphathanh").value = '';
+            document.getElementById("soDen").value = '';
+            document.getElementById("ngayden").value = '';
+            document.getElementById("noidung").value = '';
+            document.getElementById("chidao").value = '';
+
+            document.getElementById("theovanban").value = '';
+            document.getElementById("theochidao").value = '';
+            document.getElementById("nguonTrongTruong").value = '';
+            document.getElementById("nguonNgoaiTruong").value = '';
+            document.getElementById("documentFile").value = '';
+            document.getElementById("fileNameDisplay").value = '';
+            document.getElementById("oldFilePath").value = '';
+            document.getElementById("documentFile_di").value = '';
+            document.getElementById("fileNameDisplay_di").value = '';
+
+            fetchUsers(-1, -1);
+            // Lấy ngày hiện tại
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = (today.getMonth() + 1).toString().padStart(2, '0'); // Đảm bảo tháng có 2 chữ số
+            const day = today.getDate().toString().padStart(2, '0'); // Đảm bảo ngày có 2 chữ số
+
+            // Định dạng ngày theo kiểu "YYYY-MM-DD"
+            const currentDate = `${year}-${month}-${day}`;
+
+            // Gán ngày hiện tại vào ô input
+            document.getElementById("ngayxuly").value = currentDate;
+
+            // Đặt trường ngày nhận văn bản ở chế độ không thể chỉnh sửa
+            document.getElementById("ngayxuly").setAttribute("readonly", true);
+
+            // Ẩn form "Kính chuyển" khi thêm mới
+            const kinhChuyenRow = document.getElementById("kinhChuyenRow");
+            const kinhChuyenSelect = document.getElementById("kinhchuyen");
+
+            kinhChuyenRow.style.display = "none"; // Ẩn hàng kính chuyển
+            kinhChuyenSelect.value = ''; // Reset giá trị chọn kính chuyển
+
+            document.getElementById('ngayphathanh_di').value = currentDate;
+            document.getElementById('ngayphathanh_di').setAttribute("readonly", true);
+
+            // Gọi lại hàm fetchUsers để tải lại danh sách người dùng (với tham số -1)
+            document.getElementById("formContainer").style.display = 'none'; // Ẩn form container nếu cần
+        }
+
+        function taovanbandi(event) {
+            event.preventDefault();
+            const formData = new FormData();
+
+            // Các giá trị từ form
+            const sovanban_di = document.getElementById('sovanban_di').value;
+            const ngayphathanh_di = document.getElementById('ngayphathanh_di').value;
+            const donvitiepnhan = document.getElementById('donvitiepnhan').value;
+            const noidung_di = document.getElementById('noidung_di').value;
+            const nguoiphutrach = document.getElementById('canbosoanthao').value;
+            const lanhdaophongki = document.getElementById('lanhdaophongki').value;
+            const BGHduyet = document.getElementById('BGHduyet').value;
+            const lienket = document.getElementById("documentId").value;
+
+            // Thêm dữ liệu vào FormData
+            formData.append('sovanban_di', sovanban_di);
+            formData.append('ngayphathanh_di', ngayphathanh_di);
+            formData.append('donvitiepnhan', donvitiepnhan);
+            formData.append('noidung_di', noidung_di);
+            formData.append('nguoiphutrach', nguoiphutrach);
+            formData.append('lanhdaoki', lanhdaophongki);
+            formData.append('BGHduyet', BGHduyet);
+            formData.append('lienket', lienket);
+
+            // Kiểm tra và xử lý tệp tải lên
+            const fileInput = document.getElementById('documentFile_di');
+
+            if (fileInput.files.length > 0) {
+                formData.append('documentFile', fileInput.files[0]);
+                // Hiển thị tên tệp đã chọn
+                const fileNameDisplay = document.getElementById('fileNameDisplay_di');
+                fileNameDisplay.textContent = `Tệp đã chọn: ${fileInput.files[0].name}`;
+            } else {
+                formData.append('oldFilePath', null);
+            }
+
+            try {
+                const url = '/api/vb_di';
+                const method = 'POST';
+
+                fetch(url, {
+                    method: method,
+                    body: formData
+                }).then(() => {
+                    $('#formContainer').modal('hide');
+                    fetchDocuments();
+                })
+                    .catch(error => alert('Có lỗi xảy ra: ' + error.message));
+
+            } catch (error) {
+                console.error('Có lỗi xảy ra:', error);
+            }
+        }
 
     </script>
 

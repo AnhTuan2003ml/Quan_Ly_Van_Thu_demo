@@ -133,8 +133,6 @@ export const Put_vb_den = (req, res) => {
                         token_old = generateConfirmLink(oldEmail, 24, oldDocument.id, "văn bản đến");
                     }
                     testSendEmail_multi(oldEmail, newEmail, token_new, token_old);
-
-                    updateLogByDocumentIdAndType(parseInt(documentId), 'văn bản đến', parseInt(nguoiphutrach), currentDate.toISOString());
                 }
             }
 

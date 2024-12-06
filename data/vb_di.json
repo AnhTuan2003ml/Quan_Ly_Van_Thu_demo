@@ -1,11 +1,11 @@
 [
   {
     "id": 1,
-    "sovanbandi": "P03/04",
+    "sovanbandi": "P03/05",
     "ngayphathanh": "2024-12-06",
     "donvitiepnhan": "P03",
     "noidung": "anh tuấn",
-    "nguoiphutrach": 2,
+    "nguoiphutrach": 3,
     "lanhdaophongki": 1,
     "bghd": "Phạm Anh Tuấn",
     "link": "../../doc/import.py",

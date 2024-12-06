@@ -107,20 +107,33 @@
             <div class="content">
                 <div class="container mt-5">
                     <h2>Danh sách văn bản đi</h2>
-
-                    <!-- Add and Search Controls -->
-                    <div class="d-flex justify-content-between mb-3">
-                        <button class="btn btn-primary" data-toggle="modal" data-target="#formContainer"
+                    <div class="d-flex align-items-center mb-3">
+                        <!-- Nút Thêm Văn Bản -->
+                        <button class="btn btn-primary btn-sm mr-2" data-toggle="modal" data-target="#formContainer" style="margin-top: 15px;"
                             onclick="clearForm()">Thêm Văn Bản</button>
-                        <div class="form-group mb-0 d-flex">
-                            <input type="text" id="searchInput" class="form-control"
-                                placeholder="Tìm kiếm theo tên hoặc nội dung..." style="width: 300px;">
-                            <button class="btn btn-secondary ml-2" onclick="searchDocuments()">Tìm Kiếm</button>
-                            <button class="btn btn-success ml-2" onclick="exportCSV()">Xuất File CSV</button>
-
+                    
+                        <!-- Ô Tìm Kiếm -->
+                        <input type="text" id="searchInput" class="form-control mr-2"
+                            placeholder="Nhập số, cụm từ nội dung, hoặc nguồn phát hành..." style="width: 300px; margin-top: 25px;">
+                    
+                        <!-- Ngày Bắt Đầu -->
+                        <div class="form-group mr-2 d-flex flex-column">
+                            <label for="startDateInput" class="col-form-label">Ngày Bắt Đầu</label>
+                            <input type="date" id="startDateInput" class="form-control" style="width: 150px;">
                         </div>
+                    
+                        <!-- Ngày Kết Thúc -->
+                        <div class="form-group mr-2 d-flex flex-column">
+                            <label for="endDateInput" class="col-form-label">Ngày Kết Thúc</label>
+                            <input type="date" id="endDateInput" class="form-control" style="width: 150px;">
+                        </div>
+                    
+                        <!-- Nút Tìm Kiếm -->
+                        <button class="btn btn-secondary btn-sm mr-2" onclick="searchDocuments()">Tìm Kiếm</button>
+                    
+                        <!-- Nút Xuất File CSV -->
+                        <button class="btn btn-success btn-sm" onclick="exportCSV()">Xuất File CSV</button>
                     </div>
-
                     <!-- Document Table -->
                     <table class="table table-bordered" id="documentTable">
                         <thead>
@@ -316,6 +329,70 @@
             });
             clearForm();
         });
+
+        function exportCSV() {
+                // Gửi yêu cầu đến API để xuất file CSV
+                fetch('/api/vb_di/getfile', {
+                    method: 'GET',
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.blob();
+                        }
+                        throw new Error('Không thể tải file CSV');
+                    })
+                    .then(blob => {
+                        const link = document.createElement('a');
+                        link.href = URL.createObjectURL(blob);
+                        link.download = 'documents.csv'; // Tên file khi tải về
+                        link.click();
+                    })
+                    .catch(error => {
+                        alert(error.message);
+                    });
+            }
+
+        function searchDocuments() {
+                const searchInput = document.getElementById('searchInput').value.trim().toLowerCase();
+                const startDateInput = document.getElementById('startDateInput').value;
+                const endDateInput = document.getElementById('endDateInput').value;
+
+                const table = document.getElementById('documentTable');
+                const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+                for (let i = 0; i < rows.length; i++) {
+                    const row = rows[i];
+                    const cells = row.getElementsByTagName('td');
+
+                    // Lấy giá trị từ các cột cần tìm kiếm
+                    const soVanBan = cells[1].textContent.toLowerCase(); // Cột số văn bản
+                    const noiDung = cells[4].textContent.toLowerCase();  // Cột nội dung
+                    const nguonPhatHanh = cells[3].textContent.toLowerCase(); // Cột nguồn phát hành
+                    const ngayPhatHanh = cells[2].textContent;           // Cột ngày phát hành
+
+                    // Kiểm tra khớp chuỗi tìm kiếm
+                    const matchesSearch =
+                        soVanBan.includes(searchInput) ||
+                        noiDung.includes(searchInput) ||
+                        nguonPhatHanh.includes(searchInput);
+
+                    // Kiểm tra khớp ngày
+                    const ngayPhatHanhDate = new Date(ngayPhatHanh);
+                    const startDate = startDateInput ? new Date(startDateInput) : null;
+                    const endDate = endDateInput ? new Date(endDateInput) : null;
+
+                    const matchesDate =
+                        (!startDate || ngayPhatHanhDate >= startDate) &&
+                        (!endDate || ngayPhatHanhDate <= endDate);
+
+                    // Hiển thị hoặc ẩn dòng
+                    if (matchesSearch && matchesDate) {
+                        row.style.display = ''; // Hiển thị dòng
+                    } else {
+                        row.style.display = 'none'; // Ẩn dòng
+                    }
+                }
+            }
             // Hàm hiển thị form với thông tin văn bản
             function toggleForm() {
                 $('#formContainer').modal('show');

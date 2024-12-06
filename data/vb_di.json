@@ -1,28 +1,28 @@
 [
   {
     "id": 1,
-    "tenvb": "Văn bản 1",
+    "sovanbandi": "P03/04",
+    "ngayphathanh": "2024-12-06",
+    "donvitiepnhan": "P03",
+    "noidung": "anh tuấn",
+    "nguoiphutrach": 2,
+    "lanhdaophongki": 1,
+    "bghd": "Phạm Anh Tuấn",
+    "link": null,
     "lienket": 1,
-    "ngayden": "2024-11-12",
-    "ngaydi": "2024-12-03",
-    "so": 1,
-    "han": "2024-12-05",
-    "nguoiphutrach": 3,
-    "noidung": "đẹp trai",
-    "link": "null",
-    "status": "checked"
+    "status": "uncheck"
   },
   {
     "id": 2,
-    "tenvb": "Văn bản 1",
-    "lienket": 2,
-    "ngayden": "2024-11-12",
-    "ngaydi": "2024-11-13",
-    "so": 1,
-    "han": "2024-12-15",
+    "sovanbandi": "P03/04",
+    "ngayphathanh": "2024-12-06",
+    "donvitiepnhan": "P03",
+    "noidung": "anh tuấn",
     "nguoiphutrach": 2,
-    "noidung": "Anh Tuấn Siêu Đẹp Trai",
+    "lanhdaophongki": 1,
+    "bghd": "Phạm Anh Tuấn",
     "link": null,
-    "status": "checked"
+    "lienket": 1,
+    "status": "uncheck"
   }
 ]

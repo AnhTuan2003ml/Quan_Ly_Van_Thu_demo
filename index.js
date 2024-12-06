@@ -12,7 +12,6 @@ import confirm from './routes/confirm.js';
 
 import { fileURLToPath } from 'url';
 import { checkDeadlines as checkInboundDeadlines } from './controllers/vb_den.js'; // Nhập hàm kiểm tra văn bản đến
-import { checkDeadlines as checkOutboundDeadlines } from './controllers/vb_di.js'; // Nhập hàm kiểm tra văn bản đi
 
 
 const app = express();
@@ -71,7 +70,6 @@ function scheduleDailyCheck() {
     // Thiết lập timeout để gọi hàm kiểm tra hạn và sau đó lặp lại mỗi 24 giờ
     setTimeout(() => {
         checkInboundDeadlines;
-        checkOutboundDeadlines // Gọi hàm kiểm tra ngay lập tức
         setInterval(checkDeadlines, 24 * 60 * 60 * 1000); // Lặp lại hàng ngày
     }, timeUntilFirstRun);
 

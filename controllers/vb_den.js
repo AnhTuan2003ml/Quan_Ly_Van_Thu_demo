@@ -35,8 +35,8 @@ export const GetDocumentInfo = (req, res) => {
     const data = readJSONFile(filePath);
     // Lấy thông tin các văn bản và tạo một mảng mới chứa các đối tượng id và info
     const documentInfo = data.map(doc => {
-        // Tạo chuỗi thông tin bao gồm tenvb, ngayden, so
-        const info = `${doc.tenvb} - Ngày đến: ${doc.ngayden} - Số: ${doc.so}`;
+        // Tạo chuỗi thông tin bao gồm  ngayden, so
+        const info = `Ngày đến: ${doc.ngayden} - Số: ${doc.so}`;
         // Trả về đối tượng chứa id và chuỗi thông tin
         return {
             id: doc.id,
@@ -64,11 +64,12 @@ export const Get_vb_den = (req, res) => {
 }
 export const Put_vb_den = (req, res) => {
     const documentId = parseInt(req.params.id);
-    const { tenvb, sovanban, ngayphathanh, soDen, ngayden, noidung, chidao, ngayxuly, hantheovanban, hantheochidao, nguonphathanh, nguoiphutrach, kinhchuyen } = req.body;
+    console.log(req.body);
+    const { sovanban, ngayphathanh, soDen, ngayden, noidung, chidao, ngayxuly, hantheovanban, hantheochidao, nguonphathanh, nguoiphutrach, kinhchuyen, oldFilePath } = req.body;
     const documentFile = req.file; // Tệp mới nếu có
 
     // Kiểm tra nếu không có tệp mới, sử dụng tệp cũ
-    let filePath_doc = documentFile ? `../../doc/${path.basename(documentFile.filename)}` : req.body.oldFilePath || null;
+    let filePath_doc = documentFile ? `../../doc/${path.basename(documentFile.filename)}` : oldFilePath || null;
     const data = readJSONFile(filePath);
 
     // Kiểm tra sự trùng lặp đường dẫn với các văn bản khác
@@ -92,6 +93,7 @@ export const Put_vb_den = (req, res) => {
             }
         }
     }
+    console.log(filePath_doc);
 
     // Tìm thông tin văn bản cũ
     readJSONFileID(filePath, parseInt(documentId))
@@ -167,7 +169,7 @@ export const Put_vb_den = (req, res) => {
             }
 
             // Cập nhật thông tin văn bản
-            updateDocument_den(documentId, tenvb, parseInt(sovanban), ngayphathanh, parseInt(soDen), ngayden, noidung, chidao, ngayxuly, hantheovanban, hantheochidao, nguonphathanh, parseInt(nguoiphutrach), parseInt(kinhchuyen), filePath_doc, filePath)
+            updateDocument_den(documentId,  sovanban, ngayphathanh, parseInt(soDen), ngayden, noidung, chidao, ngayxuly, hantheovanban, hantheochidao, nguonphathanh, parseInt(nguoiphutrach), parseInt(kinhchuyen), filePath_doc, filePath)
                 .then(() => {
                     res.json({ success: true, message: 'Văn bản đã được cập nhật thành công.' });
                 })
@@ -182,7 +184,7 @@ export const Put_vb_den = (req, res) => {
 
 
 export const Post_vb_den = (req,res) => {
-    const { tenvb, sovanban, ngayphathanh, soDen, ngayden, noidung, chidao, ngayxuly, hantheovanban, hantheochidao, nguonphathanh, nguoiphutrach, kinhchuyen } = req.body;
+    const { sovanban, ngayphathanh, soDen, ngayden, noidung, chidao, ngayxuly, hantheovanban, hantheochidao, nguonphathanh, nguoiphutrach, kinhchuyen } = req.body;
     const documentFile = req.file; // Tệp mới nếu có
     // Kiểm tra nếu không có tệp mới, sử dụng tệp cũ
     let filePath_doc = documentFile ? `../../doc/${path.basename(documentFile.filename)}` : null;
@@ -237,7 +239,7 @@ export const Post_vb_den = (req,res) => {
 
     
     // Thêm văn bản mới vào cơ sở dữ liệu (hoặc file)
-    addDocument_den(tenvb, parseInt(sovanban), ngayphathanh, parseInt(soDen), ngayden, noidung, chidao, ngayxuly, hantheovanban, hantheochidao, nguonphathanh, parseInt(nguoiphutrach), parseInt(kinhchuyen), filePath_doc,filePath)
+    addDocument_den(sovanban, ngayphathanh, parseInt(soDen), ngayden, noidung, chidao, ngayxuly, hantheovanban, hantheochidao, nguonphathanh, parseInt(nguoiphutrach), parseInt(kinhchuyen), filePath_doc,filePath)
         .then((documentId) => {
             const id_doc = documentId;
             const timestamp = new Date().toISOString(); // Thời gian thay đổi

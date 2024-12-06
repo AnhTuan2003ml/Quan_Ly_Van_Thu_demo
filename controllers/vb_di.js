@@ -61,75 +61,72 @@ export const Get_vb_di = async (req, res) => {
 
 export const Put_vb_di = (req, res) => {
     const documentId = parseInt(req.params.id);
-    const { tenvb, noidung, ngayden, so, han, nguoiphutrach,lienket,ngaydi} = req.body;
+    console.log(req.body);
+    const { sovanban_di, ngayphathanh_di, donvitiepnhan, noidung_di, nguoiphutrach,lanhdaoki, BGHduyet,lienket,oldFilePath } = req.body;
     const documentFile = req.file; // Tệp mới nếu có
     // Kiểm tra nếu không có tệp mới, sử dụng tệp cũ
-    const filePath_doc = documentFile ? `../../doc/${path.basename(documentFile.filename)}` : req.body.oldFilePath || null;
-   
+    let filePath_doc = documentFile
+        ? `../../doc/${path.basename(documentFile.filename)}`  // Nếu có tệp mới, lấy tên tệp mới
+        : oldFilePath || null;  // Nếu không có tệp mới, lấy đường dẫn cũ nếu có
+
+    // Kiểm tra xem có tệp không
     if (filePath_doc) {
-        const data = readJSONFile(filePath);
-        const existingDocument = data.find(doc => doc.link === filePath_doc);
+        const data = readJSONFile(filePath);  // Đọc dữ liệu từ file JSON
+
+        const existingDocument = data.find(doc => doc.link === filePath_doc);  // Kiểm tra nếu tệp đã tồn tại trong cơ sở dữ liệu
 
         if (existingDocument) {
-            // Nếu trùng với văn bản khác, thay đổi tên tệp
+            // Nếu tệp đã tồn tại, nhưng là tệp khác (không phải tệp hiện tại)
             if (existingDocument.id !== documentId) {
-                const ext = path.extname(filePath_doc);
-                const baseName = path.basename(filePath_doc, ext);
-                let counter = 1;
-                let newFilePath = `../../doc/${baseName}_${counter}${ext}`;
+                const ext = path.extname(filePath_doc);  // Lấy phần mở rộng của tệp
+                const baseName = path.basename(filePath_doc, ext);  // Lấy tên gốc của tệp (không bao gồm phần mở rộng)
 
+                let counter = 1;
+                let newFilePath = `../../doc/${baseName}_${counter}${ext}`;  // Đặt tên mới cho tệp
+
+                // Kiểm tra xem tên mới có bị trùng lặp không
                 while (data.some(doc => doc.link === newFilePath)) {
                     counter++;
-                    newFilePath = `../../doc/${baseName}_${counter}${ext}`;
+                    newFilePath = `../../doc/${baseName}_${counter}${ext}`;  // Nếu trùng, thêm hậu tố để đổi tên tệp
                 }
 
+                // Cập nhật lại đường dẫn tệp
                 filePath_doc = newFilePath;
                 console.log(`Tên tệp mới: ${filePath_doc}`);
             }
-            // Nếu trùng với chính văn bản đó, không thay đổi tên file, chỉ ghi đè
+            // Nếu là tệp hiện tại (id giống nhau), không thay đổi tên
         }
+        console.log(`Tên tệp : ${filePath_doc}`);
     }
+
+
     // Tìm thông tin văn bản cũ (có thể lấy từ cơ sở dữ liệu hoặc từ file JSON)
     readJSONFileID(filePath, parseInt(documentId)) // Giả sử bạn có hàm này để lấy thông tin văn bản cũ
         .then(oldDocument => {
             // So sánh và tạo danh sách các thuộc tính thay đổi
             let token_old;
             let token_new;
+            let oldEmail,newEmail;
             if (oldDocument.nguoiphutrach !== parseInt(nguoiphutrach)) {
-                const oldEmail = getEmailById(oldDocument.nguoiphutrach)
-                const newEmail = getEmailById(nguoiphutrach)
-
-                // Lấy ngày hiện tại
-                const currentDate = new Date();
-
-                // Lấy ngày hết hạn từ oldDocument.han
-                const expirationDate = new Date(oldDocument.han);
-
-                // Tính toán sự khác biệt giữa ngày hết hạn và ngày hiện tại
-                const timeDifference = expirationDate - currentDate;
-
-                // Chuyển đổi sự khác biệt thành giờ, phút
-                const hoursRemaining = timeDifference / (1000 * 60 * 60);  // Chuyển từ milliseconds sang giờ
-
-                // Kiểm tra nếu ngày hết hạn còn lớn hơn ngày hiện tại
-                if (hoursRemaining > 0) {
-                    token_new = generateConfirmLink(newEmail, hoursRemaining, oldDocument.id ,"văn bản đi");
-                    token_old = generateConfirmLink(oldEmail, hoursRemaining, oldDocument.id ,"văn bản đi");
-                    testSendEmail_multi(oldEmail, newEmail, token_new, token_old);
-                }
+                oldEmail = getEmailById(oldDocument.nguoiphutrach)
+                newEmail = getEmailById(nguoiphutrach)
+                token_new = generateConfirmLink(newEmail, 24, oldDocument.id ,"văn bản đi");
+                token_old = generateConfirmLink(oldEmail, 24, oldDocument.id ,"văn bản đi");
                 //console.log(parseInt(documentId), 'văn bản đi', parseInt(nguoiphutrach), currentDate.toISOString())
-                updateLogByDocumentIdAndType(parseInt(documentId), 'văn bản đi', parseInt(nguoiphutrach), currentDate.toISOString());
-                
             }
-        
+            if (!lienket) {
+                return null;
+            }
             // Cập nhật thông tin văn bản
-            updateDocument_di(documentId, tenvb, noidung, ngayden, parseInt(so), han, parseInt(nguoiphutrach), filePath_doc, filePath, parseInt(lienket),ngaydi)
+            updateDocument_di(parseInt(documentId), sovanban_di, ngayphathanh_di, donvitiepnhan, noidung_di, parseInt(nguoiphutrach), parseInt(lanhdaoki), BGHduyet, filePath_doc, parseInt(lienket), filePath)
                 .then(() => {
                     res.json({ success: true, message: 'Văn bản đã được cập nhật thành công.' });
+                    testSendEmail_multi(oldEmail, newEmail, token_new, token_old);
+                    updateLogByDocumentIdAndType(parseInt(documentId), 'văn bản đi', parseInt(nguoiphutrach), currentDate.toISOString());
                 })
                 .catch(err => {
                     res.status(500).json({ success: false, message: 'Có lỗi xảy ra khi cập nhật văn bản.' });
-                });
+                }); 
         })
         .catch(err => {
             res.status(500).json({ success: false, message: 'Không tìm thấy văn bản.' });
@@ -137,60 +134,55 @@ export const Put_vb_di = (req, res) => {
 }
 
 export const Post_vb_di = (req, res) => {
-    const { tenvb, noidung, ngayden, so, han, nguoiphutrach,lienket,ngaydi} = req.body;
+    console.log(req.body);
+    const { sovanban_di, ngayphathanh_di, donvitiepnhan, noidung_di, nguoiphutrach,lanhdaoki, BGHduyet,lienket} = req.body;
     const documentFile = req.file; // Tệp mới nếu có
-   // Kiểm tra nếu không có tệp mới, sử dụng tệp cũ
-    const filePath_doc = documentFile ? `../../doc/${path.basename(documentFile.filename)}` : null;
+    // Kiểm tra nếu không có tệp mới, sử dụng tệp cũ
+    let filePath_doc = documentFile
+        ? `../../doc${path.basename(documentFile.filename)}`  // Nếu có tệp mới, lấy tên tệp mới
+        :  null;  // Nếu không có tệp mới, lấy đường dẫn cũ nếu có
 
+    // Kiểm tra xem có tệp không
     if (filePath_doc) {
-        const data = readJSONFile(filePath);
-        const existingDocument = data.find(doc => doc.link === filePath_doc);
+        const data = readJSONFile(filePath);  // Đọc dữ liệu từ file JSON
+
+        const existingDocument = data.find(doc => doc.link === filePath_doc);  // Kiểm tra nếu tệp đã tồn tại trong cơ sở dữ liệu
 
         if (existingDocument) {
-            // Nếu trùng với văn bản khác, thay đổi tên tệp
+            // Nếu tệp đã tồn tại, nhưng là tệp khác (không phải tệp hiện tại)
             if (existingDocument.id) {
-                const ext = path.extname(filePath_doc);
-                const baseName = path.basename(filePath_doc, ext);
-                let counter = 1;
-                let newFilePath = `../../doc/${baseName}_${counter}${ext}`;
+                const ext = path.extname(filePath_doc);  // Lấy phần mở rộng của tệp
+                const baseName = path.basename(filePath_doc, ext);  // Lấy tên gốc của tệp (không bao gồm phần mở rộng)
 
+                let counter = 1;
+                let newFilePath = `../../doc${baseName}_${counter}${ext}`;  // Đặt tên mới cho tệp
+
+                // Kiểm tra xem tên mới có bị trùng lặp không
                 while (data.some(doc => doc.link === newFilePath)) {
                     counter++;
-                    newFilePath = `../../doc/${baseName}_${counter}${ext}`;
+                    newFilePath = `../../doc${baseName}_${counter}${ext}`;  // Nếu trùng, thêm hậu tố để đổi tên tệp
                 }
 
+                // Cập nhật lại đường dẫn tệp
                 filePath_doc = newFilePath;
                 console.log(`Tên tệp mới: ${filePath_doc}`);
             }
-            // Nếu trùng với chính văn bản đó, không thay đổi tên file, chỉ ghi đè
+            // Nếu là tệp hiện tại (id giống nhau), không thay đổi tên
         }
     }
+
+
     const newEmail = getEmailById(nguoiphutrach);
     let token_new;
     // console.log(newDocument);
-    // Lấy ngày hiện tại
-    const currentDate = new Date();
-
-    // Lấy ngày hết hạn từ oldDocument.han
-    const expirationDate = new Date(han);
-
-    // Tính toán sự khác biệt giữa ngày hết hạn và ngày hiện tại
-    const timeDifference = expirationDate - currentDate;
-
-    // Chuyển đổi sự khác biệt thành giờ, phút
-    const hoursRemaining = timeDifference / (1000 * 60 * 60);  // Chuyển từ milliseconds sang giờ
-
-   
     // Thêm văn bản mới vào cơ sở dữ liệu (hoặc file)
-    addDocument_di(tenvb, noidung, ngayden, parseInt(so), han, parseInt(nguoiphutrach), filePath_doc, filePath,parseInt(lienket),ngaydi)
+    addDocument_di(sovanban_di, ngayphathanh_di, donvitiepnhan, noidung_di, parseInt(nguoiphutrach), parseInt(lanhdaoki), BGHduyet, filePath_doc, parseInt(lienket), filePath)
         .then((documentId) => {
             const id_doc = documentId;
             const timestamp = new Date().toISOString(); // Thời gian thay đổi
             // Kiểm tra nếu ngày hết hạn còn lớn hơn ngày hiện tại
-            if (hoursRemaining > 0) {
-                token_new = generateConfirmLink(newEmail, hoursRemaining, documentId, "văn bản đi");
-                testSendEmail_single(newEmail, token_new);
-            }
+            token_new = generateConfirmLink(newEmail, 24, documentId, "văn bản đi");
+            testSendEmail_single(newEmail, token_new);
             // Trả về phản hồi thành công trước khi gọi addLogData()
             res.json({ success: true, message: 'Văn bản đi đã được thêm thành công.', documentId: id_doc });
 
@@ -268,15 +260,6 @@ export const Delete = (req, res) => {
 
 
 
-// Gọi hàm kiểm tra và gửi email
-export async function checkDeadlines() {
-    try {
-        await daysUntilDeadline(filePath,"Văn bản đi");
-        console.log('Đã kiểm tra tất cả các hạn.');
-    } catch (error) {
-        console.error('Lỗi khi kiểm tra hạn:', error);
-    }
-}
 
 // Hàm nhận vào ID và gọi hàm cập nhật trạng thái
 export function changeDocumentStatusById_di(id) {

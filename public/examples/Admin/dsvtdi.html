@@ -110,7 +110,7 @@
 
                     <!-- Add and Search Controls -->
                     <div class="d-flex justify-content-between mb-3">
-                        <button class="btn btn-primary" data-toggle="modal" data-target="#documentModal"
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#formContainer"
                             onclick="clearForm()">Thêm Văn Bản</button>
                         <div class="form-group mb-0 d-flex">
                             <input type="text" id="searchInput" class="form-control"
@@ -125,14 +125,14 @@
                     <table class="table table-bordered" id="documentTable">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Tên Văn Bản</th>
+                                <th>STT</th>
+                                <th>Số Văn Bản</th>
+                                <th>Ngày Phát Hành</th>
+                                <th>Đơn Vị Tiếp Nhận</th>
                                 <th>Nội Dung</th>
-                                <th>Ngày Đến</th>
-                                <th>Ngày Đi</th>
-                                <th>Số</th>
-                                <th>Hạn</th>
+                                <th>Ban Giám Hiệu</th>
                                 <th>Người Phụ Trách</th>
+                                <th>Lãnh Kí</th>
                                 <th>Văn Bản liên kết</th>
                                 <th>Link Văn Bản</th>
                                 <th>Actions</th>
@@ -145,76 +145,100 @@
                 </div>
             </div>
 
-            <!-- Document Modal -->
-            <div class="modal fade" id="documentModal" tabindex="-1" role="dialog" aria-labelledby="documentModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="documentModalLabel">Edit Document</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="documentForm">
-                                <input type="hidden" id="documentId">
-                                <div class="form-group">
-                                    <label for="tenvb">Tên Văn Bản:</label>
-                                    <input type="text" class="form-control" id="tenvb" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="noidung">Nội Dung:</label>
-                                    <textarea class="form-control" id="noidung" required></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label for="ngayden">Ngày Đến:</label>
-                                    <input type="date" class="form-control" id="ngayden" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="ngayden">Ngày Đi:</label>
-                                    <input type="date" class="form-control" id="ngaydi" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="so">Số:</label>
-                                    <input type="number" class="form-control" id="so" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="han">Hạn:</label>
-                                    <input type="date" class="form-control" id="han">
-                                </div>
-                                <div class="form-group">
-                                    <label for="nguoiphutrach">Văn bản đến liên kết:</label>
-                                    <select class="form-control" id="vblk" required>
-                                        <!-- Các option sẽ được điền tự động ở đây -->
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="nguoiphutrach">Người Phụ Trách:</label>
-                                    <select class="form-control" id="nguoiphutrach" required>
-                                        <!-- Các option sẽ được điền tự động ở đây -->
-                                    </select>
-                                </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="documentFile">Tải lên văn bản:</label>
-                            <input type="file" class="form-control" id="documentFile" name="documentFile">
-                            <small id="fileNameDisplay" class="form-text text-muted"></small>
-                            <!-- To display the file name -->
-                            <input type="hidden" id="oldFilePath" name="oldFilePath" value="">
-                            <!-- Đường dẫn cũ -->
-                        </div>
-
-                        <button type="submit" class="btn btn-primary" id="submitBtn" onclick="saveDocument()">Lưu Văn
-                            Bản</button>
-                        </form>
+        <div class="modal fade" id="formContainer" tabindex="-1" role="dialog" aria-labelledby="documentModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="documentModalLabel">Văn Bản Đi</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
+                    <form id="documentForm" class="custom-form">
+                        <input type="hidden" id="documentId">
+                        <div class="modal-body">
+                            <!-- <div class="form-group row">
+                                        <label for="sovanban_di" class="col-sm-4 col-form-label">Sinh Từ :</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="thongtin" required readonly>
+                                        </div>
+                                    </div> -->
+                            <!-- Form Group for Số Văn Bản and Ngày Phát Hành -->
+                            <div class="form-group row">
+                                <label for="sovanban_di" class="col-sm-4 col-form-label">Số Văn Bản:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="sovanban_di" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="ngayphathanh_di" class="col-sm-4 col-form-label">Ngày Phát Hành:</label>
+                                <div class="col-sm-8">
+                                    <input type="date" class="form-control" id="ngayphathanh_di" required readonly >
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="donvitiepnhan" class="col-sm-4 col-form-label">Đơn Vị Tiếp Nhận:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="donvitiepnhan">
+                                </div>
+                            </div>
+        
+                            <!-- Form Group for Nội Dung Trích Yếu -->
+                            <div class="form-group row">
+                                <label for="noidung_di" class="col-sm-4 col-form-label">Nội Dung Trích Yếu:</label>
+                                <div class="col-sm-8">
+                                    <textarea class="form-control" id="noidung_di" rows="3"></textarea>
+                                </div>
+                            </div>
+        
+                            <!-- Cán Bộ Soạn Thảo and Lãnh Đạo Phòng Kí -->
+                            <div class="form-group row">
+                                <label for="canbosoanthao" class="col-sm-4 col-form-label">Cán Bộ Soạn Thảo:</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" id="canbosoanthao">
+                                        <option value="">Chọn cán bộ</option>
+                                        <!-- Populate options here -->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="lanhdaophongki" class="col-sm-4 col-form-label">Lãnh Đạo Phòng
+                                    Kí:</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" id="lanhdaophongki">
+                                        <option value="">Chọn lãnh đạo phòng kí</option>
+                                        <!-- Populate options here -->
+                                    </select>
+                                </div>
+                            </div>
+        
+                            <!-- Ban Giám Hiệu Duyệt -->
+                            <div class="form-group row">
+                                <label for="BGHduyet" class="col-sm-4 col-form-label">Ban Giám Hiệu Duyệt:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="BGHduyet">
+                                </div>
+                            </div>
+                            <!-- Tải lên văn bản -->
+                            <div class="form-group">
+                                <label for="documentFile">Tải lên văn bản:</label>
+                                <input type="file" class="form-control" id="documentFile" name="documentFile">
+                                <small id="fileNameDisplay" class="form-text text-muted">Để hiển thị tên tệp</small>
+                                <input type="hidden" id="oldFilePath" name="oldFilePath" value="">
+                                <input type="hidden" id="lienket" name="lienket" value="" />
+                            </div>
+                        </div>
+                        <!-- Submit Button -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                            <button type="submit" class="btn btn-primary" onclick="saveDocument()">Lưu Văn Bản</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-
-
+        </div>
     </div>
     </div>
 
@@ -222,185 +246,163 @@
     <script src="../../assets/js/core/jquery.3.2.1.min.js" type="text/javascript"></script>
     <script src="../../assets/js/core/popper.min.js" type="text/javascript"></script>
     <script src="../../assets/js/core/bootstrap.min.js" type="text/javascript"></script>
-
     <!-- Custom JavaScript -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             fetchDocuments(); // Fetch documents when the page loads
-            fetchUsers(-1);
-            fetchVBDen(-1);
+            fetchUsers(-1,-1);
+            // fetchVBDen(-1);
 
             // Event listener for form submission
             document.getElementById('documentForm').onsubmit = function (event) {
                 event.preventDefault();  // Prevent the default form submission
-                updateDocument();          // Trigger saveDocument function
+                saveDocument(event);         // Trigger saveDocument function
             };
+            clearForm();
         });
-        function saveDocument() {
-                event.preventDefault();
-                const formData = new FormData();
-                // Kiểm tra và thêm các giá trị vào FormData
-                formData.append('tenvb', document.getElementById('tenvb').value);
-                formData.append('noidung', document.getElementById('noidung').value);
-                formData.append('ngayden', document.getElementById('ngayden').value);
-                formData.append('ngaydi', document.getElementById('ngaydi').value);
-                formData.append('so', document.getElementById('so').value);
-                formData.append('han', document.getElementById('han').value);
-                formData.append('nguoiphutrach', document.getElementById('nguoiphutrach').value);
-                formData.append('lienket', document.getElementById('vblk').value);
+            // Hàm hiển thị form với thông tin văn bản
+            function toggleForm() {
+                $('#formContainer').modal('show');
+            }
 
-                const fileInput = document.getElementById('documentFile');
-                const oldFilePathInput = document.getElementById('oldFilePath'); // Đường dẫn cũ
+            // Hàm lấy danh sách người dùng
+            function fetchUsers(canbosoanthao,lanhdaophongki) {
+                fetch('/api/users/basic')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Lỗi khi lấy danh sách người dùng');
+                        }
+                        return response.json();
+                    })
+                    .then(users => {
+                        populateDropdowns(users, canbosoanthao, lanhdaophongki);
+                    })
+                    .catch(error => {
+                    });
+            }
 
-                if (fileInput.files.length > 0) {
-                    // Nếu có tệp mới, thêm vào formData
-                    formData.append('documentFile', fileInput.files[0]);
-                } else {
-                    // Nếu không có tệp mới, thêm đường dẫn cũ vào formData
-                    formData.append('oldFilePath', oldFilePathInput.value);
-                }
+            // Hàm cập nhật danh sách vào các dropdown
+            function populateDropdowns(users, canbosoanthao_id, lanhdaophongki_id) {
+                const dropdowns = {
+                    canbosoanthao: document.getElementById('canbosoanthao'),
+                    lanhdaophongki: document.getElementById('lanhdaophongki')
+                };
 
-                // Kiểm tra nếu có documentId thì sẽ cập nhật, nếu không thì tạo mới
+                // Hàm thêm tùy chọn mặc định
+                const addDefaultOption = (dropdown, text) => {
+                    dropdown.innerHTML = ''; // Xóa tất cả tùy chọn trước đó
+                    const option = document.createElement('option');
+                    option.value = '';
+                    option.textContent = text;
+                    dropdown.appendChild(option);
+                };
+
+                // Thêm các tùy chọn mặc định
+                addDefaultOption(dropdowns.canbosoanthao, 'Chọn cán bộ soạn thảo');
+                addDefaultOption(dropdowns.lanhdaophongki, 'Chọn lãnh đạo phòng kí');
+
+                // Thêm người dùng vào dropdown
+                users.forEach(user => {
+                    const option = document.createElement('option');
+                    option.value = user.id;
+                    option.textContent = user.name;
+
+                    dropdowns.canbosoanthao.appendChild(option.cloneNode(true));
+                    dropdowns.lanhdaophongki.appendChild(option.cloneNode(true));
+                });
+
+                // Gán giá trị được chọn nếu có
+                if (canbosoanthao_id) dropdowns.canbosoanthao.value = canbosoanthao_id;
+                if (lanhdaophongki_id) dropdowns.kinhchuyen.value = lanhdaophongki_id;
+            }
+   // Hàm lưu văn bản
+    function saveDocument(event) {
+            event.preventDefault(); // Ngừng hành động mặc định của form
+            const formData = new FormData();
+
+            // Các giá trị từ form
+            const sovanban_di = document.getElementById('sovanban_di').value;
+            const ngayphathanh_di = document.getElementById('ngayphathanh_di').value;
+            const donvitiepnhan = document.getElementById('donvitiepnhan').value;
+            const noidung_di = document.getElementById('noidung_di').value;
+            const nguoiphutrach = document.getElementById('canbosoanthao').value;
+            const lanhdaophongki = document.getElementById('lanhdaophongki').value;
+            const BGHduyet = document.getElementById('BGHduyet').value;
+            const lienket = document.getElementById('lienket').value;
+
+            // Thêm dữ liệu vào FormData
+            formData.append('sovanban_di', sovanban_di);
+            formData.append('ngayphathanh_di', ngayphathanh_di);
+            formData.append('donvitiepnhan', donvitiepnhan);
+            formData.append('noidung_di', noidung_di);
+            formData.append('nguoiphutrach', nguoiphutrach);
+            formData.append('lanhdaoki', lanhdaophongki);
+            formData.append('BGHduyet', BGHduyet);
+            formData.append('lienket', lienket);
+
+            // Kiểm tra và xử lý tệp tải lên
+            const fileInput = document.getElementById('documentFile');
+            const oldFilePathInput = document.getElementById('oldFilePath');
+
+            if (fileInput.files.length > 0) {
+                formData.append('documentFile', fileInput.files[0]);
+                // Hiển thị tên tệp đã chọn
+                const fileNameDisplay = document.getElementById('fileNameDisplay');
+                fileNameDisplay.textContent = `Tệp đã chọn: ${fileInput.files[0].name}`;
+            } else if (oldFilePathInput.value) {
+                formData.append('oldFilePath', oldFilePathInput.value);
+            }
+
+            try {
                 const documentId = document.getElementById('documentId').value;
-                const isUpdate = !!documentId; // Xác định isUpdate dựa trên việc có documentId hay không
-
+                const isUpdate = !!documentId;
                 const url = isUpdate ? `/api/vb_di/${documentId}` : '/api/vb_di';
                 const method = isUpdate ? 'PUT' : 'POST';
 
                 fetch(url, {
                     method: method,
                     body: formData
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert(isUpdate ? 'Văn bản đã được cập nhật thành công!' : 'Văn bản đã được thêm thành công!');
-                            $('#documentModal').modal('hide'); // Đóng modal sau khi lưu thành công
-                            fetchDocuments(); // Làm mới danh sách văn bản
-                        } else {
-                            alert(isUpdate ? 'Cập nhật văn bản thất bại.' : 'Thêm văn bản thất bại.');
-                        }
+                }).then(() => {
+                        $('#formContainer').modal('hide');
+                        fetchDocuments();
                     })
-                    .catch(error => {
-                        console.error('Lỗi:', error);
-                        alert('Đã có lỗi xảy ra.');
-                    });
+                    .catch(error => alert('Có lỗi xảy ra: ' + error.message));
+
+            } catch (error) {
+                console.error('Có lỗi xảy ra:', error);
             }
-
-
-        function editDocument(id, ten, noidung, ngayden, so, han, nguoiphutrach, link, nguoiphutrach_id, lienket, ngaydi) {
-            document.getElementById('documentId').value = id;
-            document.getElementById('tenvb').value = ten;
-            document.getElementById('noidung').value = noidung;
-            document.getElementById('ngayden').value = ngayden;
-            document.getElementById('ngaydi').value = ngaydi;
-            document.getElementById('so').value = so;
-            document.getElementById('han').value = han;
-            document.getElementById('nguoiphutrach').value = nguoiphutrach;
-            document.getElementById('vblk').value = lienket;
-            document.getElementById('ngaydi').value = ngaydi;
-            document.getElementById('oldFilePath').value = link;
-            // Fetch users and set the selected user
-            fetchUsers(nguoiphutrach_id);
-            fetchVBDen(lienket);
-
-            // Set the filename if a file is associated with the document
-            const fileNameDisplay = document.getElementById('fileNameDisplay');
-            if (link) {
-                fileNameDisplay.textContent = `Tên văn bản đã tải lên: ${link.split('/').pop()}`;
-            } else {
-                fileNameDisplay.textContent = ''; // Clear if no file
-            }
-
-            // Show the modal
-            $('#documentModal').modal('show');
-        }
-        // Hàm lấy danh sách người dùng và thiết lập người phụ trách mặc định
-        function fetchUsers(nguoiphutrach_id) {
-            fetch('/api/users/basic')
-                .then(response => response.json())
-                .then(users => {
-                    const nguoiphutrachSelect = document.getElementById('nguoiphutrach');
-                    nguoiphutrachSelect.innerHTML = ''; // Xóa các tùy chọn cũ
-                    // Tạo tùy chọn mặc định
-                    const defaultOption = document.createElement('option');
-                    defaultOption.value = '';
-                    defaultOption.textContent = 'Chọn người phụ trách';
-                    nguoiphutrachSelect.appendChild(defaultOption);
-
-                    // Thêm các người dùng vào dropdown
-                    users.forEach(user => {
-                        const option = document.createElement('option');
-                        option.value = user.id;
-                        option.textContent = user.name;
-                        nguoiphutrachSelect.appendChild(option);
-                    });
-
-                    // Thiết lập người dùng đã chọn nếu có
-                    if (nguoiphutrach_id && users.some(user => user.id == nguoiphutrach_id)) {
-                        nguoiphutrachSelect.value = nguoiphutrach_id; // Chọn giá trị nếu hợp lệ
-                    } else {
-                        nguoiphutrachSelect.selectedIndex = 0; // Quay lại giá trị mặc định nếu không tìm thấy
-                    }
-                })
-                .catch(error => console.error('Error fetching users:', error));
         }
 
-        // Hàm để lấy dữ liệu từ API và điền vào danh sách chọn
-        function fetchVBDen(selectId) {
-            // Gửi yêu cầu GET tới API để lấy dữ liệu văn bản
-            fetch('/api/vb_den/info')
-                .then(response => response.json()) // Chuyển đổi phản hồi thành JSON
-                .then(data => {
-                    const selectElement = document.getElementById('vblk');
-                    console.log(data);
-                    // Xóa tất cả các option hiện tại trong select (để không bị trùng lặp)
-                    selectElement.innerHTML = '';
 
-                    // Nếu dữ liệu không có mục nào, thêm option mặc định
-                    if (!Array.isArray(data) || data.length === 0) {
-                        const defaultOption = document.createElement('option');
-                        defaultOption.value = 0; // Giá trị mặc định
-                        defaultOption.textContent = 'Không có dữ liệu'; // Nội dung hiển thị
-                        selectElement.appendChild(defaultOption);
-                        return; // Kết thúc hàm nếu không có dữ liệu
-                    }
 
-                    // Duyệt qua từng tài liệu trong data và tạo các <option>
-                    data.forEach(doc => {
-                        const option = document.createElement('option');
-                        option.value = doc.id; // Giá trị của option là id của tài liệu
-                        option.textContent = doc.info; // Hiển thị thông tin của tài liệu
-                        selectElement.appendChild(option); // Thêm option vào <select>
-                    });
-                })
-                .catch(error => {
-                    console.error('Có lỗi khi lấy dữ liệu từ API: ', error);
-                });
+    // Hàm sửa văn bản (edit)
+    function editDocument(id, sovanban_di, ngayphathanh_di, donvitiepnhan, noidung_di, nguoiphutrach, lanhdaophongki, BGHduyet, lienket, link) {
+        // Điền các trường dữ liệu vào form modal
+        document.getElementById('documentId').value = id; // Lưu lại ID văn bản để sửa
+        document.getElementById('sovanban_di').value = sovanban_di;
+        document.getElementById('ngayphathanh_di').value = ngayphathanh_di;
+        document.getElementById('donvitiepnhan').value = donvitiepnhan;
+        document.getElementById('noidung_di').value = noidung_di;
+        document.getElementById('canbosoanthao').value = nguoiphutrach;
+        document.getElementById('lanhdaophongki').value = lanhdaophongki;
+        document.getElementById('BGHduyet').value = BGHduyet;
+        document.getElementById('lienket').value = lienket;
+        document.getElementById('oldFilePath').value = link;
+
+        // Xóa giá trị trường tệp tải lên để người dùng biết có thể tải lên tệp mới
+        document.getElementById('documentFile').value = '';
+        const fileNameDisplay = document.getElementById('fileNameDisplay');
+
+        // Hiển thị tên văn bản đã tải lên nếu có
+        if (link) {
+            fileNameDisplay.textContent = `Tên văn bản đã tải lên: ${link.split('/').pop()}`;
+        } else {
+            fileNameDisplay.textContent = 'Chưa có tệp tải lên.'; // Clear the file name if not present
         }
 
-    function exportCSV() {
-        // Gửi yêu cầu đến API để xuất file CSV
-        fetch('/api/vb_di/getfile', {
-            method: 'GET',
-        })
-            .then(response => {
-                if (response.ok) {
-                    return response.blob();
-                }
-                throw new Error('Không thể tải file CSV');
-            })
-            .then(blob => {
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = 'documents.csv'; // Tên file khi tải về
-                link.click();
-            })
-            .catch(error => {
-                alert(error.message);
-            });
+        // Hiển thị modal để người dùng chỉnh sửa
+        $('#formContainer').modal('show');
     }
-
 
         function fetchDocuments() {
             fetch('/api/vb_di')
@@ -421,25 +423,26 @@
                             data.forEach((doc, index) => {
                                 const row = document.createElement('tr');
                                 const nguoiphutrachName = usersMap[doc.nguoiphutrach] || 'Không tìm thấy'; // Get the user's name
+                                const lanhdao = usersMap[doc.lanhdaophongki]||'Không tìm thấy';
 
                                 row.innerHTML = `
                             <td>${index + 1}</td>
-                            <td>${doc.tenvb}</td>
+                            <td>${doc.sovanbandi}</td>
+                            <td>${doc.ngayphathanh}</td>
+                            <td>${doc.donvitiepnhan}</td>
                             <td>${doc.noidung}</td>
-                            <td>${doc.ngayden}</td>
-                            <td>${doc.ngaydi}</td>
-                            <td>${doc.so}</td>
-                            <td>${doc.han}</td>
+                            <td>${doc.bghd}</td>
                             <td>${nguoiphutrachName}</td> <!-- Display user name -->
+                            <td>${lanhdao}</td> <!-- Display user name -->
                             <td>
-                                ${doc.lienket ? `<a href="${doc.lienket}" target="_blank">Xem liên kết</a>` : 'Không có liên kết'}
+                                ${doc.vb_lk ? `<a href="${doc.vb_lk}" target="_blank">Xem liên kết</a>` : 'Không có liên kết'}
                             </td>
                             <td>
                                 ${doc.link ? `<a href="${doc.link}" target="_blank">Xem chi tiết</a>` : 'Không có liên kết'}
                             </td>
                             <td>${doc.status}</td>
                             <td>
-                                <button class="btn btn-info btn-sm" onclick="editDocument(${doc.id}, '${doc.tenvb}', '${doc.noidung}', '${doc.ngayden}', '${doc.so}', '${doc.han}', '${doc.nguoiphutrach}', '${doc.link}','${doc.nguoiphutrach}','${doc.lienket}','${doc.ngaydi}')">Edit</button>
+                                <button class="btn btn-info btn-sm" onclick="editDocument('${doc.id}', '${doc.sovanbandi}', '${doc.ngayphathanh}', '${doc.donvitiepnhan}', '${doc.noidung}', '${doc.nguoiphutrach}', '${doc.lanhdaophongki}', '${doc.bghd}','${doc.lienket}','${doc.link}')">Chi Tiết</button>
                                 <button class="btn btn-danger btn-sm" onclick="deleteDocument(${doc.id})">Delete</button>
                             </td>
                         `;
@@ -461,18 +464,29 @@
             }
         }
 
-        // Clear the form for adding a new document
-        function clearForm() {
-            document.getElementById('documentId').value = '';
-            document.getElementById('tenvb').value = '';
-            document.getElementById('noidung').value = '';
-            document.getElementById('ngayden').value = '';
-            document.getElementById('so').value = '';
-            document.getElementById('han').value = '';
-            document.getElementById('nguoiphutrach').value = '';
-            document.getElementById('documentFile').value = ''; // Clear file input
-            document.getElementById('oldFilePath').value = ''; // Clear file input
-        }
+        // Hàm Clear Form
+            function clearForm() {
+                // Đặt giá trị cho các trường input về trống
+                document.getElementById('sovanban_di').value = '';
+                document.getElementById('ngayphathanh_di').value = new Date().toISOString().split('T')[0]; // Ngày hôm nay
+                document.getElementById('donvitiepnhan').value = '';
+                document.getElementById('noidung_di').value = '';
+                document.getElementById('canbosoanthao').value = ''; // Cán bộ soạn thảo
+                document.getElementById('lanhdaophongki').value = ''; // Lãnh đạo phòng kí
+                document.getElementById('BGHduyet').value = '';
+
+                // Xóa file đã chọn (nếu có)
+                document.getElementById('documentFile').value = ''; // Xóa tệp đã chọn
+
+                // Reset hidden input oldFilePath
+                document.getElementById('oldFilePath').value = '';
+
+                // Reset documentId nếu có
+                document.getElementById('documentId').value = '';
+
+                // Nếu có tên tệp hiển thị (nếu có)
+                document.getElementById('fileNameDisplay').textContent = 'Để hiển thị tên tệp';
+            }
 
     </script>
 </body>

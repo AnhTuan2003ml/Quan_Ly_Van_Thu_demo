@@ -1,8 +1,7 @@
 [
   {
     "id": 1,
-    "tenvb": "văn bản 1",
-    "sovanban": 2,
+    "sovanban": "P03/37",
     "ngayphathanh": "2024-11-12",
     "soDen": 456,
     "ngayden": "2024-11-15",
@@ -18,14 +17,13 @@
       }
     ],
     "nguoiphutrach": 2,
-    "nguoikinhgui": 3,
-    "link": "null",
-    "status": "checked"
+    "nguoikinhgui": 2,
+    "link": "../../doc/demo.txt",
+    "status": "uncheck"
   },
   {
     "id": 2,
-    "tenvb": "văn bản 1",
-    "sovanban": 1,
+    "sovanban": "P04/1",
     "ngayphathanh": "2024-12-03",
     "soDen": 456,
     "ngayden": "2024-12-03",
@@ -47,8 +45,7 @@
   },
   {
     "id": 3,
-    "tenvb": "văn bản 2",
-    "sovanban": 5,
+    "sovanban": "P05/2",
     "ngayphathanh": "2024-12-05",
     "soDen": 789,
     "ngayden": "2024-12-06",
@@ -66,12 +63,11 @@
     "nguoiphutrach": 1,
     "nguoikinhgui": 2,
     "link": "../../doc/null_2",
-    "status": "checked"
+    "status": "uncheck"
   },
   {
     "id": 4,
-    "tenvb": "văn bản 3",
-    "sovanban": 4,
+    "sovanban": "P05/3",
     "ngayphathanh": "2024-11-15",
     "soDen": 123,
     "ngayden": "2024-11-20",
@@ -93,8 +89,7 @@
   },
   {
     "id": 5,
-    "tenvb": "văn bản 4",
-    "sovanban": 6,
+    "sovanban": "P04/2",
     "ngayphathanh": "2024-12-01",
     "soDen": 234,
     "ngayden": "2024-12-02",
@@ -112,6 +107,50 @@
     "nguoiphutrach": 1,
     "nguoikinhgui": 3,
     "link": "../../doc/null_4",
-    "status": "checked"
+    "status": "uncheck"
+  },
+  {
+    "id": 6,
+    "sovanban": "P04/3",
+    "ngayphathanh": "2024-11-25",
+    "soDen": 456,
+    "ngayden": "2024-11-26",
+    "noidung": "Tuấn đẹp trai",
+    "chidao": "anh tuấn",
+    "ngayxuly": "2024-11-27",
+    "hantheovanban": "2024-11-30",
+    "hantheochidao": null,
+    "nguonphathanh": [
+      {
+        "type": "Ngoài Trường",
+        "address": "HD-005"
+      }
+    ],
+    "nguoiphutrach": 2,
+    "nguoikinhgui": null,
+    "link": "../../doc/null_5",
+    "status": "uncheck"
+  },
+  {
+    "id": 7,
+    "sovanban": "P03/37",
+    "ngayphathanh": "2024-12-20",
+    "soDen": 456,
+    "ngayden": null,
+    "noidung": "Anh Tuấn",
+    "chidao": "Anh Tuấn",
+    "ngayxuly": "2024-12-05",
+    "hantheovanban": "2024-12-22",
+    "hantheochidao": null,
+    "nguonphathanh": [
+      {
+        "type": "Ngoài Trường",
+        "address": "HD-005"
+      }
+    ],
+    "nguoiphutrach": 2,
+    "nguoikinhgui": null,
+    "link": null,
+    "status": "uncheck"
   }
 ]

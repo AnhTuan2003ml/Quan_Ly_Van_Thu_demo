@@ -14,5 +14,21 @@
     "timestamp": "2024-12-06T03:00:58.949Z",
     "nguoiduocgiao": null,
     "ngaygiao": null
+  },
+  {
+    "documentId": 3,
+    "type": "văn bản đi",
+    "nguoiphutrach": 2,
+    "timestamp": "2024-12-06T10:39:58.259Z",
+    "nguoiduocgiao": null,
+    "ngaygiao": null
+  },
+  {
+    "documentId": 4,
+    "type": "văn bản đi",
+    "nguoiphutrach": 2,
+    "timestamp": "2024-12-06T12:16:34.587Z",
+    "nguoiduocgiao": null,
+    "ngaygiao": null
   }
 ]

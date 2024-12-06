@@ -16,10 +16,10 @@ export let filePath = path.join(__dirname, '../data/vb_di.json');
 if (filePath.startsWith('\\')) {
     filePath = filePath.substring(1);
 }
-
+let  userId;
 
 export const Get_vb_di = async (req, res) => {
-    const userId = req.session.userId;
+    userId = req.session.userId;
     const userRole = req.session.userRole;
 
     const data = readJSONFile(filePath);
@@ -170,13 +170,26 @@ export const Post_vb_di = (req, res) => {
             // Nếu là tệp hiện tại (id giống nhau), không thay đổi tên
         }
     }
+    let canbosoanthao = '';  // Dùng 'let' thay vì 'const' để có thể thay đổi giá trị sau này
 
 
-    const newEmail = getEmailById(nguoiphutrach);
+    // Kiểm tra nguoiphutrach nếu không có giá trị thì lấy id của người đăng nhập từ session
+    if (!nguoiphutrach) {
+        canbosoanthao = userId;  // Nếu nguoiphutrach rỗng, lấy id từ session
+    } else {
+        canbosoanthao = nguoiphutrach;  // Nếu nguoiphutrach có giá trị, gán canbosoanthao = nguoiphutrach
+    }
+
+    console.log(canbosoanthao);
+
+
+
+
+    const newEmail = getEmailById(canbosoanthao);
     let token_new;
     // console.log(newDocument);
     // Thêm văn bản mới vào cơ sở dữ liệu (hoặc file)
-    addDocument_di(sovanban_di, ngayphathanh_di, donvitiepnhan, noidung_di, parseInt(nguoiphutrach), parseInt(lanhdaoki), BGHduyet, filePath_doc, parseInt(lienket), filePath)
+    addDocument_di(sovanban_di, ngayphathanh_di, donvitiepnhan, noidung_di, parseInt(canbosoanthao), parseInt(lanhdaoki), BGHduyet, filePath_doc, parseInt(lienket), filePath)
         .then((documentId) => {
             const id_doc = documentId;
             const timestamp = new Date().toISOString(); // Thời gian thay đổi
@@ -191,7 +204,7 @@ export const Post_vb_di = (req, res) => {
             addLogData({
                 documentId: id_doc,
                 type: 'văn bản đi',
-                nguoiphutrach: parseInt(nguoiphutrach),
+                nguoiphutrach: parseInt(userId),
                 timestamp: timestamp,
                 nguoiduocgiao: null,
                 ngaygiao: null

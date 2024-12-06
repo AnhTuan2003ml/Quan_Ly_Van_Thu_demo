@@ -28,6 +28,7 @@ export const Login = (req,res) =>{
         // console.log(user)
         // Kiểm tra thông tin đăng nhập
         if (user && password === user.password) {
+            // Giả sử sau khi xác thực thành công
             req.session.userId = user.id;
             req.session.userRole = user.status === 1 ? 'admin' :
                 user.status === 2 ? 'vanthu' : 'user';

@@ -232,8 +232,23 @@
                         </div>
                         <!-- Submit Button -->
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                            <button type="submit" class="btn btn-primary" onclick="saveDocument()">Lưu Văn Bản</button>
+                            <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                            <button type="submit" class="btn btn-primary" onclick="saveDocument()">Lưu Văn Bản</button> -->
+                            <!-- Nút Chỉnh sửa -->
+                            <button type="button" id="editButton" class="btn btn-info btn-sm">
+                                Chỉnh Sửa
+                            </button>
+                            
+                            <!-- Nút Lưu -->
+                            <button type="submit" id="saveButton" class="btn btn-primary btn-sm d-none">
+                                Lưu Văn Bản
+                            </button>
+                            
+                            <!-- Nút Hủy -->
+                            <button type="button" id="cancelButton" class="btn btn-secondary btn-sm d-none">
+                                Hủy
+                            </button>
+
                         </div>
                     </form>
                 </div>
@@ -258,7 +273,47 @@
             document.getElementById('documentForm').onsubmit = function (event) {
                 event.preventDefault();  // Prevent the default form submission
                 saveDocument(event);         // Trigger saveDocument function
+                setReadOnly(true);  // Chuyển lại chế độ chỉ đọc
+                editButton.classList.remove('d-none');  // Hiển thị lại nút chỉnh sửa
+                saveButton.classList.add('d-none');  // Ẩn nút lưu
+                cancelButton.classList.add('d-none');  // Ẩn nút hủy
             };
+                const editButton = document.getElementById('editButton');  // Nút chỉnh sửa
+            const saveButton = document.getElementById('saveButton');  // Nút lưu
+            const cancelButton = document.getElementById('cancelButton');  // Nút hủy
+            const formElements = document.querySelectorAll('#documentForm input, #documentForm textarea, #documentForm select');
+
+            // Đặt tất cả các thẻ trong form ở chế độ chỉ đọc
+            const setReadOnly = (isReadOnly) => {
+                formElements.forEach((el) => {
+                    if (isReadOnly) {
+                        el.setAttribute('readonly', 'true');
+                        el.setAttribute('disabled', 'true'); // Dùng cho select
+                    } else {
+                        el.removeAttribute('readonly');
+                        el.removeAttribute('disabled'); // Dùng cho select
+                    }
+                });
+            };
+
+            // Ban đầu ở chế độ đọc
+            setReadOnly(true);
+
+            // Chuyển sang chế độ chỉnh sửa khi nhấn nút "Chỉnh sửa"
+            editButton.addEventListener('click', () => {
+                setReadOnly(false);  // Cho phép chỉnh sửa
+                editButton.classList.add('d-none');  // Ẩn nút chỉnh sửa
+                saveButton.classList.remove('d-none');  // Hiển thị nút lưu
+                cancelButton.classList.remove('d-none');  // Hiển thị nút hủy
+            });
+
+            // Hủy chỉnh sửa, quay lại chế độ đọc
+            cancelButton.addEventListener('click', () => {
+                setReadOnly(true);  // Chuyển lại chế độ chỉ đọc
+                editButton.classList.remove('d-none');  // Hiển thị lại nút chỉnh sửa
+                saveButton.classList.add('d-none');  // Ẩn nút lưu
+                cancelButton.classList.add('d-none');  // Ẩn nút hủy
+            });
             clearForm();
         });
             // Hàm hiển thị form với thông tin văn bản

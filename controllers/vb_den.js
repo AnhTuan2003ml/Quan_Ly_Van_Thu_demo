@@ -31,6 +31,27 @@ export const Get_link_vb_den = async (id) => {
         return { link: null, error: 'Document not found' };
     }
 };
+export const Get_vb_by_id = (req, res) => {
+    const documentId = req.params.id; // Lấy ID văn bản từ URL (được truyền qua params)
+    const data = readJSONFile(filePath); // Đọc dữ liệu từ file JSON
+
+    // Tìm văn bản theo ID
+    const document = data.find(doc => doc.id === parseInt(documentId)); // Chuyển ID sang số
+
+    if (!document) {
+        // Nếu không tìm thấy văn bản, trả về lỗi
+        return res.status(404).json({
+            success: false,
+            message: 'Văn bản không tồn tại.'
+        });
+    }
+
+    // Nếu tìm thấy, trả về thông tin văn bản
+    return res.json({
+        success: true,
+        document: document // Trả về thông tin văn bản
+    });
+};
 export const GetDocumentInfo = (req, res) => {
     const data = readJSONFile(filePath);
     // Lấy thông tin các văn bản và tạo một mảng mới chứa các đối tượng id và info
